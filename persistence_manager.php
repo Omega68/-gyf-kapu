@@ -6,7 +6,7 @@ class PersistenceManager{
 
  const OBJECT_TABLE_NAME = "object";
 
-  private $dbconnection;
+  private $dbConnection;
   private $objectTable;
 
   private static $instance;
@@ -18,14 +18,14 @@ class PersistenceManager{
   
   final function __construct(DatabaseConnection $connection){
    $this->objectTable = PersistenceManager::OBJECT_TABLE_NAME;
-    $this->dbconnection = $connection;    
+    $this->dbConnection = $connection;
   }
   
   /**  
   return object
   */
   final function getObject($id){
-    $sql = sprintf("SELECT * FROM %s WHERE id = %s", $this->mainObjectTableName, $id);
+    $sql = sprintf("SELECT * FROM %s WHERE id = %s", $this->getMainObjectTableName(), $id);
     $result = $this->dbConnection->query($sql);
     if($result->num_rows == 1){
       $row = $result->fetch_assoc();
@@ -38,7 +38,33 @@ class PersistenceManager{
   public function getMainObjectTableName(){
     return $this->objectTable;
   }
-  
+
+
+    /*
+     * return a megadott táblával, és paraméterekkel rendelkező objects
+     */
+    public function getObjectsByField($class, $params=null){
+        $sql = sprintf("SELECT * FROM %s WHERE", $class);
+        $counter=0;
+        foreach($params as $key=>$value) {
+            $sql .= " " . $key . " = " . " '".$value."'";
+            $counter++;
+            if($counter<count($params))
+                $sql.=" and";
+
+        }
+        $result = $this->dbConnection->query($sql);
+        $count=0;
+        $objects=array();
+        foreach($result as $key => $value){
+            $ojb=new $class($result[$count]['id']);
+            $objects[]=$ojb;
+            if($count<count($result))
+                $count++;
+        }
+        return $objects;
+       // throw new Exception("Multiple rows affected.");
+    }
   
   /**
   return hiba kódok array
