@@ -1,16 +1,13 @@
 <html>
-<head><title>Ügyfél teszt</title></head>
+<head><title>Urlap teszt</title></head>
 <body>
 <h1>Teszt</h1>
 <?php
 require_once("../persistence_manager.php");
-require_once("../ugyfel.php");
-require_once("../felhasznalo.php");
-require_once("../admin.php");
-require_once("../kitoltott_mezo.php");
-require_once("../mezo.php");
-require_once("../urlap_sablon.php");
-require_once("../igenyles.php");
+require_once("../model/kitoltott_mezo.php");
+require_once("../model/mezo.php");
+require_once("../model/urlap_sablon.php");
+require_once("../model/igenyles.php");
 
 $pm = PersistenceManager::getInstance();
 
@@ -38,13 +35,14 @@ $urlap_adatok=array(
   'admin_azon' => 'a365424'
 );
 
-$urlaper=$pm->createObject('urlapsablon',$urlap_adatok);
+$urlaper = new UrlapSablon();
+$urlaper->create($urlap_adatok);
 
 echo 'Az új ûrlapsablon: ';
 
 echo implode(', ',$urlaper->getUrlapSablonFields()).'<br/>'; 
 
-
+/*
 $mezo_adatok2=array(
   'azon' => "{$r}",
   'tipus' => 'kerekites',
@@ -56,7 +54,7 @@ $mezok=$urlaper->createMezo($mezo_adatok2);
 echo 'Az új mezõ a sablonhoz: ';
 
 echo implode(', ',$mezok->getMezoFields()).'<br/>'; 
-
+*/
 
 ?>
 </body>
