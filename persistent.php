@@ -25,16 +25,22 @@ abstract class Persistent{
   final function create(array $params=null){
     //Csak vak pélányon futhat.
     if (isset($this->id)) return;
-  
-    //1. objektum bejegyzése a fő objektum táblába
+
+      /*if(count($this->validate($params))  > 0){
+          return;
+      }*/
+
+      if($this->validationError($this->validate($params)))
+          return;
+
+
+      //1. objektum bejegyzése a fő objektum táblába
      $class = get_class($this);
      $sql = sprintf("INSERT INTO %s VALUES ('','%s')", $this->objectTable, $class);
      $this->db->query($sql);
+
     
     //2. auto generált id lekérdezése, és beállítása $this->id -be
-     //$sql = sprintf("SELECT max(id) as id FROM %s", $this->objectTable);
-     //$result = $this->db->query($sql);
-     //$this->id = $result[0]['id'];
      $this->id = $this->db->getLastInsertID();
     
     //3. objektum bejegyzése az osztályaihoz tartozó táblákba 
@@ -97,7 +103,12 @@ abstract class Persistent{
     foreach($field_values as $key => $value){
       $s[] = $key."='".$value."'";
     }
-    $sql = sprintf("UPDATE %s SET %s WHERE id = %s", strtolower(get_class($this)), implode(", ", $s) , $this->id);
+
+      if($this->validationError($this->validate($field_values)))
+          return;
+
+
+      $sql = sprintf("UPDATE %s SET %s WHERE id = %s", strtolower(get_class($this)), implode(", ", $s) , $this->id);
     $result = $this->db->query($sql);
     return $result;
   }
@@ -126,5 +137,17 @@ abstract class Persistent{
   Alosztály implementálja  
   */
   abstract protected function onAfterCreate(array $params=null);      
-  
+
+    private function validationError($errors){
+
+        if(count($errors) > 0 ){
+            echo "validation error: ";
+            foreach( $errors as $s)
+                echo $s . "<br/>";
+            return true;
+        }
+
+        return false;
+
+    }
 }

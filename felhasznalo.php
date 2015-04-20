@@ -2,10 +2,11 @@
 require_once("../persistent.php");
 
 class Felhasznalo extends Persistent{
- const TABLE_NAME="felhasznalo";
- 
+ //const TABLE_NAME="felhasznalo";
+
  private $azon;
  private $jelszo;
+
  
   //protected static function getTableName() {
   //      return 'felhasznalo';
@@ -18,6 +19,11 @@ class Felhasznalo extends Persistent{
   Alosztály implementálja  
   */
   public function validate(array $params=null){
+      $errors = array();
+      if(strlen($params['jelszo']) < 5 )
+          $errors[]='Túl rövid jelszó';
+
+      return $errors;
   }
   
   /**

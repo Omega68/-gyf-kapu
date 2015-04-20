@@ -8,7 +8,9 @@ require_once("../ugyfel.php");
 require_once("../felhasznalo.php");
 require_once("../admin.php");
 
-$pm = PersistenceManager::getInstance();
+$br = "<br/>";
+
+//$pm = PersistenceManager::getInstance();
 
 $r=rand(1,150000); 
 
@@ -17,11 +19,23 @@ $felhasznalo_adatok=array(
   'jelszo' => 'jelszo'
 );
 
-$felhasznalo=$pm->createObject('felhasznalo',$felhasznalo_adatok);
-
+//$felhasznalo=$pm->createObject('felhasznalo',$felhasznalo_adatok);
+$felhasznalo = new Felhasznalo();
+$felhasznalo->create($felhasznalo_adatok);
 echo 'Az új felhasználó: ';
 
-echo implode(', ',$felhasznalo->getFelhasznaloFields()).'<br/>'; 
+echo implode(', ',$felhasznalo->getFelhasznaloFields()).'<br/>';
+
+echo $br . $br;
+echo "Adatok módosítása:<br/> Új jelszó: alma<br/>";
+$felhasznalo->setFelhasznaloFields(array('jelszo'=>'alma'));
+echo implode(', ',$felhasznalo->getFelhasznaloFields()).'<br/>';
+
+echo $br . $br;
+echo "Adatok módosítása:<br/> Új jelszó: alma1234<br/>";
+$felhasznalo->setFelhasznaloFields(array('jelszo'=>'alma1234'));
+echo implode(', ',$felhasznalo->getFelhasznaloFields()).'<br/>';
+echo $br . $br;
 
 $ugyfel_adatok = array(
    'azon'=>"{$r}",
@@ -29,7 +43,9 @@ $ugyfel_adatok = array(
    'email'=>'pelda@pelda.hu',
    'telefon'=>'555555'
 );
-$ugyfel=$pm->createObject('ugyfel',$ugyfel_adatok);
+$ugyfel = new Ugyfel();
+$ugyfel->create($ugyfel_adatok);
+//$ugyfel=$pm->createObject('ugyfel',$ugyfel_adatok);
 
 
 echo 'Az új ügyfél: ';
@@ -44,7 +60,9 @@ $felhasznalo_adatok=array(
   'jelszo'=>'jelszo'
 );
 
-$felhasznalo=$pm->createObject('felhasznalo',$felhasznalo_adatok);
+$felhasznalo = new Felhasznalo();
+$felhasznalo->create($felhasznalo_adatok);
+//$felhasznalo=$pm->createObject('felhasznalo',$felhasznalo_adatok);
 
 echo 'Az új felhasználó: ';
 
@@ -52,8 +70,9 @@ echo implode(', ',$felhasznalo->getFelhasznaloFields()).'<br/>';
 $admin_adatok = array(
    'azon'=>"{$r2}"
 );
-$admin=$pm->createObject('admin',$admin_adatok);
-
+//$admin=$pm->createObject('admin',$admin_adatok);
+$admin = new Admin();
+$admin->create($admin_adatok);
 
 echo 'Az új Admin: ';
 
