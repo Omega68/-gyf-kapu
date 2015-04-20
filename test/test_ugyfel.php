@@ -4,9 +4,9 @@
 <h1>Teszt</h1>
 <?php
 require_once("../persistence_manager.php");
-require_once("../ugyfel.php");
-require_once("../felhasznalo.php");
-require_once("../admin.php");
+require_once("../model/ugyfel.php");
+require_once("../model/felhasznalo.php");
+require_once("../model/admin.php");
 
 $br = "<br/>";
 

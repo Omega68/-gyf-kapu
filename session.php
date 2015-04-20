@@ -7,8 +7,8 @@
  */
 
 require_once("../persistence_manager.php");
-require_once("../ugyfel.php");
-require_once("../felhasznalo.php");
+require_once("../model/ugyfel.php");
+require_once("../model/felhasznalo.php");
 
 //Nem biztos, hogy teljesen jo. az elmeletileg egyedi felhasznalo azonositot hasznalja mint session_id-t.
 class Authentication
