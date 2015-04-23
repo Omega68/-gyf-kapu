@@ -1,0 +1,60 @@
+/* ================================================================ 
+This copyright notice must be untouched at all times.
+
+The original version of this stylesheet and the associated (x)html
+is available at http://www.cssplay.co.uk/menus/dd_valid.html
+Copyright (c) 2005-2007 Stu Nicholls. All rights reserved.
+This stylesheet and the assocaited (x)html may be modified in any 
+way to fit your requirements.
+=================================================================== */
+/* common styling */
+.menu { height:25px; position:relative;  z-index:100; float: left;
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 13px;
+  font-weight: bold; 
+  margin-bottom:8px;
+}
+.menu ul li a, .menu ul li a:visited {
+  display:block; 
+  text-decoration:none; 
+  color:#000; 
+  height:24px; 
+  text-align:center; 
+  /*border-left:1px solid #FFFFFF;*/ 
+  border-left:1px solid #D8D8D8;  
+  /*background:#f6f6f6;*/ 
+  line-height:24px; 
+  font-size:11px; 
+  overflow:hidden;
+  padding: 3px 10px 3px 10px;
+  }
+.menu ul {padding:0; margin:0 ; list-style: none;}
+.menu ul li {float:left; position:relative;}
+.menu ul li ul {display: none; border: 1px solid #CFCFCF; }
+.menu ul li ul li{width: 200px;}
+.menu ul li ul li a{text-align: left; border: none ;}
+/* specific to non IE browsers */
+.menu ul li:hover a {color:#fff; background:#0887d8;}
+.menu ul li:hover ul {display:block; position:absolute; top:30px; left:0; width:200px;}
+.menu ul li:hover ul li a.hide {background:#0887d8; color:#fff;}
+.menu ul li:hover ul li:hover a.hide {background:#0887d8; color:#fff;}
+.menu ul li:hover ul li ul {display: none;}
+.menu ul li:hover ul li a {display:block; background:#f6f6f6; color:#000;}
+.menu ul li:hover ul li a:hover {background:#0887d8; color:#fff;}
+.menu ul li:hover ul li:hover ul {display:block; position:absolute; left:100px; top:0; z-index: 101;}
+.menu ul li:hover ul li:hover ul.left {left:-200px;}
+.menu > ul > li{	
+  background: #fcfcfc; /* Old browsers */
+  background: -moz-linear-gradient(top,  #fcfcfc 0%, #e5e5e5 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfcfc), color-stop(100%,#e5e5e5)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #fcfcfc 0%,#e5e5e5 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #fcfcfc 0%,#e5e5e5 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #fcfcfc 0%,#e5e5e5 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #fcfcfc 0%,#e5e5e5 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+
+
+  border-bottom: #c7c7c7 solid 1px;
+
+}
+.menu > ul > li:last-child{border-right:  #ccc solid 1px;}
