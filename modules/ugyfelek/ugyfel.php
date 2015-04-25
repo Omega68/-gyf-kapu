@@ -1,6 +1,5 @@
 <?php
 
-require_once("../persistent.php");
 
 class Ugyfel extends Persistent
 {

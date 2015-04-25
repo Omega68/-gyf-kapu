@@ -1,6 +1,4 @@
-<?php 
-
-require_once("../persistent.php");
+<?php
 
 class UrlapSablon extends Persistent{
  
@@ -9,10 +7,10 @@ class UrlapSablon extends Persistent{
   //}
  
  /**
-  return hiba kódok array
+  return hiba kï¿½dok array
   
-  Létrehozási/módosítási paraméterek ellenõrzése
-  Alosztály implementálja  
+  Lï¿½trehozï¿½si/mï¿½dosï¿½tï¿½si paramï¿½terek ellenï¿½rzï¿½se
+  Alosztï¿½ly implementï¿½lja  
   */
   public function validate(array $params=null){
   $errors = array();
@@ -30,13 +28,13 @@ class UrlapSablon extends Persistent{
   /**
   return void
   
-  Tetszõleges létrehozási tevékenység. 
-  Alosztály implementálja  
+  Tetszï¿½leges lï¿½trehozï¿½si tevï¿½kenysï¿½g. 
+  Alosztï¿½ly implementï¿½lja  
   */
   protected function onAfterCreate(array $params=null){
   }
   
-  //TODO: getterek, setterek a Persistent-ben lévõ getFields és setFields segítségével
+  //TODO: getterek, setterek a Persistent-ben lï¿½vï¿½ getFields ï¿½s setFields segï¿½tsï¿½gï¿½vel
     public function getUrlapSablonFields(){
       return $this->getFields();
     }
