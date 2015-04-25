@@ -6,7 +6,7 @@
  * Time: 8:23
  */
 
-class Urlap_sablon_Loader extends AbstractLoader{
+class Urlap_sablonok_Loader extends AbstractLoader{
 
     /**
      * return:
