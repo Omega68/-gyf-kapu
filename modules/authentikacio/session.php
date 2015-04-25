@@ -6,27 +6,23 @@
  * Time: 17:31
  */
 
-require_once("../persistence_manager.php");
-require_once("../model/ugyfel.php");
-require_once("../model/felhasznalo.php");
-
-//Nem biztos, hogy teljesen jo. az elmeletileg egyedi felhasznalo azonositot hasznalja mint session_id-t.
 class Authentication
 {
+    static private $instance;
 
-public function __construct(){
-    ini_set('session.use_only_cookies', true);
-    session_start();
-}
+    static function getInstance()
+    {
+            if (!isset(self::$instance)) {
+                self::$instance = new self();
+            }
+
+            return self::$instance;
+    }
+
+
 
     //true, ha bejelentkezett és false, ha nem tartalmazza az adatbázis
 public function login($felhasznaloNev, $jelszo){
-   /* if(isset($_COOKIE['PHPSESSID']))
-    {
-        echo 'The session ID has been store in a cookie'."<br>";
-    }*/
-    if(PHP_SESSION_DISABLED==session_status())
-        session_start();
     $pm = PersistenceManager::getInstance();
     $felhasznalo_adatok=array(
         'azon' => "{$felhasznaloNev}",
@@ -46,11 +42,8 @@ public function login($felhasznaloNev, $jelszo){
 
     //elotte letre kell hozni a session_start-tal egy sessiont-t, utana van ertelme ezt meghivni.
     public function logout(){
-        //Nem vagyok biztos benne, hogy ez igy tokeletes, de a test-eken eleg jol mukodgetett
-        if(PHP_SESSION_ACTIVE==session_status()) {
+        //Nem vagyok biztos benne, hogy ez igy tokeletes, de a test-eken eleg jol mukodgetett{
             unset($_SESSION['PHPSESSID']);
-            session_destroy();
-        }
     }
 
 
@@ -73,25 +66,5 @@ public function login($felhasznaloNev, $jelszo){
             return "nobody";
         }
     }
-/*
-    public function egyeb()
-    {
-//$_SESSION['teszt']='123';
 
-        $_SESSION['szamlalo']++;
-
-//$_SESSION['bejelentkezve_id']=123;
-
-//debug
-        echo "<pre>";
-        var_dump($_SESSION);
-        echo "</pre>";
-
-
-        $user = $autentikacio->login('elek', '123');
-
-        $autentikacio->logout();
-
-        $user = $autentikacio->getLoggedInUser();
-    }*/
 }
