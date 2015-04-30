@@ -27,6 +27,16 @@ return array(
           'class'=>'Ugyfelek_Site_Component',
           'params'=>array(),
           'allowed_slots'=>array('page')
+      ),
+      'sablon'=>array(
+          'class'=>'Urlap_sablonok_Site_Component',
+          'params'=>array(),
+          'allowed_slots'=>array('page')
+      ),
+      'igenyles'=>array(
+          'class'=>'Igenylesek_Site_Component',
+          'params'=>array(),
+          'allowed_slots'=>array('page')
       )
   ) 
 );

@@ -11,6 +11,6 @@ class Urlap_sablonok_Site_Component extends Site_Component{
     }
 
     function show(){
-
+        echo "<p>Sablonok site component</p>";
     }
 }

@@ -11,6 +11,6 @@ class Ugyfelek_Site_Component extends Site_Component{
     }
 
     function show(){
-
+        echo "<p> Hello ügyfél site komponens!</p>";
     }
 }

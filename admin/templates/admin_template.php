@@ -22,16 +22,10 @@ class Admin_Template extends Site_Template{
               <a href="?page=ugyfel"><span>Ügyfelek</span></a>
             </li>
             <li>
-              <a href="?page=termek"><span>Termékek</span></a>
+              <a href="?page=sablon"><span>Sablonok</span></a>
             </li>
             <li>
-              <a href="?page=ajanlat_keres"><span>Ajánlat kérések</span></a>
-            </li>
-            <li>
-              <a href="?page=ajanlat"><span>Ajánlatok</span></a>
-            </li>
-            <li>
-              <a href="?page=rendeles"><span>Rendelések</span></a>
+              <a href="?page=igenyles"><span>Igénylések</span></a>
             </li>
           </ul>
         </div>

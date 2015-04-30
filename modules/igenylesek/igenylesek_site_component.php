@@ -11,6 +11,6 @@ class Igenylesek_Site_Component extends Site_Component{
     }
 
     function show(){
-
+        echo "<p>Igenylesek site component</p>";
     }
 }
