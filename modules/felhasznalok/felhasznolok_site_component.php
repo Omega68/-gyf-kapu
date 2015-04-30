@@ -11,6 +11,6 @@ class Felhasznalok_Site_Component extends Site_Component{
     }
 
     function show(){
-
+        echo "<p> Hello Felhasználó site komponens!</p>";
     }
 }

@@ -6,7 +6,7 @@
  * Time: 8:23
  */
 
-class Ugyfelek_Loader extends AbstractLoader{
+class Felhasznalok_Loader extends AbstractLoader{
 
     /**
      * return:
@@ -17,7 +17,7 @@ class Ugyfelek_Loader extends AbstractLoader{
     {
         // protected function getFileNameForClass($classname){
         switch ($classname) {
-            case "Felhasznalok_Site_Component": return $this->myfolder."/felhasznalok_site_component.php";
+            case "Felhasznalok_Site_Component": return $this->myfolder."/felhasznolok_site_component.php";
             case "Felhasznalo" : return $this->myfolder."/felhasznalo.php";
             default:
                 return null;

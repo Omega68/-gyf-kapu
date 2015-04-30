@@ -16,5 +16,6 @@ return array(
   ,"Kitoltott_mezok_Loader"=>"/modules/kitoltott_mezok/loader.php"
   ,"Adminok_Loader"=>"/modules/adminok/loader.php"
   ,"Perzisztencia_Loader"=>"/modules/perzisztencia/loader.php"
+  ,"Felhasznalok_Loader"=>"/modules/felhasznalok/loader.php"
 );
 

@@ -17,6 +17,16 @@ return array(
     ,'uzenetek'=>array(
       'class'=>'Uzenetek_Site_Component'
       ,'allowed_slots'=>array()
-    )
+    ),
+     'felhasznalo'=>array(
+        'class'=>'Felhasznalok_Site_Component',
+        'params'=>array(),
+        'allowed_slots'=>array('page')
+    ),
+      'ugyfel'=>array(
+          'class'=>'Ugyfelek_Site_Component',
+          'params'=>array(),
+          'allowed_slots'=>array('page')
+      )
   ) 
 );
