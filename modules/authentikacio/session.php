@@ -40,21 +40,17 @@ public function login($felhasznaloNev, $jelszo){
 
 }
 
-    //elotte letre kell hozni a session_start-tal egy sessiont-t, utana van ertelme ezt meghivni.
     public function logout(){
         //Nem vagyok biztos benne, hogy ez igy tokeletes, de a test-eken eleg jol mukodgetett{
             unset($_SESSION['PHPSESSID']);
     }
 
-
-    //eredetileg boolean változóval akartam true, és false értéket visszaadni, de a php-ban nem igazan mukodik vagy nem tudom,
-    // igy maradt a "logged", vagy "not logged" dolog
     public function isLogged(){
         if(isset($_SESSION['PHPSESSID'])){
-            return "logged";
+            return true;
         }
         else{
-            return "not logged";
+            return false;
         }
     }
 
@@ -63,7 +59,7 @@ public function login($felhasznaloNev, $jelszo){
             return $_SESSION['PHPSESSID'];
         }
         else{
-            return "nobody";
+            return false;
         }
     }
 
