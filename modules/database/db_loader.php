@@ -4,7 +4,7 @@ class DB_Loader extends AbstractLoader{
 
   protected function getFileNameForClass($classname){
     switch ($classname) {
-      case "Database":
+      case "DatabaseConnection":
         return $this->myfolder."/database.php"; 
     	break;
       case "DBConfig":

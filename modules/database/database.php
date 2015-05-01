@@ -1,6 +1,6 @@
 <?
 
-class Database{
+class DatabaseConnection{
 	protected $user, $password, $location, $dbname, $charset;
 	protected $resource = null;
 
