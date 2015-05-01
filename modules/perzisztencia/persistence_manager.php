@@ -28,7 +28,7 @@ class PersistenceManager{
     $result = $this->dbConnection->query($sql);
     if($result->num_rows == 1){
       $row = $result->fetch_assoc();
-      return $row['class']($row['id']);                      
+      return $row['class']($row['id']);
     }
     throw new Exception("Multiple rows affected.");
     
@@ -65,7 +65,35 @@ class PersistenceManager{
        // throw new Exception("Multiple rows affected.");
     }
 
-    public function getAllObjects($class){
+    /*
+    * return a megadott táblával, paraméterekkel rendelkező objects, limit a menyiség, és offset a start rész,
+    * order azt jelöli ami szerint rendezni kell, default értékben növekvő, true érték esetén csökkenő lesz
+    */
+    public function getObjectsByFieldLimitOffsetOrderBy($class, $params=null, $limit=null,$offset=null, $order=null, $isDesc=false){
+        $sql = sprintf("SELECT * FROM %s WHERE", $class);
+        $counter=0;
+        foreach($params as $key=>$value) {
+            $sql .= " " . $key . " = " . " '".$value."'";
+            $counter++;
+            if($counter<count($params))
+                $sql.=" and";
+
+        }
+        if($order!=null){
+            $sql.=" ORDER BY ".$order;
+            if($isDesc==true)
+                $sql.=" DESC";
+            else
+                $sql.=" ASC";
+        }
+        if($limit!=null) {
+            $sql .= " LIMIT " . $limit;
+            if($offset!=null)
+                $sql.=" OFFSET ".$offset;
+        }
+	}
+
+public function getAllObjects($class){
         $sql = sprintf("SELECT * FROM %s", strtolower($class));
         $result = $this->dbConnection->query($sql);
         $count=0;

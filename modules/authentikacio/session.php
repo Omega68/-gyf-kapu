@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: nor
+ * User: norbert
  * Date: 2015.04.18.
  * Time: 17:31
  */
 
-class Authentication
+class Authentication extends Site_Authenticator
 {
     static private $instance;
 
@@ -29,7 +29,7 @@ public function login($felhasznaloNev, $jelszo){
         'jelszo' => "{$jelszo}"
     );
     //a formalis parameterlistaban szereplo valtozokkal megnezi, hogy van-e ilyen felhasznalo az adatbazisban
-    $users=$pm->getObjectsByField('felhasznalo',$felhasznalo_adatok);
+    $users=$pm->getObjectsByField('Felhasznalo',$felhasznalo_adatok);
     //itt megnezi, hogy visszateresi ertek milyen, ha megfelelo az azonosito-t belerakja a $_SESSION tombe
     if(is_array($users) && count($users)==1) {
         if($felhasznalo=$users[0]->getFelhasznaloFields()['azon']==$felhasznalo_adatok['azon']);
@@ -41,7 +41,7 @@ public function login($felhasznaloNev, $jelszo){
 }
 
     public function logout(){
-        //Nem vagyok biztos benne, hogy ez igy tokeletes, de a test-eken eleg jol mukodgetett{
+        //Nem vagyok biztos benne, hogy ez igy tokeletes, de a test-eken eleg jol mukodgetett
             unset($_SESSION['PHPSESSID']);
     }
 
@@ -63,4 +63,18 @@ public function login($felhasznaloNev, $jelszo){
         }
     }
 
+    /**
+     * return:
+     * true: ha felhasználó be van lépve és jogosult az adott belépési pontra
+     * false: ha felhasználó be nincs lépve vagy nem jogosult az adott belépési pontra
+     */
+    public function isUserAuthorized()
+    {
+        if(isset($_SESSION['PHPSESSID']) && !empty($_SESSION['PHPSESSID'])){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

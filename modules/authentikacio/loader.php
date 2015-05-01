@@ -18,6 +18,7 @@ class Authentikacio_Loader extends AbstractLoader{
         // protected function getFileNameForClass($classname){
         switch ($classname) {
             case "Authentication": return $this->myfolder."/session.php";
+            case "Authentication_Site_Component": return $this->myfolder."/authentication_site_component.php";
             default:
                 return null;
         }

@@ -4,7 +4,7 @@ return array(
   ,'template_class'=>"Admin_Template"
   ,'component_slots'=>array(
     'menu'=>''
-    ,'login'=>''
+    ,'login'=>'authentikacio'
     ,'page'=>''
     ,'messages'=>'uzenetek'
   )
@@ -37,6 +37,10 @@ return array(
           'class'=>'Igenylesek_Site_Component',
           'params'=>array(),
           'allowed_slots'=>array('page')
+      ),
+      'authentikacio'=>array(
+          'class' =>'Authentication_Site_Component',
+          'allowed_slots'=>array()
       )
   ) 
 );
