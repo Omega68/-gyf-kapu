@@ -1,6 +1,6 @@
 <?
 return array(
-  'default_menu'=>array('page' => 'teszt')
+  'default_menu'=>array('page' => 'profil')
   ,'template_class'=>"Admin_Template"
   ,'component_slots'=>array(
     'menu'=>''
@@ -41,6 +41,11 @@ return array(
       'authentikacio'=>array(
           'class' =>'Authentication_Site_Component',
           'allowed_slots'=>array()
-      )
+      ),
+        'profil'=>array(
+            'class' =>'Profil_Site_Component',
+            'allowed_slots'=>array(),
+            'allowed_slots'=>array('page')
+        )
   ) 
 );

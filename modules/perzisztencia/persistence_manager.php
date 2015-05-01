@@ -26,9 +26,10 @@ class PersistenceManager{
   final function getObject($id){
     $sql = sprintf("SELECT * FROM %s WHERE id = %s", $this->getMainObjectTableName(), $id);
     $result = $this->dbConnection->query($sql);
-    if($result->num_rows == 1){
-      $row = $result->fetch_assoc();
-      return $row['class']($row['id']);
+      echo $result->num_rows;
+    if(count($result) == 1){
+      $row = $result[0];
+        return new $row['class']($row['id']);
     }
     throw new Exception("Multiple rows affected.");
     

@@ -34,6 +34,17 @@ class Felhasznalok_Site_Component extends Site_Component {
         $ugyfel->setUgyfelFields(array('email'=>''));
         echo $ugyfel->to_string() . "<br/>";
 
+        $r=rand(1,150000);
+        $admin_adatok = array(
+            'azon'=>$r,
+            'jelszo' => 'alma1234'
+        );
+
+        $admin=$pm->createObject('Admin',$admin_adatok);
+
+        ?><h2>Admin adatok:</h2><?
+        echo $admin->to_string();
+
 
     }
 }

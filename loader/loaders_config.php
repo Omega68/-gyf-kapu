@@ -18,5 +18,6 @@ return array(
   ,"Perzisztencia_Loader"=>"/modules/perzisztencia/loader.php"
   ,"Felhasznalok_Loader"=>"/modules/felhasznalok/loader.php"
   ,"Error_Loader"=>"/modules/errors/loader.php"
+  ,"Profil_Loader"=>"/modules/profil/loader.php"
 );
 

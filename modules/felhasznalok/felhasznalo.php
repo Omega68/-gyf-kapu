@@ -45,5 +45,9 @@ class Felhasznalo extends Persistent{
     {
         // TODO: Implement validateFields() method.
     }
+
+    public function to_string(){
+        return implode(", ", $this->getFelhasznaloFields());
+    }
 }
 ?>
