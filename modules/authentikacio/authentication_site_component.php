@@ -28,17 +28,30 @@ class Authentication_Site_Component extends Site_Component{
     function show()
     {
         if(!$this->auth->isUserAuthorized()) {
-            echo '
+            ?>
             <form action="" method="post">
-             Azonosító:<input type="text" name="azon"><br>
-             Jelszó   :<input type="text" name="pass"><br>
-            <input type="submit" name="submit" value="Bejelentkezés">
-            </form>';
+             <table>
+                 <tr>
+                     <td>Azonosító:</td>
+                     <td><input type="text" name="azon"></td>
+                 </tr>
+                 <tr>
+                 <td>Jelszó:</td>
+                 <td><input type="password" name="pass"></td>
+                 </tr>
+            <tr>
+                <td colspan="2"><input type="submit" name="submit" value="Bejelentkezés"></td>
+            </tr>
+             </table>
+            </form>
+        <?
         }
         else{
-            echo '<form action="" method="post">
+         ?>
+            <form action="" method="post">
                     <input type="submit" name="logout" value="logout">
-            </form>';
+            </form>
+            <?
 
         }
     }

@@ -9,7 +9,7 @@ class Admin_Template extends Site_Template{
       <script src="/modules/moopage/moopage4.js"></script>
       <link rel="stylesheet" href="/admin/templates/perpetuum_template.css" type="text/css">
       <link rel="stylesheet" href="/admin/templates/menu.css" type="text/css">
-      <title>Admin</title>
+      <title>Ügyfélkapu</title>
      </head>
      <body>
       <div class="fixed_header">

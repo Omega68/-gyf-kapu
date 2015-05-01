@@ -13,7 +13,7 @@ class Admin_Login_Site_Template extends Site_Template{
      </head>
      <body>
       <center><h1>
-       Admin
+        Ügyfélkapu - Belépés
       </h1>
       </center>
       <div class= "login_box">
