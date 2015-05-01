@@ -1,7 +1,5 @@
 <?
 
-require_once("../database.php");
-
 class PersistenceManager{
 
  const OBJECT_TABLE_NAME = "object";

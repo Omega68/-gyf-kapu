@@ -1,11 +1,6 @@
 <?php
 
 class Igenyles extends Persistent{
- 
-  //protected static function getTableName() {
-  //       return 'igenyles';
-  //}
- 
  /**
   return hiba k�dok array
   

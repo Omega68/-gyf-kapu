@@ -17,8 +17,8 @@ class Mezok_Loader extends AbstractLoader{
     {
         // protected function getFileNameForClass($classname){
         switch ($classname) {
-            case "Mezok_Site_Component": return $this->myfolder."/mezok_site_component.php";
-            case "Mezo" : return $this->myfolder."/mezo.php";
+            case "Mezok_Site_Component": return $this->myfolder."/error_site_component.php";
+            case "Mezo" : return $this->myfolder."/error.php";
             default:
                 return null;
         }

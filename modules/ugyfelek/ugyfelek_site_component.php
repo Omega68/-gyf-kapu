@@ -11,6 +11,22 @@ class Ugyfelek_Site_Component extends Site_Component{
     }
 
     function show(){
-        echo "<p> Hello ügyfél site komponens!</p>";
+        ?><h2>Új ügyfél regisztrálása</h2>
+
+        <form action="?page=ugyfel">
+            <input type="submit" value="Submit">
+        </form>
+
+        <?
+
+
+        ?><h2>Ügyfelek</h2><?
+
+        $pm = PersistenceManager::getInstance();
+        $ugyfelek = $pm->getAllObjects("Ugyfel");
+        foreach($ugyfelek as $u){
+            echo "<p>". $u->to_string() ."</p>";
+        }
+
     }
 }

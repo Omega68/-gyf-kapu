@@ -5,7 +5,7 @@
 <?php
 require_once("../persistence_manager.php");
 require_once("../model/kitoltott_mezo.php");
-require_once("../model/mezo.php");
+require_once("../model/error.php");
 require_once("../model/urlap_sablon.php");
 require_once("../model/igenyles.php");
 
@@ -22,7 +22,7 @@ $mezo_adatok=array(
 
 //$mezo=$pm->createObject('mezo',$mezo_adatok);
 
-//echo 'Az új mezõ: ';
+//echo 'Az ï¿½j mezï¿½: ';
 
 //echo implode(', ',$mezo->getMezoFields()).'<br/>'; 
 
@@ -38,7 +38,7 @@ $urlap_adatok=array(
 $urlaper = new UrlapSablon();
 $urlaper->create($urlap_adatok);
 
-echo 'Az új ûrlapsablon: ';
+echo 'Az ï¿½j ï¿½rlapsablon: ';
 
 echo implode(', ',$urlaper->getUrlapSablonFields()).'<br/>'; 
 
@@ -51,7 +51,7 @@ $mezo_adatok2=array(
 
 $mezok=$urlaper->createMezo($mezo_adatok2);
 
-echo 'Az új mezõ a sablonhoz: ';
+echo 'Az ï¿½j mezï¿½ a sablonhoz: ';
 
 echo implode(', ',$mezok->getMezoFields()).'<br/>'; 
 */

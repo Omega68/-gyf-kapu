@@ -1,12 +1,10 @@
 <?php
 
 class Felhasznalo extends Persistent{
- //const TABLE_NAME="felhasznalo";
 
- private $azon;
- private $jelszo;
+ protected $azon;
+ protected $jelszo;
 
- 
  /**
   return hiba k�dok array
   
@@ -15,9 +13,9 @@ class Felhasznalo extends Persistent{
   */
   public function validate(array $params=null){
       $errors = array();
-      if(strlen($params['jelszo']) < 5 )
-          $errors[]='Tul rovid jelszo';
-
+      if(strlen($params['azon']) == 0 ){
+          $errors[]=Error::EMPTY_FIELD;
+      }
       return $errors;
   }
   
@@ -41,6 +39,11 @@ class Felhasznalo extends Persistent{
       return $this->setFields($values);
     }     
     
-    protected function onBeforeDelete(array $params=null) {}  
+    protected function onBeforeDelete(array $params=null) {}
+
+    function validateFields(array $params = null)
+    {
+        // TODO: Implement validateFields() method.
+    }
 }
 ?>

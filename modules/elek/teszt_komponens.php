@@ -66,7 +66,7 @@ A projektnek saját adatbázisa van . Ide kell majd dolgozni, és az adatbázis 
     echo "Példa adatbázis kérésre (nézd meg ezt a komponenst):<br>";
     echo "Aktuális adatbázis táblák:<br />";
     
-    $db=Database::getInstance();
+    $db=DatabaseConnection::getInstance();
     $res=$db->query("SHOW TABLES");
     //debug
     echo "<pre>";

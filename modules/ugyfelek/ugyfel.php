@@ -1,42 +1,52 @@
 <?php
 
 
-class Ugyfel extends Persistent
+class Ugyfel extends Felhasznalo
 {
-    const TABLE_NAME = "ugyfel";
-    private $azon;
     private $cim;
     private $email;
     private $telefon;
-    
-    
-    //protected function getTableName() {
-    //    return "ugyfel";
-    //}
-    
 
     protected function onAfterCreate(array $params = null) {
       $this->azon = $params['azon'];
       $this->cim=$params['cim'];
       $this->email=$params['email'];
       $this->telefon=$params['telefon'];
-      //TODO valami ilyesmi...
     }
 
 
     public function validate(array $params = null) {
         $errors = array();
          if(empty($params['azon']))
-         $errors[]='Nincs azon megadva';
+         $errors[]=array(Error::MANDATORY, "azon");
          if(empty($params['cim']))
-         $errors[]='Nincs cim megadva';
+         $errors[]= array(Error::MANDATORY, "cim");
          if(empty($params['email']))
-         $errors[]='Nincs email megadva';
+         $errors[]= array(Error::MANDATORY, "email");
          if(empty($params['telefon']))
-         $errors[]='Nincs telefon megadva';
+         $errors[]= array(Error::MANDATORY, "telefon");
+        $allFields = $this->validateFields($params);
+        foreach($allFields as $e){
+            $errors[] = $e;
+        }
         return $errors;
     }
-    
+
+    public function validateFields(array $params = null){
+        $errors = array();
+        foreach($params as $key => $value){
+            if(empty($value)){
+                $errors[] = array(Error::EMPTY_FIELD, $key);
+                continue;
+            }
+            if($key == "jelszo"){
+                if(strlen($value) < 5 )
+                    $errors[] = array(Error::SHORT_PASSWORD, $key);
+            }
+        }
+        return $errors;
+    }
+
     //TODO: getterek, setterek a Persistent-ben lévő getFields és setFields segítségével
     public function getUgyfelFields(){
       return $this->getFields();
@@ -44,6 +54,10 @@ class Ugyfel extends Persistent
     
     public function setUgyfelFields(array $values){
       return $this->setFields($values);
+    }
+
+    public function to_string(){
+        return implode(", ", $this->getUgyfelFields());
     }
     
     protected function onBeforeDelete(array $params=null) {}

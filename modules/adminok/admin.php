@@ -38,5 +38,12 @@ class Admin extends Felhasznalo{
       return $this->setFields($values);
     } 
     
-    protected function onBeforeDelete(array $params=null) {}      
+    protected function onBeforeDelete(array $params=null) {}
+
+    public function ujUgyfel($adatok){
+        $pm = PersistenceManager::getInstance();
+        $u = $pm->createObject("Ugyfel", $adatok );
+        return $u;
+
+    }
 }

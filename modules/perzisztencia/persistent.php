@@ -140,7 +140,7 @@ abstract class Persistent{
       $s[] = $key."='".$value."'";
     }
 
-      if($this->validationError($this->validate($field_values)))
+      if($this->validationError($this->validateFields($field_values)))
           return;
 
 
@@ -179,8 +179,10 @@ abstract class Persistent{
   Alosztály implementálja  
   */
   abstract function validate(array $params=null);
-  
-  /**
+  abstract function validateFields(array $params=null);
+
+
+    /**
   return void
   
   Tetszőleges létrehozási tevékenység. 
@@ -193,8 +195,8 @@ abstract class Persistent{
 
         if(count($errors) > 0 ){
             echo "validation error: ";
-            foreach( $errors as $s)
-                echo $s . "<br/>";
+            foreach( $errors as $e )
+                echo Error::get_error_msg($e[0]) . " Mező: " . $e[1] . "<br/>";
             return true;
         }
 

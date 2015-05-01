@@ -4,15 +4,15 @@ require_once("../persistence_manager.php");
 
 abstract class Persistent{
   private $id;
-  private $persistanceManager;
+  private $pm;
   private $db;
   private $objectTable;
 
   final function __construct($id=null){
     $this->id = $id;
-    $this->persistanceManager = PersistenceManager::getInstance();
+    $this->pm = PersistenceManager::getInstance();
     $this->db = DatabaseConnection::getInstance();
-    $this->objectTable = $this->persistanceManager->getMainObjectTableName();
+    $this->objectTable = $this->pm->getMainObjectTableName();
   }
   
   final function getID(){
@@ -137,15 +137,16 @@ abstract class Persistent{
   final protected function setFields(array $field_values){
     //megadott mezők beállítása a megfelelő táblákba
     $s = array();
+
     foreach($field_values as $key => $value){
       $s[] = $key."='".$value."'";
     }
-
       if($this->validationError($this->validate($field_values)))
           return;
 
 
-      $sql = sprintf("UPDATE %s SET %s WHERE id = %s", strtolower(get_class($this)), implode(", ", $s) , $this->id);
+
+    $sql = sprintf("UPDATE %s SET %s WHERE id = %s", strtolower(get_class($this)), implode(", ", $s) , $this->id);
     $result = $this->db->query($sql);
     return $result;
   }
