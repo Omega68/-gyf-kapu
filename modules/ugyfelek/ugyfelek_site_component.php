@@ -43,7 +43,6 @@ class Ugyfelek_Site_Component extends Site_Component{
         echo '<form method="post">
             <div class="form_box">
                 <h1>Ugyfelek adatai</h1>
-                <input type="submit" name="uj_ugyfel" value="Uj ugyfel" class="save_button">
             </div>
             <br/>
             <br/>
@@ -54,6 +53,7 @@ class Ugyfelek_Site_Component extends Site_Component{
                             <th>cim</th>
                             <th>email</th>
                             <th>telefon</th>
+                            <th>jelszo</th>
                         </tr>
                         ';
                             $count=count($felhasznalok);
@@ -62,6 +62,7 @@ class Ugyfelek_Site_Component extends Site_Component{
                                 echo '<td>'.$felhasznalok[$i]->getUgyfelFields()['azon'].'</td>';
                                 echo '<td>'.$felhasznalok[$i]->getUgyfelFields()['cim'].'</td>';
                                 echo '<td>'.$felhasznalok[$i]->getUgyfelFields()['telefon'].'</td>';
+                                echo '<td>'.$felhasznalok[$i]->getUgyfelFields()['jelszo'].'</td>';
                                 echo '</tr>';
                             }
                         echo '
