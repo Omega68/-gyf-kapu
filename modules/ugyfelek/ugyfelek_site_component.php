@@ -19,24 +19,9 @@ class Ugyfelek_Site_Component extends Site_Component{
     }
 
     function show(){
-       /* ?><h2>Új ügyfél regisztrálása</h2>
-
-        <form action="?page=ugyfel">
-            <input type="submit" name="" value="Submit">
-        </form>
-
-        <?
-
-
-        ?><h2>Ügyfelek</h2><?
-
-        $pm = PersistenceManager::getInstance();
-        $ugyfelek = $pm->getAllObjects("Ugyfel");
-        foreach($ugyfelek as $u){
-            echo "<p>". $u->to_string() ."</p>";
-        }*/
-        $felhasznalok=$this->perm->getAllObjects("Ugyfel");
-        echo '<form method="post">
+        $ugyfelek=$this->perm->getAllObjects("Ugyfel");
+        ?>
+        <form method="post">
             <div class="form_box">
                 <h1>Ugyfelek adatai</h1>
             </div>
@@ -45,23 +30,24 @@ class Ugyfelek_Site_Component extends Site_Component{
             <div class="listtable">
                 <table style="width:100%">
                         <tr>
-                            <th>azon</th>
-                            <th>cim</th>
-                            <th>email</th>
-                            <th>telefon</th>
-                            <th>jelszo</th>
+                            <th>Azonosító</th>
+                            <th>Cim</th>
+                            <th>E-mail</th>
+                            <th>Telefon</th>
+
                         </tr>
-                        ';
-                            $count=count($felhasznalok);
-                            for($i=0;$i<$count;$i++){
+
+                    <?
+                            foreach($ugyfelek as $f){
                                 echo '<tr>';
-                                echo '<td>'.$felhasznalok[$i]->getUgyfelFields()['azon'].'</td>';
-                                echo '<td>'.$felhasznalok[$i]->getUgyfelFields()['cim'].'</td>';
-                                echo '<td>'.$felhasznalok[$i]->getUgyfelFields()['telefon'].'</td>';
-                                echo '<td>'.$felhasznalok[$i]->getUgyfelFields()['jelszo'].'</td>';
+                                    echo '<td>'.$f->getUgyfelFields()['azon'].'</td>';
+                                    echo '<td>'.$f->getUgyfelFields()['cim'].'</td>';
+                                    echo '<td>'.$f->getUgyfelFields()['email'].'</td>';
+                                    echo '<td>'.$f->getUgyfelFields()['telefon'].'</td>';
+                                   // echo '<td>'.$f->getUgyfelFields()['jelszo'].'</td>';
                                 echo '</tr>';
                             }
-                        echo '
+                    ?>
                 </table>
             </div>
             <div class="pagination">
@@ -75,6 +61,8 @@ class Ugyfelek_Site_Component extends Site_Component{
                 </span>
                     Következő
                 </div>
-            </form>';
+            </form>
+
+    <?
     }
 }

@@ -15,15 +15,26 @@ class KitoltottMezo extends Persistent{
   public function validate(array $params=null){
   $errors = array();
          if(empty($params['azon']))
-         $errors[]='Nincs azon megadva';
+             $errors[]=array(Error::MANDATORY, "azon");
          if(empty($params['tartalom']))
-         $errors[]='Nincs tartalom megadva';
+             $errors[]=array(Error::MANDATORY, "tartalom");
         if(empty($params['mezo_azon']))
-         $errors[]='Nincs mezo_azon megadva';
+            $errors[]=array(Error::MANDATORY, "mezo_azon");
         if(empty($params['igenyles_azon']))
-         $errors[]='Nincs igenyles_azon megadva';
-  return $errors;
-  }
+            $errors[]=array(Error::MANDATORY, "igenyles_azon");
+      $allFields = $this->validateFields($params);
+      return array_merge($errors, $allFields);  }
+
+    public function validateFields(array $params = null){
+        $errors = array();
+        foreach($params as $key => $value) {
+            if (empty($value)) {
+                $errors[] = array(Error::EMPTY_FIELD, $key);
+                continue;
+            }
+        }
+        return $errors;
+    }
   
   /**
   return void

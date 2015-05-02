@@ -28,7 +28,9 @@ class Felhasznalok_Site_Component extends Site_Component {
         $ugyfel=$pm->createObject('Ugyfel',$ugyfel_adatok);
 
         ?><h2>Ügyfél adatok:</h2><?
-        echo $ugyfel->to_string();
+        if($ugyfel)
+            echo $ugyfel->to_string();
+
 
         echo "<p>Adatok módosítása:<br/> új e-mail: (üres)</p>";
         $ugyfel->setUgyfelFields(array('email'=>''));
@@ -41,9 +43,6 @@ class Felhasznalok_Site_Component extends Site_Component {
         );
 
         $admin=$pm->createObject('Admin',$admin_adatok);
-
-        ?><h2>Admin adatok:</h2><?
-        echo $admin->to_string();
 
 
     }

@@ -13,10 +13,11 @@ class Felhasznalo extends Persistent{
   */
   public function validate(array $params=null){
       $errors = array();
-      if(strlen($params['azon']) == 0 ){
-          $errors[]=Error::EMPTY_FIELD;
-      }
-      return $errors;
+      if(empty($params['azon']))
+          $errors[]=array(Error::MANDATORY, "azon");
+
+      $allFields = $this->validateFields($params);
+      return array_merge($errors, $allFields);
   }
   
   /**
@@ -43,7 +44,19 @@ class Felhasznalo extends Persistent{
 
     function validateFields(array $params = null)
     {
-        // TODO: Implement validateFields() method.
+        $errors = array();
+        foreach($params as $key => $value) {
+            if (empty($value)) {
+                $errors[] = array(Error::EMPTY_FIELD, $key);
+                continue;
+            }
+            if($key == "jelszo"){
+                if(strlen($value) < 5 )
+                    $errors[] = array(Error::SHORT_PASSWORD, $key);
+            }
+        }
+        return $errors;
+
     }
 
     public function to_string(){

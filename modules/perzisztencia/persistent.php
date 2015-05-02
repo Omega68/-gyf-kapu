@@ -112,13 +112,15 @@ abstract class Persistent{
     }
     $table = strtolower($classes[0]);
     for($i=1; $i<count($classes); $i++)
-      $table = $table.sprintf(" INNER JOIN %s USING(id)", strtolower($classes[$i]));
+    $table = $table.sprintf(" LEFT JOIN %s USING(id)", strtolower($classes[$i]));
+
 
     if (isset($field_names))
       $sql = sprintf("SELECT %s FROM %s WHERE id = %s", implode(',', $field_names), strtolower(get_class($this)), $this->id);
     else {
-      //$sql = sprintf("SELECT * FROM %s WHERE id  = %s", strtolower(get_class($this)), $this->id);
-      $sql = sprintf("SELECT * FROM %s WHERE id  = %s", $table, $this->id);
+      $sql = sprintf("SELECT * FROM %s WHERE id  = %s", strtolower($table), $this->id);
+
+        //$sql = sprintf("SELECT * FROM %s WHERE id  = %s", $table, $this->id);
     }
     $result = $this->db->query($sql);
     if (!isset($result)) {

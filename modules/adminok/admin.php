@@ -1,25 +1,28 @@
 <?php
 
 class Admin extends Felhasznalo{
- 
-  //protected static function getTableName() {
-  //      return 'admin';
-  //}
- 
+
  /**
   return hiba k�dok array
   
   L�trehoz�si/m�dos�t�si param�terek ellen�rz�se
   Aloszt�ly implement�lja  
   */
-  public function validate(array $params=null){
-  $errors = array();
-         if(empty($params['azon']))
-         $errors[]='Nincs azon megadva';
-  
-  return $errors;
+  public function validate(array $params=null)
+  {
+      $errors = array();
+      if (empty($params['azon']))
+          $errors[] = array(Error::MANDATORY, "azon");
+
+      $allFields = $this->validateFields($params);
+      return array_merge($errors, $allFields);
+     // return $errors;
   }
-  
+    function validateFields(array $params = null)
+    {
+        return parent::validateFields($params);
+    }
+
   /**
   return void
   

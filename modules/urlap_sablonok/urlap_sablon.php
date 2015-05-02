@@ -15,15 +15,27 @@ class UrlapSablon extends Persistent{
   public function validate(array $params=null){
   $errors = array();
          if(empty($params['azon']))
-         $errors[]='Nincs azon megadva';
+             $errors[]=array(Error::MANDATORY, "azon");
           if(empty($params['letrehozas_datuma']))
-         $errors[]='Nincs letrehozas_datuma megadva';
+              $errors[]=array(Error::MANDATORY, "letrehozas_datuma");
           if(empty($params['allapot']))
-         $errors[]='Nincs allapot megadva';
+              $errors[]=array(Error::MANDATORY, "allapot");
           if(empty($params['admin_azon']))
-         $errors[]='Nincs admin_azon megadva';
-  return $errors;
-  }
+              $errors[]=array(Error::MANDATORY, "admin_azon");
+
+      $allFields = $this->validateFields($params);
+      return array_merge($errors, $allFields);  }
+
+    public function validateFields(array $params = null){
+        $errors = array();
+        foreach($params as $key => $value) {
+            if (empty($value)) {
+                $errors[] = array(Error::EMPTY_FIELD, $key);
+                continue;
+            }
+        }
+        return $errors;
+    }
   
   /**
   return void

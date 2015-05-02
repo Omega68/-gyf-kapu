@@ -15,6 +15,9 @@ class Admin_Template extends Site_Template{
       <div class="fixed_header">
         <div class="menu">
           <ul>
+              <li>
+                  <a href="?page=profil"><span>Profil</span></a>
+              </li>
             <li>
               <a href="?page=felhasznalo"><span>Felhasználók</span></a>
             </li>

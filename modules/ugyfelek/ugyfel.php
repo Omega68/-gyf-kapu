@@ -26,18 +26,23 @@ class Ugyfel extends Felhasznalo
          if(empty($params['telefon']))
          $errors[]= array(Error::MANDATORY, "telefon");
         $allFields = $this->validateFields($params);
-        foreach($allFields as $e){
-            $errors[] = $e;
-        }
-        return $errors;
+        return array_merge($errors, $allFields);
     }
 
     public function validateFields(array $params = null){
         $errors = array();
-        foreach($params as $key => $value){
-            if(empty($value)){
+        foreach($params as $key => $value) {
+            if (empty($value)) {
                 $errors[] = array(Error::EMPTY_FIELD, $key);
                 continue;
+            }
+            if ($key == "azon") {
+                if (!is_numeric($value))
+                    $errors[] = array(Error::NOT_NUMERIC, $key);
+            }
+            if ($key == "email") {
+                if (strpos($value, '@') == false)
+                    $errors[] = array(Error::NOT_EMAIL, $key);
             }
             if($key == "jelszo"){
                 if(strlen($value) < 5 )

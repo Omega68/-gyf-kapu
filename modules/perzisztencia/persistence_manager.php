@@ -93,32 +93,19 @@ class PersistenceManager{
                 $sql.=" OFFSET ".$offset;
         }
 	}
-/*
-public function getAllObjects($class){
+
+    public function getAllObjects($class){
         $sql = sprintf("SELECT * FROM %s", strtolower($class));
         $result = $this->dbConnection->query($sql);
-        $count=0;
         $objects=array();
+        $count=0;
         foreach($result as $key => $value){
+            if(!empty($value)){
             $ojb=new $class($result[$count]['id']);
             $objects[]=$ojb;
             if($count<count($result))
                 $count++;
-        }
-        return $objects;
-    }
-  */
-    /** Szerintem pedig így kéne kinéznie egy ilyen metódusnak */
-    public function getAllObjects($class){
-        $sql = sprintf("SELECT * FROM %s", $class);
-        $result = $this->dbConnection->query($sql);
-        $objects=array();
-        $count=0;
-        foreach($result as $key => $value){
-            $ojb=new $class($result[$count]['id']);
-            $objects[]=$ojb;
-            if($count<count($result))
-                $count++;
+            }
         }
         return $objects;
     }
@@ -144,12 +131,29 @@ public function getAllObjects($class){
     //Ha nem volt hiba, akkor létrehozzuk az objektumot, és visszaadjuk
     if (!$errors){
       $object->create($params);
+        unset($errors);
       return $object;
     } else {
+        if($this->validationError($errors))
+            return;
         return null;
     }
-    
+
+
   }
+
+    private function validationError($errors){
+
+        if(count($errors) > 0 ){
+            echo "validation error: ";
+            foreach( $errors as $e )
+                echo Error::get_error_msg($e[0]) . " Mező: " . $e[1] . "<br/>";
+            return true;
+        }
+
+        return false;
+
+    }
   
   /**
   return table name string

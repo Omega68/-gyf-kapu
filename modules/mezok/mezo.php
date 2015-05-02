@@ -15,15 +15,27 @@ class Mezo extends Persistent{
   public function validate(array $params=null){
   $errors = array();
          if(empty($params['azon']))
-         $errors[]='Nincs azon megadva';
+             $errors[]=array(Error::MANDATORY, "azon");
           if(empty($params['tipus']))
-         $errors[]='Nincs tipus megadva';
+              $errors[]=array(Error::MANDATORY, "tipus");
           if(empty($params['kotelezoseg']))
-         $errors[]='Nincs kotelezoseg megadva';
+              $errors[]=array(Error::MANDATORY, "kotelezoseg");
           if(empty($params['sablon_azon']))
-         $errors[]='Nincs sablon_azon megadva';
-  return $errors;
-  }
+              $errors[]=array(Error::MANDATORY, "sablon_azon");
+
+      $allFields = $this->validateFields($params);
+      return array_merge($errors, $allFields);  }
+
+    public function validateFields(array $params = null){
+        $errors = array();
+        foreach($params as $key => $value) {
+            if (empty($value)) {
+                $errors[] = array(Error::EMPTY_FIELD, $key);
+                continue;
+            }
+        }
+        return $errors;
+    }
   
   /**
   return void
