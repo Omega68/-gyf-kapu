@@ -12,6 +12,50 @@ class Felhasznalok_Site_Component extends Site_Component {
     }
 
     function show(){
+        $pm = PersistenceManager::getInstance();
+        $ugyfelek=$pm->getAllObjects("Ugyfel");
+        ?>
+        <form method="post">
+            <div class="form_box">
+                <h1>Felhasználók adatai</h1>
+            </div>
+            <br/>
+            <br/>
+            <div class="listtable" style="width:50%">
+                <table style="width:100%">
+                    <tr>
+                        <th>Azonosító</th>
+                    </tr>
+
+                    <?
+                    foreach($ugyfelek as $f){
+                        echo '<tr>';
+                        echo '<td>'.$f->getFelhasznaloFields()['azon'].'</td>';
+                        echo '</tr>';
+                    }
+                    ?>
+                </table>
+            </div>
+            <div class="pagination">
+                <select>
+                    <option value="5" selected="">5</option>
+                    <option value="25">25</option>
+                    <option value="50" >50</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                </select> Előző
+                 <span class="pagination_page_number">
+                        <span class="pagination_active_page_number">1</span>
+                </span>
+                Következő
+            </div>
+        </form>
+
+    <?
+
+    }
+
+    private function test(){
         echo "<h1>Felhasználók</h1>";
 
         $pm = PersistenceManager::getInstance();

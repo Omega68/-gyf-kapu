@@ -15,13 +15,18 @@ class Ugyfelek_Site_Component extends Site_Component{
     }
 
     function process(){
+        if(isset($_POST['deleteButton']) && isset($_POST['deleteAzon'])){
+            $azon = $_POST['deleteAzon'];
+            $u = $this->perm->getObjectsByField("Ugyfel", array('azon'=>$azon))[0];
+            $u->delete();
+        }
 
     }
 
     function show(){
         $ugyfelek=$this->perm->getAllObjects("Ugyfel");
         ?>
-        <form method="post">
+
             <div class="form_box">
                 <h1>Ugyfelek adatai</h1>
             </div>
@@ -34,7 +39,7 @@ class Ugyfelek_Site_Component extends Site_Component{
                             <th>Cim</th>
                             <th>E-mail</th>
                             <th>Telefon</th>
-
+                            <th>Törlés</th>
                         </tr>
 
                     <?
@@ -44,13 +49,20 @@ class Ugyfelek_Site_Component extends Site_Component{
                                     echo '<td>'.$f->getUgyfelFields()['cim'].'</td>';
                                     echo '<td>'.$f->getUgyfelFields()['email'].'</td>';
                                     echo '<td>'.$f->getUgyfelFields()['telefon'].'</td>';
-                                   // echo '<td>'.$f->getUgyfelFields()['jelszo'].'</td>';
+                                    ?><td> <form action="" method="post">
+                                                    <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott ügyfelet?')" >
+                                                    <input type="hidden" name="deleteAzon" value="<? echo $f->getUgyfelFields()['azon'] ?>">
+                                                </form></td>
+                                    <?
+
+                                // echo '<td>'.$f->getUgyfelFields()['jelszo'].'</td>';
                                 echo '</tr>';
                             }
                     ?>
                 </table>
             </div>
             <div class="pagination">
+                <form action="" method="post">
                  <select>
                         <option value="50" selected="">50</option>
                         <option value="100">100</option>
@@ -60,9 +72,8 @@ class Ugyfelek_Site_Component extends Site_Component{
                         <span class="pagination_active_page_number">1</span>
                 </span>
                     Következő
+                </form>
                 </div>
-            </form>
-
     <?
     }
 }
