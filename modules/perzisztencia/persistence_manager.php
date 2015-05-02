@@ -92,7 +92,63 @@ class PersistenceManager{
             if($offset!=null)
                 $sql.=" OFFSET ".$offset;
         }
+        $result = $this->dbConnection->query($sql);
+        $count=0;
+        $objects=array();
+        foreach($result as $key => $value){
+            $ojb=new $class($result[$count]['id']);
+            $objects[]=$ojb;
+            if($count<count($result))
+                $count++;
+        }
+        return $objects;
 	}
+
+    /**
+     * Egy metódus, mely kisebb, vagy nagyobb összehasonlításokat végzi
+     *
+     * @param $class az osztály, ahonnan le kívánunk kérdezni
+     * @param $param az osztály azon attribútuma, amivel az összehasonlítást végezzük
+     * @param $value az érték, aminél nagyobb attribútumú object-ek lesznek kiválasztva
+     * @param $limit a lekérdezendő elemek száma
+     * @param $offset honnan kezdje a lekérdezést
+     * @param $bigger default értékben false így kisebb elemmekkel tér vissza
+     * @param $isDesc alap értékben false, true értékben növekvő lesz
+     * @param $order rendezzen-e az elemek szerint
+     *
+     * return object-ek melyek egy adott feltételnek megfelelnek
+     */
+    public function getObjectsBiggerOrLess($class,$param,$value,$limit=null,$offset=null, $bigger=false,$order=null, $isDesc=false){
+        $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        $counter=0;
+        //param-nak oszlop névnek kell lennie
+        if($bigger)
+            $sql .= " " . $param . " > " . " '".$value."'";
+        else
+            $sql.=" ".$param." < "." '".$value."'";
+        if($order!=null){
+                $sql.=" ORDER BY ".$order;
+            if($isDesc==true)
+                $sql.=" DESC";
+            else
+                $sql.=" ASC";
+        }
+        if($limit!=null) {
+            $sql .= " LIMIT " . $limit;
+            if($offset!=null)
+                $sql.=" OFFSET ".$offset;
+        }
+        $result = $this->dbConnection->query($sql);
+        $count=0;
+        $objects=array();
+        foreach($result as $key => $value){
+            $ojb=new $class($result[$count]['id']);
+            $objects[]=$ojb;
+            if($count<count($result))
+                $count++;
+        }
+        return $objects;
+    }
 
     public function getAllObjects($class){
         $sql = sprintf("SELECT * FROM %s", strtolower($class));
