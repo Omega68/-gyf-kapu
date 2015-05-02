@@ -64,6 +64,17 @@ class Ugyfelek_Site_Component extends Site_Component{
                         echo '
                 </table>
             </div>
+            <div class="pagination">
+                 <select>
+                        <option value="50" selected="">50</option>
+                        <option value="100">100</option>
+                        <option value="500">500</option>
+                        </select> Előző
+                 <span class="pagination_page_number">
+                        <span class="pagination_active_page_number">1</span>
+                </span>
+                    Következő
+                </div>
             </form>';
     }
 }
