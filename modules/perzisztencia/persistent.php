@@ -178,8 +178,8 @@ abstract class Persistent{
   Létrehozási/módosítási paraméterek ellenőrzése
   Alosztály implementálja  
   */
-  abstract function validate(array $params=null);
-  abstract function validateFields(array $params=null);
+  abstract function validate(array $params=null);/*
+  abstract function validateFields(array $params=null);*/
 
 
     /**

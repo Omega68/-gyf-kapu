@@ -9,16 +9,12 @@
 class Ugyfelek_Site_Component extends Site_Component{
 
     private $perm;
-    private $uj_ugyfel_form=false;
 
     protected function afterConstruction(){
         $this->perm=PersistenceManager::getInstance();
     }
 
     function process(){
-        if(!empty($_POST['new_ugyfel'])){
-            $this->uj_ugyfel_form=true;
-        }
 
     }
 
