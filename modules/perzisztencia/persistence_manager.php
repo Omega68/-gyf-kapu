@@ -93,7 +93,7 @@ class PersistenceManager{
                 $sql.=" OFFSET ".$offset;
         }
 	}
-
+/*
 public function getAllObjects($class){
         $sql = sprintf("SELECT * FROM %s", strtolower($class));
         $result = $this->dbConnection->query($sql);
@@ -107,7 +107,21 @@ public function getAllObjects($class){
         }
         return $objects;
     }
-  
+  */
+    /** Szerintem pedig így kéne kinéznie egy ilyen metódusnak */
+    public function getAllObjects($class){
+        $sql = sprintf("SELECT * FROM %s", $class);
+        $result = $this->dbConnection->query($sql);
+        $objects=array();
+        $count=0;
+        foreach($result as $key => $value){
+            $ojb=new $class($result[$count]['id']);
+            $objects[]=$ojb;
+            if($count<count($result))
+                $count++;
+        }
+        return $objects;
+    }
   /**
   return hiba kódok array
   */

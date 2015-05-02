@@ -49,7 +49,7 @@ class Mezo extends Persistent{
       return Persistent::getSelectFields($s,'Mezo','sablon_azon',$param);    
     }
     
-    protected function onBeforeDelete(array $params=null) {}  
+    protected function onBeforeDelete(array $params=null) {}
 }
 
   ?>
