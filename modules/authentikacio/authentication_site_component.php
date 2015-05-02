@@ -9,15 +9,19 @@
 class Authentication_Site_Component extends Site_Component{
 
     private $auth;
+    private $error;
 
     protected function afterConstruction(){
         $this->auth=Authentication::getInstance();
+        $this->error = false;
     }
 
     function process()
     {
         if (isset($_POST['submit'])) {
-            $this->auth->login($_REQUEST['azon'],$_REQUEST['pass']);
+            if(!$this->auth->login($_REQUEST['azon'],$_REQUEST['pass'])){
+                $this->error = true;
+            }
         }
 
         if(isset($_POST['logout'])){
@@ -39,9 +43,11 @@ class Authentication_Site_Component extends Site_Component{
                  <td>Jelszó:</td>
                  <td><input type="password" name="pass"></td>
                  </tr>
-            <tr>
-                <td colspan="2"><input type="submit" name="submit" value="Bejelentkezés"></td>
-            </tr>
+                 <tr><td colspan="2"><input type="submit" name="submit" value="Bejelentkezés"></td></tr>
+                 <? if($this->error){
+                     echo '<tr><td colspan="2">Sikertelen bejelentkezés!</td></tr>';
+                 }?>
+
              </table>
             </form>
         <?
