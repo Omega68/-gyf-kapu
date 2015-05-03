@@ -66,6 +66,44 @@ class PersistenceManager{
        // throw new Exception("Multiple rows affected.");
     }
 
+    /**
+     * Általános lekérdező metódus, mely nem szűr paraméterekre
+     *
+     * @param $class Annak az osztálynak a neve, ahonnan lekérdezünk
+     * @param null $limit Mennyit
+     * @param null $offset Honnan
+     * @param bool $order legyen rendezve? (default: false)
+     * @param bool $isDesc csökkenő? (default: false)
+     *
+     * @return visszatérési érték maguk az object-ek
+     */
+    public function getObjectsByLimitOffsetOrderBy($class,$limit=null,$offset=null,$order=null,$isDesc=false){
+        $sql = sprintf("SELECT * FROM %s ", strtolower($class));
+        $counter=0;
+        if($order!=null){
+            $sql.=" ORDER BY ".$order;
+            if($isDesc==true)
+                $sql.=" DESC";
+            else
+                $sql.=" ASC";
+        }
+        if($limit!=null) {
+            $sql .= " LIMIT " . $limit;
+            if($offset!=null)
+                $sql.=" OFFSET ".$offset;
+        }
+        $result = $this->dbConnection->query($sql);
+        $count=0;
+        $objects=array();
+        foreach($result as $key => $value){
+            $ojb=new $class($result[$count]['id']);
+            $objects[]=$ojb;
+            if($count<count($result))
+                $count++;
+        }
+        return $objects;
+    }
+
     /*
     * return a megadott táblával, paraméterekkel rendelkező objects, limit a menyiség, és offset a start rész,
     * order azt jelöli ami szerint rendezni kell, default értékben növekvő, true érték esetén csökkenő lesz
