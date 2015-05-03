@@ -19,13 +19,13 @@ class Ugyfelek_Site_Component extends Site_Component{
     }
 
     function process(){
-        //echo $_POST['selected'].' '.$_POST['next'].' '.$_POST['previous'];
+        echo $_POST['selected'].' '.$_POST['next'].' '.$_POST['previous'];
         if(isset($_POST['deleteButton']) && isset($_POST['deleteAzon'])){
             $azon = $_POST['deleteAzon'];
             $u = $this->perm->getObjectsByField("Ugyfel", array('azon'=>$azon))[0];
             $u->delete();
         }
-        if(isset($_POST['selected']) && !isset($_POST['previous'])){
+        if(isset($_POST['selected']) && !isset($_POST['previous']) && !isset($_POST['next'])){
             if($_POST['selected']==50){
                 $this->limit=50;
                 $this->offset=0;
@@ -44,17 +44,29 @@ class Ugyfelek_Site_Component extends Site_Component{
                 if(!$this->offset==0){
                     $this->offset-=50;
                     $this->paginationNumber--;
+                    $this->limit=50;
+                }else{
+                    $this->limit=50;
+                    $this->offset=0;
                 }
             }else if($_POST['selected']==100 && $this->paginationNumber>0){
                 if(!$this->offset==0 && !$this->offset==100){
                     $this->offset-=100;
                     $this->paginationNumber--;
+                    $this->limit=100;
+                }else{
+                    $this->limit=100;
+                    $this->offset=0;
                 }
             }
             else if($_POST['selected']==500 && $this->paginationNumber>0){
                 if(!$this->offset==0 && !$this->offset==500){
                     $this->offset-=500;
                     $this->paginationNumber--;
+                    $this->limit=500;
+                }else{
+                    $this->limit=500;
+                    $this->offset=0;
                 }
             }
         }
