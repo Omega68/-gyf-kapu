@@ -1,5 +1,5 @@
 <html>
-<head><title>Ügyfél teszt</title></head>
+<head><title>ï¿½gyfï¿½l teszt</title></head>
 <body>
 <h1>Teszt</h1>
 <?php
@@ -22,17 +22,17 @@ $felhasznalo_adatok=array(
 //$felhasznalo=$pm->createObject('felhasznalo',$felhasznalo_adatok);
 $felhasznalo = new Felhasznalo();
 $felhasznalo->create($felhasznalo_adatok);
-echo 'Az új felhasználó: ';
+echo 'Az ï¿½j felhasznï¿½lï¿½: ';
 
 echo implode(', ',$felhasznalo->getFelhasznaloFields()).'<br/>';
 
 echo $br . $br;
-echo "Adatok módosítása:<br/> Új jelszó: alma<br/>";
+echo "Adatok mï¿½dosï¿½tï¿½sa:<br/> ï¿½j jelszï¿½: alma<br/>";
 $felhasznalo->setFelhasznaloFields(array('jelszo'=>'alma'));
 echo implode(', ',$felhasznalo->getFelhasznaloFields()).'<br/>';
 
 echo $br . $br;
-echo "Adatok módosítása:<br/> Új jelszó: alma1234<br/>";
+echo "Adatok mï¿½dosï¿½tï¿½sa:<br/> ï¿½j jelszï¿½: alma1234<br/>";
 $felhasznalo->setFelhasznaloFields(array('jelszo'=>'alma1234'));
 echo implode(', ',$felhasznalo->getFelhasznaloFields()).'<br/>';
 echo $br . $br;
@@ -48,7 +48,7 @@ $ugyfel->create($ugyfel_adatok);
 //$ugyfel=$pm->createObject('ugyfel',$ugyfel_adatok);
 
 
-echo 'Az új ügyfél: ';
+echo 'Az ï¿½j ï¿½gyfï¿½l: ';
 
 echo implode(', ',$ugyfel->getUgyfelFields()).'<br/>'; 
 
@@ -64,7 +64,7 @@ $felhasznalo = new Felhasznalo();
 $felhasznalo->create($felhasznalo_adatok);
 //$felhasznalo=$pm->createObject('felhasznalo',$felhasznalo_adatok);
 
-echo 'Az új felhasználó: ';
+echo 'Az ï¿½j felhasznï¿½lï¿½: ';
 
 echo implode(', ',$felhasznalo->getFelhasznaloFields()).'<br/>';
 $admin_adatok = array(
@@ -75,7 +75,7 @@ $admin_adatok = array(
 $admin = new Admin();
 $admin->create($admin_adatok);
 
-echo 'Az új Admin: ';
+echo 'Az ï¿½j Admin: ';
 
 echo implode(', ',$admin->getAdminFields()).'<br/>'; 
 ?>
