@@ -60,7 +60,7 @@ class Ugyfelek_Site_Component extends Site_Component{
                     $this->sorszam=$this->offset;
                             foreach($ugyfelek as $f){
                                 echo '<tr>';
-                                    echo '<td>'.$this->sorszam.'</td>';
+                                    echo '<td>'.($this->sorszam + 1.).'</td>';
                                     echo '<td>'.$f->getUgyfelFields()['azon'].'</td>';
                                     echo '<td>'.$f->getUgyfelFields()['cim'].'</td>';
                                     echo '<td>'.$f->getUgyfelFields()['email'].'</td>';
