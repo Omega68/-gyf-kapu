@@ -114,7 +114,7 @@ class Ugyfelek_Site_Component extends Site_Component{
                     $this->paginationNumber=1;
                 }
             }else if($_POST['selected']==100 && $this->paginationNumber>0){
-                if(!$this->offset==0 && !$this->offset==100){
+                if(!$this->offset==0){
                     $this->offset-=100;
                     $this->paginationNumber--;
                     $this->limit=100;
@@ -125,7 +125,7 @@ class Ugyfelek_Site_Component extends Site_Component{
                 }
             }
             else if($_POST['selected']==500 && $this->paginationNumber>0){
-                if(!$this->offset==0 && !$this->offset==500){
+                if(!$this->offset==0){
                     $this->offset-=500;
                     $this->paginationNumber--;
                     $this->limit=500;
