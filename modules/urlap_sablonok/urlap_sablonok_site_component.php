@@ -1,3 +1,16 @@
+<html>
+<head>
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" />
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#date").datepicker();
+        });
+    </script>
+</head>
+<body>
 <?php
 /**
  * Created by PhpStorm.
@@ -9,48 +22,29 @@
 class Urlap_sablonok_Site_Component extends Site_Component{
 
     private $perm;
+    private $showAddForm=true;
 
+    protected function afterConstruction(){
+        $this->perm=PersistenceManager::getInstance();
+    }
 
     function process(){
         $this->perm=PersistenceManager::getInstance();
-        if(!empty($_POST['sablon_id'])){
-
+        if(!empty($_POST['new'])){
+            $this->showAddForm=true;
+        }
+        if(!empty($_POST['back']) || !empty($_POST['save'])){
+            $this->showAddForm=false;
         }
     }
 
     function show(){
-
-        $sablonok=$this->perm->getAllObjects("UrlapSablon");
-        echo '<form method="post">
-            <div class="form_box">
-                <h1>Sablonok adatai</h1>
-            </div>
-            <br/>
-            <br/>
-            <div class="listtable">
-                <table style="width:100%">
-                        <tr>
-                            <th>azon</th>
-                            <th>letrehozas datuma</th>
-                            <th>allapot</th>
-                            <th>admin_azon</th>
-                            <th>Művelet</th>
-                        </tr>
-                        ';
-        $count=count($sablonok);
-        for($i=0;$i<$count;$i++){
-            echo '<tr>';
-            echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['azon'].'</td>';
-            echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['letrehozas_datuma'].'</td>';
-            echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['allapot'].'</td>';
-            echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['admin_azon'].'</td>';
-            echo '<input type="hidden" name="sablon_id" value="'.$sablonok[$i]->getUrlapSablonFields()['id'].'">';
-            echo '<td> <input type="submit" name="GetFields" value="Mezok lekerdezese"></td>';
-            echo '</tr>';
+        if ($this->showAddForm) {
+            include_once 'views/new_sablon.php';
+        } else {
+            include_once 'views/sablon_lista.php';
         }
-        echo '
-                </table>
-            </div>
-            </form>';
     }
-}
+}?>
+</body>
+</html>
