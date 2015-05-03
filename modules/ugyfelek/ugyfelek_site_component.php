@@ -50,6 +50,7 @@ class Ugyfelek_Site_Component extends Site_Component{
                             <th>Cim</th>
                             <th>E-mail</th>
                             <th>Telefon</th>
+                            <th>Szerkesztés</th>
                             <th>Törlés</th>
                         </tr>
 
@@ -62,6 +63,10 @@ class Ugyfelek_Site_Component extends Site_Component{
                                     echo '<td>'.$f->getUgyfelFields()['cim'].'</td>';
                                     echo '<td>'.$f->getUgyfelFields()['email'].'</td>';
                                     echo '<td>'.$f->getUgyfelFields()['telefon'].'</td>';
+                                    ?><td> <form action="" method="post">
+                                        <input type="submit" name="editButton" value="Szerkesztés" >
+                                    </form></td>
+                                <?
                                     ?><td> <form action="" method="post">
                                                     <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott ügyfelet?')" >
                                                     <input type="hidden" name="deleteAzon" value="<? echo $f->getUgyfelFields()['azon'] ?>">
@@ -122,7 +127,6 @@ class Ugyfelek_Site_Component extends Site_Component{
             }
         }
         if(isset($_POST['selected']) && isset($_POST['next'])){
-            echo $this->offset . " " . $this->paginationNumber;
             if($_POST['selected']==50){
                 $this->offset+=50;
                 $this->paginationNumber++;
