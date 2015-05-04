@@ -79,7 +79,7 @@ class PersistenceManager{
   final function createObject($class,array $params=null,array &$errors=null){
     //vak példány létrehozása
     $object=new $class();
-    
+
     //validálás
     $errors=$object->validate($params);
     

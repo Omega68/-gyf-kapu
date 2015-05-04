@@ -22,7 +22,7 @@
 class Urlap_sablonok_Site_Component extends Site_Component{
 
     private $perm;
-    private $showAddForm=true;
+    private $showAddForm=false;
 
     protected function afterConstruction(){
         $this->perm=PersistenceManager::getInstance();

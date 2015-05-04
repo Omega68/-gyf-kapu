@@ -5,13 +5,18 @@
  * Date: 2015.04.25.
  * Time: 8:39
  */
-class Ugyfelek_Site_Component extends Site_Component{
+class ERP_Ugyfelek_Site_Component extends Site_Component{
     private $perm;
     private $limit=50;
     private $offset=0;
     private $paginationNumber=1;
     private $sorszam=1;
     private $szerkesztes=false;
+    private $inviteAzon = -1;
+
+    private $r;
+    private $sent = false;
+
     protected function afterConstruction(){
         $this->perm=PersistenceManager::getInstance();
     }
@@ -23,20 +28,33 @@ class Ugyfelek_Site_Component extends Site_Component{
         }
         if(isset($_POST['editButton']) && isset($_POST['szerkAzon']))
             $this->szerkesztes=true;
-
-
-        if(!empty($_POST['save'])){
-                    $adatok = array(
-                        'email' => $_POST['email'],
-                        'cim' => $_POST['cim'],
-                        'telefon' => $_POST['telefon']
-                    );
-                $uk=$this->perm->updateObjectByFields('Ugyfel',$adatok, array("azon" => $_POST['azon']));
-            }
-
-
         if(!empty($_POST['back']) || !empty($_POST['save']))
             $this->szerkesztes=false;
+
+        if( isset($_POST['inviteButton']) && isset($_POST['email'])){
+            if(!empty($_POST['email']) && !empty($_POST['inviteAzon'])){
+                // The message
+                $this->r = rand(10000,990000);
+                $message = "Kód: " . $this->r;
+                // In case any of our lines are larger than 70 characters, we should use wordwrap()
+                $message = wordwrap($message, 70, "\r\n");
+                // Send
+                mail($_POST['email'], 'Ügyfélkapu - regisztrációs kód', $message);
+
+                $this->inviteAzon = $_POST['inviteAzon'];
+                $adatok = array(
+                    'azon'=>$this->inviteAzon,
+                    'kod' => $this->r
+                );
+                $uk=$this->perm->createObject('ERPUgyfelKod',$adatok);
+                $this->sent = true;
+
+            }
+            else {
+                $this->sent = false;
+            }
+        }
+
         $this->pagination();
     }
     function show(){
@@ -47,7 +65,7 @@ class Ugyfelek_Site_Component extends Site_Component{
         ?>
 
         <div class="form_box">
-            <h1>Ugyfelek adatai</h1>
+            <h1>ERP ügyféllista</h1>
         </div>
         <br/>
         <br/>
@@ -63,8 +81,7 @@ class Ugyfelek_Site_Component extends Site_Component{
                     <th>Cim</th>
                     <th>E-mail</th>
                     <th>Telefon</th>
-                    <th>Szerkesztés</th>
-                    <th>Törlés</th>
+                    <th>Regisztációs link küldése</th>
                 </tr>
 
                 <?
@@ -76,17 +93,24 @@ class Ugyfelek_Site_Component extends Site_Component{
                     echo '<td>'.$f->getUgyfelFields()['cim'].'</td>';
                     echo '<td>'.$f->getUgyfelFields()['email'].'</td>';
                     echo '<td>'.$f->getUgyfelFields()['telefon'].'</td>';
-                    ?><td> <form action="" method="post">
-                            <input type="submit" name="editButton" value="Szerkesztés" >
-                            <input type="hidden" name="szerkAzon" value="<? echo $f->getUgyfelFields()['azon']?>">
-                        </form></td>
+                    ?>
+                    <td>
+
+                        <form action="" method="post">
+                        <input type="submit" name="inviteButton" value="Meghívó küldése" >
+                        <input type="hidden" name="email" value="<? echo $f->getUgyfelFields()['email'] ?>">
+                        <input type="hidden" name="inviteAzon" value="<? echo $f->getUgyfelFields()['azon'] ?>">
+                        </form>
                     <?
-                    ?><td> <form action="" method="post">
-                        <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott ügyfelet?')" >
-                        <input type="hidden" name="deleteAzon" value="<? echo $f->getUgyfelFields()['azon'] ?>">
-                    </form></td>
+                    if($this->inviteAzon == $f->getUgyfelFields()['azon'] && $this->sent){
+                        echo "<p style=\"color: red;\">Meghívó elküldve! Kód: ";
+                        echo $this->r. "</p>";
+                    }
+                    ?>
+
+                    </td>
+
                     <?
-                    // echo '<td>'.$f->getUgyfelFields()['jelszo'].'</td>';
                     echo '</tr>';
                     $this->sorszam++;
                 }

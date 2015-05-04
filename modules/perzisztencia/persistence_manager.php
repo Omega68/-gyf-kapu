@@ -66,6 +66,42 @@ class PersistenceManager{
        // throw new Exception("Multiple rows affected.");
     }
 
+    public function updateObjectByFields($class, $params=null, $where = null){
+        $sql = sprintf("UPDATE %s SET", strtolower($class));
+        $counter=0;
+        foreach($params as $key=>$value) {
+            $sql .= " " . $key . " = " . " '".$value."'";
+            $counter++;
+            if($counter<count($params))
+                $sql.=" , ";
+
+        }
+        $counter=0;
+
+        if(!empty($where)){
+            $sql .= " where ";
+            foreach($where as $key=>$value) {
+                $sql .= " " . $key . " = " . " '".$value."'";
+
+                $counter++;
+                if($counter<count($where))
+                    $sql.=" and";
+            }
+        }
+
+       // echo $sql;
+        $result = $this->dbConnection->query($sql);
+        $count=0;
+        $objects=array();
+        foreach($result as $key => $value){
+            $ojb=new $class($result[$count]['id']);
+            $objects[]=$ojb;
+            if($count<count($result))
+                $count++;
+        }
+        return $objects;
+    }
+
     /**
      * Általános lekérdező metódus, mely nem szűr paraméterekre
      *
@@ -217,8 +253,8 @@ class PersistenceManager{
   */
   final function createObject($class,array $params=null,array &$errors=null){
     //vak példány létrehozása
-    $object=new $class();
-    
+      $object=new $class();
+
     //validálás
     $errors=$object->validate($params);
     

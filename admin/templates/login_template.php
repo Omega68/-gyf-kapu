@@ -8,7 +8,7 @@ class Admin_Login_Site_Template extends Site_Template{
       <meta http-equiv="content-type" content="text/html; charset=utf-8">
       <script src="/modules/moopage/moopage4.js"></script>      
       <link rel="stylesheet" href="/admin/templates/login.css" type="text/css">
-      <link rel="stylesheet" href="/admin/templates/perpetum_template.css" type="text/css">
+      <link rel="stylesheet" href="/admin/templates/perpetuum_template.css" type="text/css">
       <title>Login</title>
      </head>
      <body>

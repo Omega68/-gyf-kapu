@@ -46,6 +46,12 @@ return array(
             'class' =>'Profil_Site_Component',
             'allowed_slots'=>array(),
             'allowed_slots'=>array('page')
+        ),
+        'erp_ugyfel'=>array(
+            'class'=>'ERP_Ugyfelek_Site_Component',
+            'params'=>array(),
+            'allowed_slots'=>array('page')
         )
+
   ) 
 );

@@ -61,16 +61,19 @@ class Felhasznalok_Site_Component extends Site_Component {
             <br/>
             <br/>
 
-            Új felhasználó - meghívó kód küldése:
+            <!--Új felhasználó - meghívó kód küldése:
             <form action="" method="post">
                 E-mail: <input type="text" name="email" value="">
                 <input type="submit" name="inviteButton" value="Meghívó küldése!" >
             </form></td>
+            -->
             <?
+        /*
                 if($this->sent){
                     echo "<p style=\"color: red;\">Meghívó elküldve! Kód: ";
                     echo $this->r. "</p>";
                 }
+        */
             ?>
 <br/><br/>
             <form method="post">

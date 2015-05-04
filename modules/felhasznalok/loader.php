@@ -20,6 +20,8 @@ class Felhasznalok_Loader extends AbstractLoader{
             case "Felhasznalok_Site_Component": return $this->myfolder."/felhasznolok_site_component.php";
             case "Felhasznalo" : return $this->myfolder."/felhasznalo.php";
             case "FelhasznaloErrors" : return $this->myfolder."/felh_errors.php";
+            case "ERPUgyfelKod": return $this->myfolder."/erpugyfel-kod.php";
+
             default:
                 return null;
         }

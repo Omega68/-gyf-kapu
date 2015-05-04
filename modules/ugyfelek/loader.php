@@ -18,6 +18,7 @@ class Ugyfelek_Loader extends AbstractLoader{
         // protected function getFileNameForClass($classname){
         switch ($classname) {
             case "Ugyfelek_Site_Component": return $this->myfolder."/ugyfelek_site_component.php";
+            case "ERP_Ugyfelek_Site_Component": return $this->myfolder."/erp_ugyfelek_site_component.php";
             case "Ugyfel" : return $this->myfolder."/ugyfel.php";
             default:
                 return null;

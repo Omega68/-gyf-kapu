@@ -31,6 +31,11 @@ class Admin_Template extends Site_Template{
                   <li>
                       <a href="?page=ugyfel"><span>Ügyfelek</span></a>
                   </li>
+
+                  <li>
+                      <a href="?page=erp_ugyfel"><span>ERP Ügyfelek</span></a>
+                  </li>
+
                   <li>
                       <a href="?page=sablon"><span>Sablonok</span></a>
                   </li>
