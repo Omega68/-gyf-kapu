@@ -24,6 +24,27 @@ class Ugyfelek_Site_Component extends Site_Component{
         if(isset($_POST['editButton']) && isset($_POST['szerkAzon']))
             $this->szerkesztes=true;
 
+        if(isset($_POST['searchButton'])){
+            if (empty($_REQUEST['usearchString']))
+                $_SESSION['ukeresve']=false;
+            else if (($_POST['ukazon']!=1) && ($_POST['ukcim']!=1) && ($_POST['ukemail']!=1) && ($_POST['uktelefon']!=1))
+                $_SESSION['ukeresve']=false;
+            else 
+                $_SESSION['ukeresve']=true;
+            $_SESSION['usearchString'] = $_POST['usearchString'];
+            $_SESSION['ukazon'] = $_POST['ukazon'];
+            $_SESSION['ukcim'] = $_POST['ukcim'];
+            $_SESSION['ukemail'] = $_POST['ukemail'];
+            $_SESSION['uktelefon'] = $_POST['uktelefon'];
+            }
+        if(isset($_POST['resetButton'])){
+            $_SESSION['ukeresve']=false;
+            $_SESSION['usearchString'] = '';
+            $_SESSION['ukazon'] = 1;
+            $_SESSION['ukcim'] = 1;
+            $_SESSION['ukemail'] = 1;
+            $_SESSION['uktelefon'] = 1;
+            }
 
         if(!empty($_POST['save'])){
                     $adatok = array(
@@ -42,13 +63,55 @@ class Ugyfelek_Site_Component extends Site_Component{
     function show(){
         if(!$this->szerkesztes){
         // echo $_POST["limit"].' '.$_POST['offset'].' '.$_POST['pagination'];
-        $ugyfelek=$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'azon');
-        $osszes=$this->perm->getAllObjects("Ugyfel");
+        //$ugyfelek=$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'azon');
+        //$osszes=$this->perm->getAllObjects("Ugyfel");
+        
+        if ($_SESSION['ukeresve']){
+            $ugyfel_adatok=array();
+            if($_SESSION['ukazon']==1) $ugyfel_adatok['azon'] = $_SESSION['usearchString'];
+            if($_SESSION['ukcim']==1) $ugyfel_adatok['cim'] = $_SESSION['usearchString'];
+            if($_SESSION['ukemail']==1) $ugyfel_adatok['email'] = $_SESSION['usearchString'];
+            if($_SESSION['uktelefon']==1) $ugyfel_adatok['telefon'] = $_SESSION['usearchString'];
+            
+            $ugyfelek=$this->perm->getObjectsByFieldLimitOffsetOrderByOr("Ugyfel",$ugyfel_adatok,$this->limit,$this->offset,'azon'); 
+            $osszes=$this->perm->getObjectsByFieldOr("Ugyfel", $ugyfel_adatok);          
+        }
+        else{
+          $ugyfelek=$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'azon');
+          $osszes=$this->perm->getAllObjects("Ugyfel");
+        }
+        
         ?>
 
         <div class="form_box">
             <h1>Ugyfelek adatai</h1>
         </div>
+        <br/>
+        
+        <div class="form_box">          
+          <form action="" method="post">
+            <input id="search_field" type="text" value="<? echo $_SESSION['usearchString']; ?>" name="usearchString" size="32">
+            <input type="submit" value="Keresés" name="searchButton">
+            <input type="submit" value="Alaphelyzet" name="resetButton">
+            <div>
+              <input id="id_search_sel__1" type="checkbox" value="1" <? if($_SESSION['ukazon']==1) echo 'checked=""';?> name="ukazon">
+              <label for="id_search_sel__1">Azonosító</label>
+            </div>
+            <div>
+              <input id="id_search_sel__2" type="checkbox" value="1" <? if($_SESSION['ukcim']==1) echo 'checked=""';?> name="ukcim">
+              <label for="id_search_sel__2">Cím</label>
+            </div>
+            <div>
+              <input id="id_search_sel__3" type="checkbox" value="1" <? if($_SESSION['ukemail']==1) echo 'checked=""';?> name="ukemail">
+              <label for="id_search_sel__3">E-mail</label>
+            </div>
+            <div>
+              <input id="id_search_sel__4" type="checkbox" value="1" <? if($_SESSION['uktelefon']==1) echo 'checked=""';?> name="uktelefon">
+              <label for="id_search_sel__4">Telefon</label>
+            </div>
+          </form>                      
+        </div>
+                
         <br/>
         <br/>
         <?

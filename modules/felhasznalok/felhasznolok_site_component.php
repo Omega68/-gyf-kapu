@@ -24,6 +24,24 @@ class Felhasznalok_Site_Component extends Site_Component {
             $u = $pm->getObjectsByField("Felhasznalo", array('azon'=>$azon))[0];
             $u->delete();
         }
+        
+        if(isset($_POST['searchButton'])){
+            if (empty($_REQUEST['fsearchString']))
+                $_SESSION['fkeresve']=false;
+            else if (($_POST['fkazon']!=1) && ($_POST['fkemail']!=1))
+                $_SESSION['fkeresve']=false;
+            else 
+                $_SESSION['fkeresve']=true;
+            $_SESSION['fsearchString'] = $_POST['fsearchString'];
+            $_SESSION['fkazon'] = $_POST['fkazon'];
+            $_SESSION['fkemail'] = $_POST['fkemail'];
+            }
+        if(isset($_POST['resetButton'])){
+            $_SESSION['fkeresve']=false;
+            $_SESSION['fsearchString'] = '';
+            $_SESSION['fkazon'] = 1;
+            $_SESSION['fkemail'] = 1;
+            }
 
         if( isset($_POST['inviteButton'])){
             if(!empty($_POST['email']) ){
@@ -49,8 +67,21 @@ class Felhasznalok_Site_Component extends Site_Component {
 
     function show(){
         $pm = PersistenceManager::getInstance();
-        $ugyfelek=$pm->getObjectsByLimitOffsetOrderBy("Felhasznalo",$this->limit,$this->offset,'azon');
-        $osszes=$pm->getAllObjects("Felhasznalo");
+        //$ugyfelek=$pm->getObjectsByLimitOffsetOrderBy("Felhasznalo",$this->limit,$this->offset,'azon');
+        //$osszes=$pm->getAllObjects("Felhasznalo");
+        
+        if ($_SESSION['fkeresve']){
+            $ugyfel_adatok=array();
+            if($_SESSION['fkazon']==1) $ugyfel_adatok['azon'] = $_SESSION['fsearchString'];
+            if($_SESSION['fkemail']==1) $ugyfel_adatok['email'] = $_SESSION['fsearchString'];
+          
+            $ugyfelek=$pm->getObjectsByFieldLimitOffsetOrderByOr("Felhasznalo",$ugyfel_adatok,$this->limit,$this->offset,'azon');
+            $osszes=$pm->getObjectsByFieldOr("Felhasznalo", $ugyfel_adatok);           
+        }
+        else{
+          $ugyfelek=$pm->getObjectsByLimitOffsetOrderBy("Felhasznalo",$this->limit,$this->offset,'azon');
+          $osszes=$pm->getAllObjects("Felhasznalo");
+        }
 
         ?>
 
@@ -58,6 +89,25 @@ class Felhasznalok_Site_Component extends Site_Component {
             <div class="form_box">
                 <h1>Felhasználók adatai</h1>
             </div>
+            
+            <br/>
+        
+            <div class="form_box">          
+              <form action="" method="post">
+                <input id="search_field" type="text" value="<? echo $_SESSION['fsearchString']; ?>" name="fsearchString" size="32">
+                <input type="submit" value="Keresés" name="searchButton">
+                <input type="submit" value="Alaphelyzet" name="resetButton">
+                <div>
+                  <input id="id_search_sel__1" type="checkbox" value="1" <? if($_SESSION['fkazon']==1) echo 'checked=""';?> name="fkazon">
+                  <label for="id_search_sel__1">Azonosító</label>
+                </div>
+                <div>
+                  <input id="id_search_sel__3" type="checkbox" value="1" <? if($_SESSION['fkemail']==1) echo 'checked=""';?> name="fkemail">
+                  <label for="id_search_sel__3">E-mail</label>
+                </div>
+              </form>                      
+            </div>
+            
             <br/>
             <br/>
 
@@ -75,7 +125,7 @@ class Felhasznalok_Site_Component extends Site_Component {
                 }
         */
             ?>
-<br/><br/>
+
             <form method="post">
             <div class="listtable" style="width:100%">
             <?         $this->showPagination(count($osszes));

@@ -65,6 +65,28 @@ class PersistenceManager{
         return $objects;
        // throw new Exception("Multiple rows affected.");
     }
+    
+    public function getObjectsByFieldOr($class, $params=null){
+        $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        $counter=0;
+        foreach($params as $key=>$value) {
+            $sql .= " " . strtolower($key) . " LIKE " . " '%".strtolower($value)."%'";
+            $counter++;
+            if($counter<count($params))
+                $sql.=" or";
+
+        }
+        $result = $this->dbConnection->query($sql);
+        $count=0;
+        $objects=array();
+        foreach($result as $key => $value){
+            $ojb=new $class($result[$count]['id']);
+            $objects[]=$ojb;
+            if($count<count($result))
+                $count++;
+        }     
+        return $objects;
+    }
 
     public function updateObjectByFields($class, $params=null, $where = null){
         $sql = sprintf("UPDATE %s SET", strtolower($class));
@@ -177,6 +199,41 @@ class PersistenceManager{
         }
         return $objects;
 	}
+  
+    public function getObjectsByFieldLimitOffsetOrderByOr($class, $params=null, $limit=null,$offset=null, $order=null, $isDesc=false){
+        $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        $counter=0;
+        foreach($params as $key=>$value) {
+            $sql .= " " . strtolower($key) . " LIKE " . " '%".strtolower($value)."%'";
+            $counter++;
+            if($counter<count($params))
+                $sql.=" or";
+
+        }
+        if($order!=null){
+            $sql.=" ORDER BY ".$order;
+            if($isDesc==true)
+                $sql.=" DESC";
+            else
+                $sql.=" ASC";
+        }
+        if($limit!=null) {
+            $sql .= " LIMIT " . $limit;
+            if($offset!=null)
+                $sql.=" OFFSET ".$offset;
+        }
+        $result = $this->dbConnection->query($sql);
+        $count=0;
+        $objects=array();
+        foreach($result as $key => $value){
+            $ojb=new $class($result[$count]['id']);
+            $objects[]=$ojb;
+            if($count<count($result))
+                $count++;
+        }
+        return $objects;
+	}
+
 
     /**
      * Egy metódus, mely kisebb, vagy nagyobb összehasonlításokat végzi
