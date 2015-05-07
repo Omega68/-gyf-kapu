@@ -1,7 +1,7 @@
  <?php
 /**
  * Created by PhpStorm.
- * User: nor
+ * User: norbert
  * Date: 2015.04.25.
  * Time: 8:39
  */
@@ -165,7 +165,7 @@ class Felhasznalok_Site_Component extends Site_Component {
         </form>
 
     <?
-
+        $this->showPagination(count($osszes));
     }
 
     private function test(){
@@ -205,14 +205,17 @@ class Felhasznalok_Site_Component extends Site_Component {
     }
 
     private function pagination(){
-        //echo $_POST['selected'].' '.$_POST['next'].' '.$_POST['previous'];
-
-        if(isset($_POST['selected']) && !isset($_POST['previous']) && !isset($_POST['next'])){
+        $this->limit=(isset($_POST['limit']) && !empty($_POST['limit'])) ? $_POST['limit'] : 50;
+        $this->offset=(isset($_POST['offset']) && !empty($_POST['offset'])) ? $_POST['offset'] : 0;
+        $this->paginationNumber=(isset($_POST['pagination']) && !empty($_POST['pagination'])) ? $_POST['pagination'] : 1;
+        /* echo $_POST['selected'].' '.$_POST['next'].' '.$_POST['previous'].'<br>';
+         echo "Limit:".$this->limit.' '."Offset:".$this->offset;*/
+        if(isset($_POST['selected']) && !isset($_POST['previous']) && !isset($_POST['next']) && empty($_POST['previous']) && empty($_POST['next'])){
+            //echo "belép";
             $this->limit = $_POST['selected'];
             $this->offset = 0;
-
+            $this->paginationNumber=1;
         }
-
         if(isset($_POST['selected']) && isset($_POST['previous'])){
             if($_POST['selected']==50 && $this->paginationNumber>0){
                 if(!$this->offset==0){
@@ -222,25 +225,28 @@ class Felhasznalok_Site_Component extends Site_Component {
                 }else{
                     $this->limit=50;
                     $this->offset=0;
+                    $this->paginationNumber=1;
                 }
             }else if($_POST['selected']==100 && $this->paginationNumber>0){
-                if(!$this->offset==0 && !$this->offset==100){
+                if(!$this->offset==0){
                     $this->offset-=100;
                     $this->paginationNumber--;
                     $this->limit=100;
                 }else{
                     $this->limit=100;
                     $this->offset=0;
+                    $this->paginationNumber=1;
                 }
             }
             else if($_POST['selected']==500 && $this->paginationNumber>0){
-                if(!$this->offset==0 && !$this->offset==500){
+                if(!$this->offset==0){
                     $this->offset-=500;
                     $this->paginationNumber--;
                     $this->limit=500;
                 }else{
                     $this->limit=500;
                     $this->offset=0;
+                    $this->paginationNumber=1;
                 }
             }
         }
@@ -248,12 +254,15 @@ class Felhasznalok_Site_Component extends Site_Component {
             if($_POST['selected']==50){
                 $this->offset+=50;
                 $this->paginationNumber++;
+                $this->limit=50;
             }else if($_POST['selected']==100){
                 $this->offset+=100;
                 $this->paginationNumber++;
+                $this->limit=100;
             }
             else if($_POST['selected']==500){
                 $this->offset+=500;
+                $this->limit=500;
                 $this->paginationNumber++;
             }
         }
@@ -273,6 +282,9 @@ class Felhasznalok_Site_Component extends Site_Component {
                              <span class="pagination_page_number">
                                     <span class="pagination_active_page_number"><?echo $this->paginationNumber;?></span>
                             </span>
+                <input type="hidden" value="<?echo $this->offset?>" name="offset">
+                <input type="hidden" value="<?echo $this->limit?>" name="limit">
+                <input type="hidden" value="<?echo $this->paginationNumber?>" name="pagination">
                 <input type="submit" name="next" value="Következő">
             </form>
         </div>
