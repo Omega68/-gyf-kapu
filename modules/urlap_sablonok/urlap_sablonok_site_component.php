@@ -49,14 +49,14 @@ class Urlap_sablonok_Site_Component extends Site_Component{
 
     function show(){
         if($this->showFieldList){
+            echo $_POST['sab_azon'];
             $adatok=array(
-                'sablon_azon' => "${$_POST['sablon_id']}"
+                'sablon_azon' => "".$_POST['sab_azon']
             );
             $mezok=$this->perm->getObjectsByField("Mezo",$adatok);
             echo '<form method="post">
             <div class="form_box">
             <h1>Mezok adatai</h1>
-                <input type="submit" name="save" value="Mentés" class="save_button">
                 <input type="submit" name="back" value="Vissza" class="back_button">
             </div>
             <br/>
@@ -158,12 +158,18 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['letrehozas_datuma'].'</td>';
                 echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['allapot'].'</td>';
                 echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['admin_azon'].'</td>';
-                echo '<input type="hidden" name="sablon_id" value="'.$sablonok[$i]->getUrlapSablonFields()['id'].'">';
+                echo '<form method="post">';
+                echo '<input type="hidden" name="sab_azon" value="'.$sablonok[$i]->getUrlapSablonFields()['azon'].'">';
                 echo '<td> <input type="submit" name="GetFields" value="Mezok lekerdezese"></td>';
+                echo '</form>';
+                echo '<form method="post">';
                 echo '<input type="hidden" name="sablon_id" value="'.$sablonok[$i]->getUrlapSablonFields()['id'].'">';
                 echo '<td> <input type="submit" name="Edit" value="Szerkesztés"></td>';
+                echo '</form>';
+                echo '<form method="post">';
                 echo '<input type="hidden" name="sablon_id" value="'.$sablonok[$i]->getUrlapSablonFields()['id'].'">';
                 echo '<td> <input type="submit" name="Delete" value="Törlés"></td>';
+                echo '</form>';
                 echo '</tr>';
                 $this->sorszam++;
             }
