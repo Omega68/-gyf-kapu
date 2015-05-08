@@ -22,7 +22,12 @@
 class Urlap_sablonok_Site_Component extends Site_Component{
 
     private $perm;
+    private $limit=50;
+    private $offset=0;
+    private $paginationNumber=1;
+    private $sorszam=1;
     private $showAddForm=false;
+    private $showFieldList=false;
 
     protected function afterConstruction(){
         $this->perm=PersistenceManager::getInstance();
@@ -33,6 +38,9 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         if(!empty($_POST['new'])){
             $this->showAddForm=true;
         }
+        if(!empty($_POST['GetFields'])) {
+            $this->showFieldList = true;
+        }
         if(!empty($_POST['back']) || !empty($_POST['save'])){
             $this->showAddForm=false;
         }
@@ -40,10 +48,85 @@ class Urlap_sablonok_Site_Component extends Site_Component{
     }
 
     function show(){
-        if ($this->showAddForm) {
-            include_once 'views/new_sablon.php';
+        if($this->showFieldList){
+            $adatok=array(
+                'sablon_azon' => "${$_POST['sablon_id']}"
+            );
+            $mezok=$this->perm->getObjectsByField("Mezo",$adatok);
+            echo '<form method="post">
+            <div class="form_box">
+            <h1>Mezok adatai</h1>
+                <input type="submit" name="save" value="Mentés" class="save_button">
+                <input type="submit" name="back" value="Vissza" class="back_button">
+            </div>
+            <br/>
+            <br/>
+            <div class="listtable">
+                <table style="width:100%">
+                        <tr>
+                            <th>azon</th>
+                            <th>tipus</th>
+                            <th>kotelezoseg</th>
+                            <th>Művelet</th>
+                        </tr>
+                        ';
+            $count=count($mezok);
+            for($i=0;$i<$count;$i++){
+                echo '<tr>';
+                echo '<td>'.$mezok[$i]->getMezoFields()['azon'].'</td>';
+                echo '<td>'.$mezok[$i]->getMezoFields()['tipus'].'</td>';
+                echo '<td>'.$mezok[$i]->getMezoFields()['kotelezoseg'].'</td>';
+                echo '<td><input type="submit" name="ModifyField" value="Mezo módosítása"></td>';
+                echo '</tr>';
+            }
+            echo '
+                </table>
+            </div>
+            </form>';
+        }
+        else if ($this->showAddForm) {
+            echo '<form action="" method="POST">
+        <div class="form_box">
+        <h1>Sablon létrehozása</h1>
+        <input type="submit" name="save" value="Mentés" class="save_button">
+        <input type="submit" name="back" value="Vissza" class="back_button">
+        <br/>
+        <br/>
+        <div>
+           <table class="formtable">
+                <tbody>
+                <tr>
+                    <td valign="top">
+                            <table>
+                            <tbody>
+                            <tr>
+                                <td><span>Azonosító</span></td>
+                                <td><input size="32" type="text" name="azon" value=""></td>
+                            </tr>
+                            <tr>
+                                <td><span>Létrehozás dátuma</span></td>
+                                <td><input type="text" name="date" id="date"/></td>
+                            </tr>
+                            <tr>
+                                <td><span>Állapot</span></td>
+                                <td><input size="32" type="text" name="varos" value=""></td>
+                            </tr>
+                            <tr>
+                                <td><span>Admin azon</span></td>
+                                <td><input size="32" type="text" name="ir" value=""></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </form>';
         } else {
-            $sablonok=$this->perm->getAllObjects("UrlapSablon");
+            $sablonok=$this->perm->getObjectsByLimitOffsetOrderBy("UrlapSablon",$this->limit,$this->offset,'azon');
+            $osszes=$this->perm->getAllObjects("UrlapSablon");
             echo '<form action="" method="post">
                 <button type="submit" name="new" value="new">Új sablon hozzáadása</button>
         </form>';
@@ -56,25 +139,35 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             <div class="listtable">
                 <table style="width:100%">
                         <tr>
+                            <th>#</th>
                             <th>azon</th>
                             <th>letrehozas datuma</th>
                             <th>allapot</th>
                             <th>admin_azon</th>
                             <th>Művelet</th>
+                            <th>Szerkesztes</th>
+                            <th>Törlés</th>
                         </tr>
                         ';
+            $this->sorszam=$this->offset;
             $count=count($sablonok);
             for($i=0;$i<$count;$i++){
                 echo '<tr>';
+                echo '<td>'.($this->sorszam + 1) . '</td>';
                 echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['azon'].'</td>';
                 echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['letrehozas_datuma'].'</td>';
                 echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['allapot'].'</td>';
                 echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['admin_azon'].'</td>';
                 echo '<input type="hidden" name="sablon_id" value="'.$sablonok[$i]->getUrlapSablonFields()['id'].'">';
                 echo '<td> <input type="submit" name="GetFields" value="Mezok lekerdezese"></td>';
+                echo '<input type="hidden" name="sablon_id" value="'.$sablonok[$i]->getUrlapSablonFields()['id'].'">';
+                echo '<td> <input type="submit" name="Edit" value="Szerkesztés"></td>';
+                echo '<input type="hidden" name="sablon_id" value="'.$sablonok[$i]->getUrlapSablonFields()['id'].'">';
+                echo '<td> <input type="submit" name="Delete" value="Törlés"></td>';
                 echo '</tr>';
+                $this->sorszam++;
             }
-            $this->showPagination(count($sablonok));
+            $this->showPagination(count($osszes));
         }
     }
 
