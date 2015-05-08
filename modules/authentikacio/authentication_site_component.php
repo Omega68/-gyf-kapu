@@ -12,7 +12,7 @@ class Authentication_Site_Component extends Site_Component{
     private $error;
     private $register = false;
     private $perm;
-    private $inviteAzon;
+    private $registerUser = false;
 
     protected function afterConstruction(){
         $this->auth=Authentication::getInstance();
@@ -44,26 +44,36 @@ class Authentication_Site_Component extends Site_Component{
 
 
         if(!empty($_POST['save'])){
-            if(!empty($_POST['azon']) && !empty($_POST['kod'])){
-                $this->inviteAzon = $_POST['azon'];
-                $eredetiKod = $this->perm->getObjectsByField("ERPUgyfelKod", array("azon"=>$_POST['azon']));
+            if(!empty($_POST['kod'])){
+                $eredetiKod = $this->perm->getObjectsByField("ERPUgyfelKod", array("kod"=>$_POST['kod']));
                 $eredetiKod = $eredetiKod[0]->getKodFields()['kod'];
 
-                if($_POST['kod'] == $eredetiKod)
-                $adatok = array(
-                    'azon'=>$this->inviteAzon,
-                    'email' => $_POST['email'],
-                    'cim' => $_POST['cim'],
-                    'telefon' => $_POST['telefon'],
-                    'jelszo' => '1234556'
-                );
-                $uk=$this->perm->createObject('Ugyfel',$adatok);
+                if($_POST['kod'] == $eredetiKod){
+                    $this->registerUser = true;
+                }
+
             }
+            else {
+                    $this->register=true;
+                    $this->error = true;
+                }
 
 
         }
-        if(!empty($_POST['back']) || !empty($_POST['save']))
+        else if(!empty($_POST['saveUser'])){
+            $adatok = array(
+                'azon'=>$_POST['azon'],
+                'email' => $_POST['email'],
+                'cim' => $_POST['cim'],
+                'telefon' => $_POST['telefon'],
+                'jelszo' => '1234556'
+            );
+            $uk=$this->perm->createObject('Ugyfel',$adatok);
+
+         }
+        else if(!empty($_POST['back']))
             $this->register=false;
+
     }
 
     function show()
@@ -72,7 +82,7 @@ class Authentication_Site_Component extends Site_Component{
             ?>
             <form action="" method="post">
              <table>
-                 <? if(!$this->register){ ?>
+                 <? if(!$this->register && !$this->registerUser){ ?>
 
                  <tr>
                      <td>Azonosító:</td>
@@ -90,57 +100,90 @@ class Authentication_Site_Component extends Site_Component{
 
                 <?
                  } else {
-                     ?>
-                     <form action="" method="POST">
-                         <div >
-                                 <table>
-                                     <tbody>
-                                     <tr><td><h2>Regisztráció</h2></td></tr>
-                                     <tr>
-                                         <td valign="top">
-                                             <table>
-                                                 <tbody>
-                                                 <tr>
-                                                     <td><span>Ügyfélazonosító: </span></td>
-                                                     <td><input type="text" name="azon"  value=""></td>
-                                                 </tr>
+                if ($this->register  || $_POST['save']) {
+                    ?>
+                    <form action="" method="POST">
+                        <div>
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td><h2>Regisztráció</h2></td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td><span>Kód:</span></td>
+                                                <td><input type="text" name="kod" value=""></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <? if($this->error){
+                                    echo '<tr><td colspan="2" style="color: #ff0000">Nem megfelelő meghívókód!</td></tr>';
+                                }?>
+                                </tbody>
+                            </table>
 
-                                                 <tr>
-                                                     <td><span>Kód:</span></td>
-                                                     <td><input type="text" name="kod" value=""></td>
-                                                 </tr>
-                                                 <tr>
-                                                    <td><span>E-mail</span></td>
-                                                    <td><input type="text" name="email" value=""></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>Telefon</span></td>
-                                                    <td><input type="number" name="telefon" value=""></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>Cím</span></td>
-                                                    <td><input type="text" name="cim" value=""></td>
-                                                </tr>
 
-                                                 </tbody>
-                                             </table>
-                                         </td>
-                                     </tr>
-                                     </tbody>
-                                 </table>
-                                 <input type="submit" name="save" value="Regisztráció" class="save_button">
-                                 <input type="submit" name="back" value="Vissza" class="back_button">
-                             <br/><br/>
-                         </div>
-                     </form>
-                 <?
-                 }?>
+                            <input type="submit" name="save" value="Regisztráció" class="save_button">
+                            <input type="submit" name="back" value="Vissza" class="back_button">
+                            <br/><br/>
+                        </div>
+                    </form>
+                <?
+                } else {
+                    ?>
 
-             </table>
-            </form>
-        <?
-        }
-        else{
+                    <form action="" method="POST">
+                        <div>
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td><h2>Regisztráció</h2></td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td><span>Ügyfélazonosító: </span></td>
+                                                <td><input type="text" name="azon" value=""></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>E-mail</span></td>
+                                                <td><input type="text" name="email" value=""></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>Telefon</span></td>
+                                                <td><input type="number" name="telefon" value=""></td>
+                                            </tr>
+                                            <tr>
+                                                <td><span>Cím</span></td>
+                                                <td><input type="text" name="cim" value=""></td>
+                                            </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <input type="submit" name="saveUser" value="Regisztráció" class="save_button">
+                            <input type="submit" name="back" value="Vissza" class="back_button">
+                            <br/><br/>
+                        </div>
+                    </form>
+
+                <?
+                } ?>
+
+                </table>
+                </form>
+            <?
+            }}else{
          ?>
             <form action="" method="post">
                     <input type="submit" name="logout" value="logout">
