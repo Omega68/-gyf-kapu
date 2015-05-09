@@ -134,6 +134,7 @@ class Felhasznalok_Site_Component extends Site_Component {
                     <tr>
                         <th>#</th>
                         <th>Azonosító</th>
+                        <th>Szerepkör</th>
                         <th>E-mail</th>
                         <th>Szerkesztés</th>
                         <th>Törlés</th>
@@ -142,10 +143,16 @@ class Felhasznalok_Site_Component extends Site_Component {
                     <?
         $this->sorszam=$this->offset;
         foreach($ugyfelek as $f){
+                        $a = $f->getFelhasznaloFields();
                         echo '<tr>';
                         echo '<td>'.($this->sorszam + 1) . '</td>';
-                        echo '<td>'.$f->getFelhasznaloFields()['azon'].'</td>';
-                        echo '<td>'.$f->getFelhasznaloFields()['email'].'</td>';
+                        echo '<td>'.$a['azon'].'</td>';
+                        echo '<td>';
+                                if(get_class($pm->getObject($a['id'])) == "Ugyfel")
+                                    echo "Ügyfél";
+                                else echo "Admin";
+                        echo '</td>';
+                        echo '<td>'.$a['email'].'</td>';
                         ?><td> <form action="" method="post">
                                 <input type="submit" name="editButton" value="Szerkesztés" >
                             </form></td>
