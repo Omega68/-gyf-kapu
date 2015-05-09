@@ -81,7 +81,9 @@ abstract class Persistent{
           $col = Persistent::getTableColumn(strtolower($akt));
           foreach ($col as $ident)
             $fields[$ident]=$params[$ident];
-          
+
+            $fields = $this->onBeforeCreate($fields);
+
           $attributes = array_keys($fields);
           $values = array_values($fields);
           $sql = sprintf("INSERT INTO %s (%s) VALUES ('%s')", strtolower($akt), implode(",", $attributes), implode("','", $values));
@@ -204,5 +206,9 @@ abstract class Persistent{
 
         return false;
 
+    }
+
+    protected function onBeforeCreate(array $params=null){
+        return;
     }
 }

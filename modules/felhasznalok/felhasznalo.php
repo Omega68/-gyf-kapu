@@ -62,5 +62,11 @@ class Felhasznalo extends Persistent{
     public function to_string(){
         return implode(", ", $this->getFelhasznaloFields());
     }
+
+    protected function onBeforeCreate(array $params=null){
+        $params['azon'] = $params['azon'];
+        $params['jelszo'] = md5($params['jelszo']);
+        return $params;
+    }
 }
 ?>

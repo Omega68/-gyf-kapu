@@ -50,6 +50,7 @@ class Authentication_Site_Component extends Site_Component{
 
                 if($_POST['kod'] == $eredetiKod){
                     $this->registerUser = true;
+                    $this->register = false;
                 }
 
             }
@@ -69,7 +70,9 @@ class Authentication_Site_Component extends Site_Component{
                 'jelszo' => '1234556'
             );
             $uk=$this->perm->createObject('Ugyfel',$adatok);
-
+            if($uk == NULL){
+                $this->registerUser = true;
+            }
          }
         else if(!empty($_POST['back']))
             $this->register=false;
@@ -97,10 +100,19 @@ class Authentication_Site_Component extends Site_Component{
                  <? if($this->error){
                      echo '<tr><td colspan="2">Sikertelen bejelentkezés!</td></tr>';
                  }?>
+                <?
+                 /*$r=126;
+                 $admin_adatok = array(
+                    'azon'=>$r,
+                    'jelszo' => 'alma1234'
+                );
 
+                $admin=$this->perm->createObject('Felhasznalo',$admin_adatok);
+                 */
+                ?>
                 <?
                  } else {
-                if ($this->register  || $_POST['save']) {
+                if ($this->register) {
                     ?>
                     <form action="" method="POST">
                         <div>
@@ -128,7 +140,7 @@ class Authentication_Site_Component extends Site_Component{
                             </table>
 
 
-                            <input type="submit" name="save" value="Regisztráció" class="save_button">
+                            <input type="submit" name="save" value="Tovább" class="save_button">
                             <input type="submit" name="back" value="Vissza" class="back_button">
                             <br/><br/>
                         </div>
