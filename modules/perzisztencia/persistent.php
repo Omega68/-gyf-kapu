@@ -88,7 +88,7 @@ abstract class Persistent{
             $values = array_values($fields);
 
             $sql = sprintf("INSERT INTO %s (%s) VALUES ('%s')", strtolower($akt), implode(",", $attributes), implode("','", $values));
-            echo $sql;
+            //echo $sql;
           $data = $this->db->query($sql);
           }
         }
@@ -211,7 +211,7 @@ abstract class Persistent{
     }
 
     protected function onBeforeCreate(array $params=null){
-        return;
+        return $params;
     }
 
 }

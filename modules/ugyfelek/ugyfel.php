@@ -64,9 +64,10 @@ class Ugyfel extends Felhasznalo
     
     protected function onBeforeDelete(array $params=null) {}
 
-
     protected function onBeforeCreate(array $params=null){
-        return $params;
+        return parent::onBeforeCreate($params);
+
     }
+
 }
 

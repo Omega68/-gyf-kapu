@@ -21,18 +21,10 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
         $this->perm=PersistenceManager::getInstance();
     }
     function process(){
-        if(isset($_POST['deleteButton']) && isset($_POST['deleteAzon'])){
-            $azon = $_POST['deleteAzon'];
-            $u = $this->perm->getObjectsByField("Ugyfel", array('azon'=>$azon))[0];
-            $u->delete();
-        }
-        if(isset($_POST['editButton']) && isset($_POST['szerkAzon']))
-            $this->szerkesztes=true;
-        if(!empty($_POST['back']) || !empty($_POST['save']))
-            $this->szerkesztes=false;
 
         if( isset($_POST['inviteButton']) && isset($_POST['email'])){
             if(!empty($_POST['email']) && !empty($_POST['inviteAzon'])){
+                echo "EMAIL: " . $_POST['email'] . " " . $_POST['inviteAzon'] . "<br/>";
                 // The message
                 $this->r = rand(1000,999999);
                 while(count($this->perm->getObjectsByField("ERPUgyfelKod", array("kod"=>$this->r)))>0){
@@ -58,6 +50,7 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
                     'azon'=>$this->inviteAzon,
                     'kod' => $this->r
                 );
+                var_dump($adatok);
                 $uk=$this->perm->createObject('ERPUgyfelKod',$adatok);
                 $this->sent = true;
 
@@ -70,10 +63,11 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
         $this->pagination();
     }
     function show(){
-        if(!$this->szerkesztes){
-        // echo $_POST["limit"].' '.$_POST['offset'].' '.$_POST['pagination'];
-        $ugyfelek=$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'azon');
+
+        $ugyfelek=$this->perm->getAllObjects("Ugyfel");
+            //$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'azon');
         $osszes=$this->perm->getAllObjects("Ugyfel");
+
         ?>
 
         <div class="form_box">
@@ -81,6 +75,11 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
         </div>
         <br/>
         <br/>
+<?
+        $json = file_get_contents('http://erp.fejlesztesgyak2015.info/api.php?module=ugyfel_api&function=allUgyfel&key=2e6766863522c270667cd91952db15f5');
+
+        var_dump(json_decode($json, true));
+  ?>
         <?
         $this->showPagination(count($osszes));
         ?>
@@ -133,55 +132,9 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
 
         <?
         $this->showPagination(count($osszes));
-        }
-        else{
-            $lekerdezes_adatok=array(
-                'azon'=>"{$_POST['szerkAzon']}"
-            );
-            //var_dump($lekerdezes_adatok);
-            $customer=$this->perm->getObjectsByField('Ugyfel',$lekerdezes_adatok);
-           // var_dump($customer);
-          ?>
-            <form action="" method="POST">
-        <div class="form_box">
-        <h1>Ugyfel adatainak módosítása</h1>
-        <input type="submit" name="save" value="Mentés" class="save_button">
-        <input type="submit" name="back" value="Vissza" class="back_button">
-        <br/>
-        <br/>
-        <div>
-           <table class="formtable">
-                <tbody>
-                <tr>
-                    <td valign="top">
-                            <table>
-                            <tbody>
-                            <tr>
-                                <td><span>Azonosító</span></td>
-                                <td><input type="text" name="azon"  value="<? echo $customer[0]->getUgyfelFields()['azon'] ?>"></td>
-                            </tr>
-                            <tr>
-                                <td><span>E-mail</span></td>
-                                <td><input type="text" name="email" value="<?echo $customer[0]->getUgyfelFields()['email']?>"></td>
-                            </tr>
-                            <tr>
-                                <td><span>Telefon</span></td>
-                                <td><input type="number" name="telefon" value="<?echo $customer[0]->getUgyfelFields()['telefon']?>"></td>
-                            </tr>
-                            <tr>
-                                <td><span>Cím</span></td>
-                                <td><input type="text" name="cim" value="<?echo $customer[0]->getUgyfelFields()['cim']?>"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</form><?
-        }
+
+
+
     }
     private function pagination(){
         $this->limit=(isset($_POST['limit']) && !empty($_POST['limit'])) ? $_POST['limit'] : 50;
