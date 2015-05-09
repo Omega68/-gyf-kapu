@@ -22,8 +22,9 @@ abstract class Persistent{
     $fields = array();
     $sql = sprintf("SHOW COLUMNS FROM %s", $param);
     $res = $this->db->query($sql);
-    foreach ($res as $t)
+    foreach ($res as $t){
       $fields[] = explode(',',implode(', ',$t))[0];
+    }
     return $fields;
   }
   
@@ -50,8 +51,7 @@ abstract class Persistent{
     
     //2. auto generált id lekérdezése, és beállítása $this->id -be
      $this->id = $this->db->getLastInsertID();
-    
-    //3. objektum bejegyzése az osztályaihoz tartozó táblákba 
+    //3. objektum bejegyzése az osztályaihoz tartozó táblákba
     $objectValues = array();
 
         if (!is_null($params)) {
@@ -59,13 +59,14 @@ abstract class Persistent{
         $params['id'] = $this->id;
         $params=array_reverse($params,true);
        // $params['id'] = $this->id;
-        foreach ($params as $key => $value) {
+        /*foreach ($params as $key => $value) {
           if (is_array($value)) {
               $objectValues[$key] = $value;
               unset($params[$key]);
             }
         }
-         
+         */
+
         //Szülőosztályok bejárása
         $actual = get_class($this);
         $classes = array();
@@ -78,15 +79,16 @@ abstract class Persistent{
         
         foreach ($classes as $akt){
           $fields = array();
-          $col = Persistent::getTableColumn(strtolower($akt));
-          foreach ($col as $ident)
+          $cols = Persistent::getTableColumn(strtolower($akt));
+          foreach ($cols as $ident){
             $fields[$ident]=$params[$ident];
-
+          }
             $fields = $this->onBeforeCreate($fields);
+            $attributes = array_keys($fields);
+            $values = array_values($fields);
 
-          $attributes = array_keys($fields);
-          $values = array_values($fields);
-          $sql = sprintf("INSERT INTO %s (%s) VALUES ('%s')", strtolower($akt), implode(",", $attributes), implode("','", $values));
+            $sql = sprintf("INSERT INTO %s (%s) VALUES ('%s')", strtolower($akt), implode(",", $attributes), implode("','", $values));
+            echo $sql;
           $data = $this->db->query($sql);
           }
         }
@@ -211,4 +213,5 @@ abstract class Persistent{
     protected function onBeforeCreate(array $params=null){
         return;
     }
+
 }

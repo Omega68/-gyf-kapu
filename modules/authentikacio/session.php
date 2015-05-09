@@ -28,7 +28,6 @@ public function login($felhasznaloNev, $jelszo){
         'azon' => "{$felhasznaloNev}",
         'jelszo' => md5($jelszo)
     );
-    echo $felhasznaloNev . " " . md5($jelszo);
     //a formalis parameterlistaban szereplo valtozokkal megnezi, hogy van-e ilyen felhasznalo az adatbazisban
     $users=$pm->getObjectsByField('Felhasznalo',$felhasznalo_adatok);
     //itt megnezi, hogy visszateresi ertek milyen, ha megfelelo az azonosito-t belerakja a $_SESSION tombe

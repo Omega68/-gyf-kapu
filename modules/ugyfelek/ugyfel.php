@@ -4,13 +4,10 @@
 class Ugyfel extends Felhasznalo
 {
     private $cim;
-    private $email;
     private $telefon;
 
     protected function onAfterCreate(array $params = null) {
-      $this->azon = $params['azon'];
       $this->cim=$params['cim'];
-      $this->email=$params['email'];
       $this->telefon=$params['telefon'];
     }
 
@@ -66,5 +63,10 @@ class Ugyfel extends Felhasznalo
     }
     
     protected function onBeforeDelete(array $params=null) {}
+
+
+    protected function onBeforeCreate(array $params=null){
+        return $params;
+    }
 }
 

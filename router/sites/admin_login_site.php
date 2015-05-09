@@ -7,10 +7,10 @@ return array(
     ,'messages'=>'uzenetek'
   )
   ,'components'=>array(
-    'uzenetek'=>array(
-      'class'=>'Uzenetek_Site_Component'
-      ,'allowed_slots'=>array()
-    ),
+        'uzenetek'=>array(
+          'class'=>'Uzenetek_Site_Component'
+          ,'allowed_slots'=>array()
+        ),
         'login'=>array(
             'class'=>'Admin_Login_Site_Component',
             'params'=>array(),
@@ -19,6 +19,10 @@ return array(
         'authentikacio'=>array(
             'class'=>'Authentication_Site_Component',
             'allowed_slots'=>array()
+        ),
+        'teszt' => array(
+            'class'=>'TestData',
+            'allowed_slots'=>array('login')
         )
     )
 

@@ -49,4 +49,10 @@ class Admin extends Felhasznalo{
         return $u;
 
     }
+
+
+    protected function onBeforeCreate(array $params=null){
+        return parent::onBeforeCreate($params);
+
+    }
 }
