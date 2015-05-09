@@ -44,7 +44,13 @@ class PersistenceManager{
      * return a megadott táblával, és paraméterekkel rendelkező objects
      */
     public function getObjectsByField($class, $params=null){
-        $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+       // $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        if($class!='Admin' && $class!='Ugyfel')
+        {
+            $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        }else{
+            $sql=sprintf("SELECT * FROM %s s inner join felhasznalo f on s.id=f.id WHERE", strtolower($class));
+        }
         $counter=0;
         foreach($params as $key=>$value) {
             $sql .= " " . $key . " = " . " '".$value."'";
