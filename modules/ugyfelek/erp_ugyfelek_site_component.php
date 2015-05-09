@@ -95,7 +95,7 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
 
   ?>
         <?
-        $this->showPagination(count($osszes));
+        $this->showPagination(count($erp_u));
         ?>
 
         <div class="listtable">
@@ -147,7 +147,7 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
         </div>
 
         <?
-        $this->showPagination(count($osszes));
+        $this->showPagination(count($erp_u));
 
 
 

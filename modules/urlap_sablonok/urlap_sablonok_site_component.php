@@ -41,8 +41,17 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         if(!empty($_POST['GetFields'])) {
             $this->showFieldList = true;
         }
-        if(!empty($_POST['back']) || !empty($_POST['save'])){
-            $this->showAddForm=false;
+        if(!empty($_POST['back']) || !empty($_POST['save']))
+            $this->szerkesztes=false;
+        if(!empty($_POST['save'])){
+            $adatok = array(
+                'azon' => $_POST['azon'],
+                'allapot' => $_POST['allapot'],
+                'letrehozas_datuma'=> date("j - n - Y"),
+                'admin_azon' => $_SESSION['PHPSESSID'].'213'
+            );
+            //$uk=$this->perm->updateObjectByFields('Ugyfel',$adatok, array("azon" => $_POST['azon']));
+            $this->perm->createObject("UrlapSablon", $adatok);
         }
         $this->pagination();
     }
@@ -104,16 +113,8 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                                 <td><input size="32" type="text" name="azon" value=""></td>
                             </tr>
                             <tr>
-                                <td><span>Létrehozás dátuma</span></td>
-                                <td><input type="text" name="date" id="date"/></td>
-                            </tr>
-                            <tr>
                                 <td><span>Állapot</span></td>
-                                <td><input size="32" type="text" name="varos" value=""></td>
-                            </tr>
-                            <tr>
-                                <td><span>Admin azon</span></td>
-                                <td><input size="32" type="text" name="ir" value=""></td>
+                                <td><input size="32" type="text" name="allapot" value=""></td>
                             </tr>
                             </tbody>
                         </table>

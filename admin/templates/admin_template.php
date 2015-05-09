@@ -39,6 +39,9 @@ class Admin_Template extends Site_Template{
                   <li>
                       <a href="?page=sablon"><span>Sablonok</span></a>
                   </li>
+                  <li>
+                      <a href="?page=igenyles"><span>Igénylések</span></a>
+                  </li>
                 <?
               }
               else {

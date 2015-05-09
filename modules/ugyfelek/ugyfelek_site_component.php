@@ -195,7 +195,7 @@ class Ugyfelek_Site_Component extends Site_Component{
                             </tr>
                             <tr>
                                 <td><span>Telefon</span></td>
-                                <td><input type="number" name="telefon" value="<?echo $customer[0]->getUgyfelFields()['telefon']?>"></td>
+                                <td><input type="tel" name="telefon" value="<?echo $customer[0]->getUgyfelFields()['telefon']?>"></td>
                             </tr>
                             <tr>
                                 <td><span>Cím</span></td>
