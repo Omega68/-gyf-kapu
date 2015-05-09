@@ -52,7 +52,10 @@ class Ugyfelek_Site_Component extends Site_Component{
                         'cim' => $_POST['cim'],
                         'telefon' => $_POST['telefon']
                     );
-                $uk=$this->perm->updateObjectByFields('Ugyfel',$adatok, array("azon" => $_POST['azon']));
+                //$uk=$this->perm->updateObjectByFields('Ugyfel',$adatok, array("azon" => $_POST['azon']));
+                $uk = $this->perm->getObjectsByField("Ugyfel", array("azon" => $_POST['azon']))[0];
+                $uk->setUgyfelFields($adatok);
+
             }
 
 
@@ -84,7 +87,7 @@ class Ugyfelek_Site_Component extends Site_Component{
         ?>
 
         <div class="form_box">
-            <h1>Ugyfelek adatai</h1>
+            <h1>Ügyfelek adatai</h1>
         </div>
         <br/>
         
@@ -170,7 +173,7 @@ class Ugyfelek_Site_Component extends Site_Component{
           ?>
             <form action="" method="POST">
         <div class="form_box">
-        <h1>Ugyfel adatainak módosítása</h1>
+        <h1>Ügyfél adatainak módosítása</h1>
         <input type="submit" name="save" value="Mentés" class="save_button">
         <input type="submit" name="back" value="Vissza" class="back_button">
         <br/>
@@ -184,7 +187,7 @@ class Ugyfelek_Site_Component extends Site_Component{
                             <tbody>
                             <tr>
                                 <td><span>Azonosító</span></td>
-                                <td><input type="text" name="azon"  value="<? echo $customer[0]->getUgyfelFields()['azon'] ?>"></td>
+                                <td><input type="text" name="azon" readonly="readonly"  value="<? echo $customer[0]->getUgyfelFields()['azon'] ?>"></td>
                             </tr>
                             <tr>
                                 <td><span>E-mail</span></td>

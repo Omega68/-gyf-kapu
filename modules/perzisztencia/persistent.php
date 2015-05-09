@@ -149,9 +149,21 @@ abstract class Persistent{
       if($this->validationError($this->validateFields($field_values)))
           return;
 
+      $actual = get_class($this);
+      $classes = array();
+      $classes[] = $actual;
+      while (strcmp(get_parent_class($actual),'Persistent')!=0) {
+          $actual = get_parent_class($actual);
+          $classes[] = $actual;
+      }
+      $table = strtolower($classes[0]);
+      for($i=1; $i<count($classes); $i++)
+          $table = $table.sprintf(" INNER JOIN %s USING(id)", strtolower($classes[$i]));
 
-      $sql = sprintf("UPDATE %s SET %s WHERE id = %s", strtolower(get_class($this)), implode(", ", $s) , $this->id);
-    $result = $this->db->query($sql);
+
+      $sql = sprintf("UPDATE %s SET %s WHERE id = %s", $table, implode(", ", $s) , $this->id);
+    //echo $sql;
+      $result = $this->db->query($sql);
     return $result;
   }
 
