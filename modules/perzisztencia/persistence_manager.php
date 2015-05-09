@@ -67,7 +67,13 @@ class PersistenceManager{
     }
     
     public function getObjectsByFieldOr($class, $params=null){
-        $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+       // $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        if($class!='Admin' && $class!='Ugyfel')
+        {
+            $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        }else{
+            $sql=sprintf("SELECT * FROM %s s inner join felhasznalo f on s.id=f.id WHERE", strtolower($class));
+        }
         $counter=0;
         foreach($params as $key=>$value) {
             $sql .= " " . strtolower($key) . " LIKE " . " '%".strtolower($value)."%'";
@@ -136,7 +142,13 @@ class PersistenceManager{
      * @return visszatérési érték maguk az object-ek
      */
     public function getObjectsByLimitOffsetOrderBy($class,$limit=null,$offset=null,$order=null,$isDesc=false){
-        $sql = sprintf("SELECT * FROM %s ", strtolower($class));
+      //  $sql = sprintf("SELECT * FROM %s ", strtolower($class));
+        if($class!='Admin' && $class!='Ugyfel')
+        {
+            $sql = sprintf("SELECT * FROM %s", strtolower($class));
+        }else{
+            $sql=sprintf("SELECT * FROM %s s inner join felhasznalo f on s.id=f.id ", strtolower($class));
+        }
         $counter=0;
         if($order!=null){
             $sql.=" ORDER BY ".$order;
@@ -201,7 +213,13 @@ class PersistenceManager{
 	}
   
     public function getObjectsByFieldLimitOffsetOrderByOr($class, $params=null, $limit=null,$offset=null, $order=null, $isDesc=false){
-        $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        if($class!='Admin' && $class!='Ugyfel')
+        {
+            $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        }else{
+            $sql=sprintf("SELECT * FROM %s s inner join felhasznalo f on s.id=f.id WHERE", strtolower($class));
+        }
+
         $counter=0;
         foreach($params as $key=>$value) {
             $sql .= " " . strtolower($key) . " LIKE " . " '%".strtolower($value)."%'";
@@ -251,6 +269,12 @@ class PersistenceManager{
      */
     public function getObjectsBiggerOrLess($class,$param,$value,$limit=null,$offset=null, $bigger=false,$order=null, $isDesc=false){
         $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+       /* if($class!='Admin' && $class!='Ugyfel')
+        {
+            $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        }else{
+            $sql=sprintf("SELECT * FROM %s s inner join felhasznalo f on s.id=f.id WHERE", strtolower($class));
+        }*/
         $counter=0;
         //param-nak oszlop névnek kell lennie
         if($bigger)
