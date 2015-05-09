@@ -26,16 +26,11 @@ class Authentication_Site_Component extends Site_Component{
         if (isset($_POST['submit'])) {
             if(!$this->auth->login($_REQUEST['azon'],$_REQUEST['pass'])){
                 $this->error = true;
-            } else {
-                header("Location: index.php");
-                die();
             }
         }
 
         if(isset($_POST['logout'])){
             $this->auth->logout();
-            header("Location: index.php");
-            die();
         }
 
         if (isset($_POST['register'])){
@@ -83,7 +78,7 @@ class Authentication_Site_Component extends Site_Component{
     {
         if(!$this->auth->isUserAuthorized()) {
             ?>
-            <form action="" method="post">
+            <form action="index.php" method="post">
              <table>
                  <? if(!$this->register && !$this->registerUser){ ?>
 
@@ -197,7 +192,7 @@ class Authentication_Site_Component extends Site_Component{
             <?
             }}else{
          ?>
-            <form action="" method="post">
+            <form action="index.php" method="post">
                     <input type="submit" name="logout" value="logout">
             </form>
             <?

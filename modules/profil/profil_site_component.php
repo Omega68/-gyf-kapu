@@ -89,7 +89,7 @@ class Profil_Site_Component extends Site_Component{
                      <tr><td colspan="2"><input type="submit" name="submit" value="Jelszó megváltoztatása!"></td></tr>
                      <? if($this->error) {
                             echo '<tr><td colspan="2">Rossz a megadott régi jelszó!</td></tr>';
-                            
+
                         }
                          if($this->errorNew){
                              echo '<tr><td colspan="2">Nincs megadva új jelszó!</td></tr>';
