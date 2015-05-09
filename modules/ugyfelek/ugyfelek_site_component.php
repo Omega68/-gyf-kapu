@@ -73,11 +73,11 @@ class Ugyfelek_Site_Component extends Site_Component{
             if($_SESSION['ukemail']==1) $ugyfel_adatok['email'] = $_SESSION['usearchString'];
             if($_SESSION['uktelefon']==1) $ugyfel_adatok['telefon'] = $_SESSION['usearchString'];
             
-            $ugyfelek=$this->perm->getObjectsByFieldLimitOffsetOrderByOr("Ugyfel",$ugyfel_adatok,$this->limit,$this->offset,'id');
+            $ugyfelek=$this->perm->getObjectsByFieldLimitOffsetOrderByOr("Ugyfel",$ugyfel_adatok,$this->limit,$this->offset,'azon');
             $osszes=$this->perm->getObjectsByFieldOr("Ugyfel", $ugyfel_adatok);          
         }
         else{
-          $ugyfelek=$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'id');
+          $ugyfelek=$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'azon');
           $osszes=$this->perm->getAllObjects("Ugyfel");
         }
         

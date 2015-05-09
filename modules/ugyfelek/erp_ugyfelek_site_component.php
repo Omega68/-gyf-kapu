@@ -65,7 +65,7 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
     function show(){
 
         //$ugyfelek=$this->perm->getAllObjects("Ugyfel");
-        $ugyfelek=$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'id');
+        $ugyfelek=$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'azon');
 
         $osszes=$this->perm->getAllObjects("Ugyfel");
 
