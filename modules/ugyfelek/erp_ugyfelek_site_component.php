@@ -72,7 +72,7 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
     function show(){
         if(!$this->szerkesztes){
         // echo $_POST["limit"].' '.$_POST['offset'].' '.$_POST['pagination'];
-        $ugyfelek=$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'azon');
+        $ugyfelek=$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'id');
         $osszes=$this->perm->getAllObjects("Ugyfel");
         ?>
 
