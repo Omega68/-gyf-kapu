@@ -50,7 +50,6 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
                     'azon'=>$this->inviteAzon,
                     'kod' => $this->r
                 );
-                var_dump($adatok);
                 $uk=$this->perm->createObject('ERPUgyfelKod',$adatok);
                 $this->sent = true;
 
@@ -79,7 +78,21 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
 <?
         $json = file_get_contents('http://erp.fejlesztesgyak2015.info/api.php?module=ugyfel_api&function=allUgyfel&key=2e6766863522c270667cd91952db15f5');
 
-        var_dump(json_decode($json, true));
+        $erp = json_decode($json, true);
+        $erp_u = array();
+        foreach($erp as $u){
+                $adatok = array();
+                $adatok['azon'] = $u['azonosito'];
+                $adatok['nev'] = $u['nev'];
+                $adatok['cim'] = $u['cim_irszam']." ".$u['cim_varos'].", ".$u['cim_utca_hsz'];
+                $adatok['telefon'] = $u['telefon'];
+                $adatok['email'] = $u['email'];
+                $erp_u[] = $adatok;
+                unset($adatok);
+        }
+
+        $erp_u = $this->tesztAdat($erp_u);
+
   ?>
         <?
         $this->showPagination(count($osszes));
@@ -90,6 +103,7 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
                 <tr>
                     <th>#</th>
                     <th>Azonosító</th>
+                    <th>Név</th>
                     <th>Cim</th>
                     <th>E-mail</th>
                     <th>Telefon</th>
@@ -98,23 +112,24 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
 
                 <?
                 $this->sorszam=$this->offset;
-                foreach($ugyfelek as $f){
+                foreach($erp_u as $f){
                     echo '<tr>';
                     echo '<td>'.($this->sorszam + 1.).'</td>';
-                    echo '<td>'.$f->getUgyfelFields()['azon'].'</td>';
-                    echo '<td>'.$f->getUgyfelFields()['cim'].'</td>';
-                    echo '<td>'.$f->getUgyfelFields()['email'].'</td>';
-                    echo '<td>'.$f->getUgyfelFields()['telefon'].'</td>';
+                    echo '<td>'.$f['azon'].'</td>';
+                    echo '<td>'.$f['nev'].'</td>';
+                    echo '<td>'.$f['cim'].'</td>';
+                    echo '<td>'.$f['email'].'</td>';
+                    echo '<td>'.$f['telefon'].'</td>';
                     ?>
                     <td>
 
                         <form action="" method="post">
                         <input type="submit" name="inviteButton" value="Meghívó küldése" >
-                        <input type="hidden" name="email" value="<? echo $f->getUgyfelFields()['email'] ?>">
-                        <input type="hidden" name="inviteAzon" value="<? echo $f->getUgyfelFields()['azon'] ?>">
+                        <input type="hidden" name="email" value="<? echo $f['email'] ?>">
+                        <input type="hidden" name="inviteAzon" value="<? echo $f['azon'] ?>">
                         </form>
                     <?
-                    if($this->inviteAzon == $f->getUgyfelFields()['azon'] && $this->sent){
+                    if($this->inviteAzon == $f['azon'] && $this->sent){
                         echo "<p style=\"color: red;\">Meghívó elküldve! Kód: ";
                         echo $this->r. "</p>";
                     }
@@ -221,5 +236,27 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
             </form>
         </div>
     <?
+    }
+
+    private function tesztAdat($erp_u){
+        $adatok = array();
+        $adatok['azon'] = 67676;
+        $adatok['nev'] = "Teszt Adat 1.";
+        $adatok['cim'] = "4031 Debrecen, Teszt út 1.";
+        $adatok['telefon'] = "0652123456";
+        $adatok['email'] = "kruppa.kinga@gmail.com";
+        $erp_u[] = $adatok;
+        unset($adatok);
+
+        $adatok = array();
+        $adatok['azon'] = 9888;
+        $adatok['nev'] = "Teszt Adat 2.";
+        $adatok['cim'] = "4031 Debrecen, Teszt út 2.";
+        $adatok['telefon'] = "0652123456";
+        $adatok['email'] = "kruppa.kinga@gmail.com";
+        $erp_u[] = $adatok;
+        unset($adatok);
+
+        return $erp_u;
     }
 }
