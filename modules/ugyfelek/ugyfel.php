@@ -51,7 +51,10 @@ class Ugyfel extends Felhasznalo
 
     //TODO: getterek, setterek a Persistent-ben lévő getFields és setFields segítségével
     public function getUgyfelFields(){
-      return $this->getFields();
+        //$arr=array_merge($this->getFields(),$this->getFelhasznaloFields());
+        $arr=$this->getFields();
+        //var_dump($arr);
+        return $arr;
     }
     
     public function setUgyfelFields(array $values){
