@@ -58,7 +58,7 @@ class Mezo extends Persistent{
     public static function getMezokUrlaphoz($param) {
       $s = array();
       $s[] = 'id';
-      return Persistent::getSelectFields($s,'Mezo','sablon_azon',$param);    
+    //  return Persistent::getSelectFields($s,'Mezo','sablon_azon',$param);
     }
     
     protected function onBeforeDelete(array $params=null) {}

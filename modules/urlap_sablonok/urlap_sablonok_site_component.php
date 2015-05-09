@@ -38,6 +38,11 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         if(!empty($_POST['new'])){
             $this->showAddForm=true;
         }
+        if(isset($_POST['deleteButton']) && isset($_POST['deleteAzon'])){
+            $azon = $_POST['deleteAzon'];
+            $u = $this->perm->getObjectsByField("UrlapSablon", array('azon'=>$azon))[0];
+            $u->delete();
+        }
         if(!empty($_POST['GetFields'])) {
             $this->showFieldList = true;
         }
@@ -112,10 +117,16 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                                 <td><span>Azonosító</span></td>
                                 <td><input size="32" type="text" name="azon" value=""></td>
                             </tr>
-                            <tr>
+                          <!--  <tr>
                                 <td><span>Állapot</span></td>
                                 <td><input size="32" type="text" name="allapot" value=""></td>
-                            </tr>
+                            </tr> -->
+                            <tr><td><span>Állapot</span></td>
+                                <td><input type="radio" name="allapot" value="Aktív" checked>Aktív
+                                     <br>
+                                <input type="radio" name="allapot" value="Passzív">Passzív
+                                </td>
+                                </tr>
                             </tbody>
                         </table>
                     </td>
@@ -167,10 +178,11 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 echo '<input type="hidden" name="sablon_id" value="'.$sablonok[$i]->getUrlapSablonFields()['id'].'">';
                 echo '<td> <input type="submit" name="Edit" value="Szerkesztés"></td>';
                 echo '</form>';
-                echo '<form method="post">';
-                echo '<input type="hidden" name="sablon_id" value="'.$sablonok[$i]->getUrlapSablonFields()['id'].'">';
-                echo '<td> <input type="submit" name="Delete" value="Törlés"></td>';
-                echo '</form>';
+                ?><td> <form action="" method="post">
+                    <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott ügyfelet?')" >
+                    <input type="hidden" name="deleteAzon" value="<? echo $sablonok[$i]->getUrlapSablonFields()['azon'] ?>">
+                </form></td>
+                <?
                 echo '</tr>';
                 $this->sorszam++;
             }
