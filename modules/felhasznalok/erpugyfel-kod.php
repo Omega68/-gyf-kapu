@@ -30,17 +30,9 @@ class ERPUgyfelKod extends Persistent{
   */
   protected function onAfterCreate(array $params=null){
     $this->azon=$params['azon'];
-    $this->jelszo=$params['jelszo'];
+    $this->jelszo=$params['kod'];
   }
-  
-  //TODO: getterek, setterek a Persistent-ben l�v� getFields �s setFields seg�ts�g�vel
-    public function getFelhasznaloFields(){
-      return $this->getFields();
-    }
-    
-    public function setFelhasznaloFields(array $values){
-      return $this->setFields($values);
-    }     
+
     
     protected function onBeforeDelete(array $params=null) {}
 
@@ -65,9 +57,6 @@ class ERPUgyfelKod extends Persistent{
         return $this->setFields($values);
     }
 
-    public function to_string(){
-        return implode(", ", $this->getUgyfelFields());
-    }
 
 }
 ?>

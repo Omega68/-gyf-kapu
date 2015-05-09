@@ -4,6 +4,7 @@ class Felhasznalo extends Persistent{
 
  protected $azon;
  protected $jelszo;
+ protected $email;
 
  /**
   return hiba k�dok array
@@ -29,6 +30,7 @@ class Felhasznalo extends Persistent{
   protected function onAfterCreate(array $params=null){
     $this->azon=$params['azon'];
     $this->jelszo=$params['jelszo'];
+    $this->jelszo=$params['email'];
   }
   
   //TODO: getterek, setterek a Persistent-ben l�v� getFields �s setFields seg�ts�g�vel
@@ -64,9 +66,13 @@ class Felhasznalo extends Persistent{
     }
 
     protected function onBeforeCreate(array $params=null){
-        $params['azon'] = $params['azon'];
-        $params['jelszo'] = md5($params['jelszo']);
+        if(isset($params['jelszo'])){
+            $params['jelszo'] = md5($params['jelszo']);
+        }
+
         return $params;
     }
+
+
 }
 ?>
