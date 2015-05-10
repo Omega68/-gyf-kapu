@@ -48,6 +48,11 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $u = $this->perm->getObjectsByField("UrlapSablon", array('azon'=>$azon))[0];
             $u->delete();
         }
+        if(isset($_POST['deleteField']) && isset($_POST['fieldAzon'])){
+            $fieldAzon=$_POST['fieldAzon'];
+            $u = $this->perm->getObjectsByField("Mezo", array('azon'=>$fieldAzon))[0];
+            $u->delete();
+        }
         if(!empty($_POST['GetFields'])) {
             $this->showFieldList = true;
         }
@@ -59,7 +64,6 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $this->addFieldForm=true;
         }
         if(!empty($_POST['change'])){
-            echo "belép";
             $adatok = array(
                 'azon' => $_POST['azon'],
                 'allapot' => $_POST['allapot'],
@@ -84,18 +88,21 @@ class Urlap_sablonok_Site_Component extends Site_Component{
              $this->perm->createObject("UrlapSablon", $adatok);
         }
         if(!empty($_POST['saveField'])){
-            $kell=false;
-            if($_POST['kotelezo']=='Kötelező')
-                $kell=true;
-            $adatok = array(
-                'azon' => $_POST['azon'],
-                'tipus' => $_POST['tipus'],
-                'kotelezoseg' => var_export($kell,true),
-                'sablon_azon' => "".$_POST['sablon_azon']
-            );
-            //$this->perm->updateObjectByFields('UrlapSablon',$adatok);
-            /*  $uk = $this->perm->getObjectsByField("UrlapSablon", array("azon" => $_POST['azon']))[0];
-              $uk->setUgyfelFields($adatok);*/
+            if($_POST['kotelezoseg']==1) {
+                $adatok = array(
+                    'azon' => $_POST['azon'],
+                    'tipus' => $_POST['tipus'],
+                    'kotelezoseg' => true,
+                    'sablon_azon' => "" . $_POST['sablon_azon']
+                );
+            } else{
+                $adatok = array(
+                    'azon' => $_POST['azon'],
+                    'tipus' => $_POST['tipus'],
+                    'kotelezoseg' => false,
+                    'sablon_azon' => "" . $_POST['sablon_azon']
+                );
+            }
             $this->perm->createObject("Mezo", $adatok);
         }
         $this->pagination();
@@ -133,9 +140,9 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                                         </tr>
                                         <tr>
                                             <td><span>Kell-e</span></td>
-                                            <td><input type="radio" name="kotelezo" checked value="Kötelező">Kötelező
+                                            <td><input type="radio" name="kotelezoseg" checked value="1">Kötelező
                                                 <br>
-                                                <input type="radio" name="kotelezo" value="Opcionális">Opcionális
+                                                <input type="radio" name="kotelezoseg" value="0">Opcionális
                                             </td>
                                             <input type="hidden" name="sablon_azon" value="<?echo $_POST['sablon_azon']?>" >
                                         </tr>
@@ -216,7 +223,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $mezok=$this->perm->getObjectsByField("Mezo",$adatok);
             echo '<form method="post">
             <div class="form_box">
-            <h1>Mezok adatai</h1>
+            <h1>Mezők adatai</h1>
                 <input type="submit" name="back" value="Vissza" class="back_button">
             </div>
             <br/>
@@ -224,9 +231,9 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             <div class="listtable">
                 <table style="width:100%">
                         <tr>
-                            <th>azon</th>
-                            <th>tipus</th>
-                            <th>kotelezoseg</th>
+                            <th>Azonosító</th>
+                            <th>Típus</th>
+                            <th>Kötelezőség</th>
                             <th>Művelet</th>
                         </tr>
                         ';
@@ -236,7 +243,10 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 echo '<td>'.$mezok[$i]->getMezoFields()['azon'].'</td>';
                 echo '<td>'.$mezok[$i]->getMezoFields()['tipus'].'</td>';
                 echo '<td>'.$mezok[$i]->getMezoFields()['kotelezoseg'].'</td>';
-                echo '<td><input type="submit" name="ModifyField" value="Mezo módosítása"></td>';
+                ?> <td> <form action="" method="post">
+                    <input type="submit" name="deleteField" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott Mezőt?')" >
+                    <input type="hidden" name="fieldAzon" value="<? echo $mezok[$i]->getMezoFields()['azon'] ?>">
+                </form></td>;<?
                 echo '</tr>';
             }
             echo '
