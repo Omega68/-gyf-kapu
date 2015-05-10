@@ -19,6 +19,7 @@ class Urlap_sablonok_Loader extends AbstractLoader{
         switch ($classname) {
             case "Urlap_sablonok_Site_Component": return $this->myfolder."/urlap_sablonok_site_component.php";
             case "UrlapSablon" : return $this->myfolder."/urlap_sablon.php";
+            case "Urlap_sablonok_Site_Component_Ugyfel" : return $this->myfolder."/urlap_sablonok_site_component_ugyfel.php";
             default:
                 return null;
         }

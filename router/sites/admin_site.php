@@ -51,6 +51,10 @@ return array(
             'class'=>'ERP_Ugyfelek_Site_Component',
             'params'=>array(),
             'allowed_slots'=>array('page')
+        ),
+        'sablon_ugyfel'=>array(
+            'class'=>'Urlap_sablonok_Site_Component_Ugyfel',
+            'allowed_slots'=>array('page')
         )
 
   ) 

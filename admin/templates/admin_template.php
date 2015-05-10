@@ -47,6 +47,9 @@ class Admin_Template extends Site_Template{
               else {
                   ?>
                   <li>
+                      <a href="?page=sablon_ugyfel"><span>Sablonok</span></a>
+                  </li>
+                  <li>
                       <a href="?page=igenyles"><span>Igénylések</span></a>
                   </li>
                   <?
