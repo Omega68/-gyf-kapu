@@ -37,12 +37,44 @@ class Igenylesek_Site_Component extends Site_Component{
             );
             //$uk=$this->perm->updateObjectByFields('Ugyfel',$adatok, array("azon" => $_POST['azon']));
             $uk = $this->perm->getObjectsByField("Igenyles", array("azon" => $_POST['azon']))[0];
+            if($uk->getIgenylesFields()['statusz'] != $_POST['statusz']){
+                $this->sendEmail($_POST['azon'],$_POST['statusz']);
+            }
             $uk->setIgenylesFields($adatok);
 
         }
 
-        if(isset($_POST['editButton']) && isset($_POST['szerkAzon']))
+
+        if(!empty($_POST['subs'])){
+            $adatok = array(
+                'igenyles_azon' => $_POST['igenyles_azon'],
+                'email' =>  $_POST['subsEmail']
+            );
+            $subs = $this->perm->createObject("Feliratkozas", $adatok);
+            $this->szerkesztes = true;
+        }
+
+        /*
+         * <input type="hidden" name="unsubs_email" value="<? echo $s->getFeliratkozasFields()[\'email\'] ?>">
+                        <input type="hidden" name="unsubs_igenyles_azon" value="<? echo $s->getFeliratkozasFields()[\'igenyles_azon\'] ?>">
+                        <input type="submit" name="unsubs" value="leiratkozás">'."</td>";
+         */
+
+        if(!empty($_POST['unsubs'])){
+            $adatok = array(
+                'igenyles_azon' => $_POST['unsubs_igenyles_azon'],
+                'email' =>  $_POST['unsubs_email']
+            );
+            $u = $this->perm->getObjectsByField("Feliratkozas", $adatok)[0];
+            $u->delete();
+            $this->szerkesztes = true;
+        }
+
+
+        if(isset($_POST['editButton']) && isset($_POST['szerkAzon'])){
             $this->szerkesztes=true;
+            $_SESSION['szerkAzon'] = $_POST['szerkAzon'];
+        }
         $this->pagination();
 
         $this->uploads();
@@ -51,7 +83,7 @@ class Igenylesek_Site_Component extends Site_Component{
 
     function show()
     {
-        if(!$this->szerkesztes) {
+        if(!$this->szerkesztes ) {
             $igenylesek = $this->perm->getObjectsByLimitOffsetOrderBy("Igenyles", $this->limit, $this->offset, 'azon');
             //    $igenylesek=$this->perm->getAllObjects("Igenyles");
             echo '
@@ -134,7 +166,7 @@ class Igenylesek_Site_Component extends Site_Component{
         }
         else{
             $lekerdezes_adatok=array(
-                'azon'=>"{$_POST['szerkAzon']}"
+                'azon'=>"{$_SESSION['szerkAzon']}"
             );
             //var_dump($lekerdezes_adatok);
             $customer=$this->perm->getObjectsByField('Igenyles',$lekerdezes_adatok);
@@ -185,6 +217,36 @@ class Igenylesek_Site_Component extends Site_Component{
                         </tbody>
                     </table>
                 </div>
+
+                <p>Igénylés állapotára való feliratkozás:</p>
+                <form method="post" enctype="multipart/form-data">
+                    E-mail: <input type="text" name="subsEmail" >
+                    <input type="hidden" name="igenyles_azon" value="<? echo $customer[0]->getIgenylesFields()['azon'] ?>">
+                    <input type="submit" name="subs" value="Feliratkozás">
+                </form>
+                <p><b>Igénylés állapotára feliratkozottak:</b></p>
+                <?
+                    //$subscribers = $this->perm->getAllObjects("Feliratkozas");
+                $subscribers = $this->perm->getObjectsByField("Feliratkozas", array("igenyles_azon"=> $customer[0]->getIgenylesFields()['azon']));
+
+                echo '<table>';
+                    foreach($subscribers as $s){
+                        echo "<tr>";
+                        echo "<td>".$s->getFeliratkozasFields()['email']."</td>";
+                        ?> <td>
+                        <input type="hidden" name="unsubs_email" value="<? echo $s->getFeliratkozasFields()['email'] ?>">
+                        <input type="hidden" name="unsubs_igenyles_azon" value="<? echo $s->getFeliratkozasFields()['igenyles_azon'] ?>">
+                        <input type="submit" name="unsubs" value="leiratkozás">
+                        </td><?
+                    }
+                if(empty($subscribers)){
+                    echo "<tr><td>";
+                    echo "Nincs feliratkozó.";
+                    echo "</td></tr>";
+                }
+                echo "</table>";
+                ?>
+
             </div>
             </form><?
         }
@@ -276,7 +338,7 @@ class Igenylesek_Site_Component extends Site_Component{
     }
 
     private function uploads(){
-        $target_dir = realpath(__DIR__ . '/../../uploads');
+        $target_dir = realpath(__DIR__ . '/../../ufkapu-uploads');
         if(isset($_POST["feltolt"])) {
             if (!$_FILES['fajl']['error']){
                 $tmp_name = $_FILES["fajl"]["tmp_name"];
@@ -293,12 +355,33 @@ class Igenylesek_Site_Component extends Site_Component{
     }
 
     private function getDownloadLink($ugyfel_azon){
-        $target_dir = realpath(__DIR__ . '/../../uploads');
+        //$target_dir = realpath(__DIR__ . '/../../ufkapu-uploads');
+        $target_dir = "http://hazik.fejlesztesgyak2015.info/kruppa_kinga/ufkapu-uploads";
         $v = NULL;
         $terv = $this->perm->getObjectsByField("KivitelezesiTerv", array("ugyfel_azon"=>$ugyfel_azon));
         if(!empty($terv)){
             $v = $target_dir."/".$terv[0]->getKivitelezesiTervFields()['path'];
         }
         return $v;
+    }
+
+    private function sendEmail($igenyles_azon, $statusz){
+        $subscribers = $this->perm->getObjectsByField("Feliratkozas", array("igenyles_azon"=> $igenyles_azon));
+        //$igenyles_azon
+        $headers = "Content-Type: text/html; charset=ISO-8859-1\r\n";
+        $message = '<html><body>';
+        $message .= "<h2>Ügyfélkapu - Igénylés állapotának változása</h2>
+                    <p>Tisztelt Felhasználó!</p>
+                    <p>A(z) <? echo $igenyles_azon ?> számú igénylés státusza megváltozott. Az új státusz: <? echo $statusz ?>. </p>";
+        $message .= "<p>Üdvözlettel,<br/>
+                        Ügyfélkapu<p>";
+        // In case any of our lines are larger than 70 characters, we should use wordwrap()
+        $message .= '</body></html>';
+        $message = wordwrap($message, 70, "\r\n");
+        // Send
+
+        foreach($subscribers as $s){
+            mail($s->getFeliratkozasFields()['email'], 'Ügyfélkapu - igénylés állapotának változása', $message, $headers);
+        }
     }
 }

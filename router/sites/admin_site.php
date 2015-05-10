@@ -59,6 +59,10 @@ return array(
         'igenyles_ugyfel' => array(
             'class'=>'Igenylesek_Site_Component_Ugyfel',
             'allowed_slots'=>array('page')
+        ),
+        'feliratkozas' => array(
+            'class'=>'Feliratkozas_Site_Component',
+            'allowed_slots'=>array('page')
         )
   ) 
 );

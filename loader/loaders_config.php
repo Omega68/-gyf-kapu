@@ -20,5 +20,6 @@ return array(
   ,"Error_Loader"=>"/modules/errors/loader.php"
   ,"Profil_Loader"=>"/modules/profil/loader.php"
   ,"Ertek_Loader"=>"/modules/ertek/loader.php"
+,"Feliratkozas_Loader"=>"/modules/feliratkozasok/loader.php"
 );
 
