@@ -54,6 +54,13 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $u = $this->perm->getObjectsByField("Mezo", array('azon'=>$fieldAzon))[0];
             $u->delete();
         }
+        if(isset($_POST['deleteValue']) && isset($_POST['azon'])){
+            $fieldAzon=$_POST['azon'];
+            $u = $this->perm->getObjectsByField("Ertek", array('azon'=>$fieldAzon))[0];
+            $u->delete();
+            $_POST['tipus']="Legördülős";
+            $_POST['azon']=$_POST['mezo_azon'];
+        }
         if(!empty($_POST['GetFields'])) {
             $this->showFieldList = true;
         }
@@ -119,7 +126,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         if(!empty($_POST['AddValue'])){
             $adatok=array(
                 'ertek'=>$_POST['ertek'],
-                'mezo_azon'=>$_POST['mezo_azon']
+                'mezo_azon'=>$_POST['azon']
             );
             $this->perm->createObject("Ertek",$adatok);
         }
@@ -127,9 +134,9 @@ class Urlap_sablonok_Site_Component extends Site_Component{
     }
 
     function show(){
-        if(!empty($_POST['tipus'])){
-            if($_POST['tipus']=='Legördülős'){
-                echo $_POST['sab_azon'];
+        if(!empty($_POST['tipus']) && ($_POST['tipus']=='Legördülős')){
+            {
+                //echo $_POST['sab_azon'];
                 $adatok=array(
                     'mezo_azon' => $_POST['azon']
                 );
@@ -146,7 +153,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                      <tr>
                         <td><span>Érték</span></td>
                         <td><input type="text" name="ertek" value=""></td>';?>
-                        <td><input type="hidden" name="mezo_azon" value="<?echo $_POST['azon']?>"></td>
+                        <td><input type="hidden" name="azon" value="<?echo $_POST['azon']?>"></td>
                         <td><input type="hidden" name="tipus" value="Legördülős"></td>';
                       <?
                     echo '</tr>
@@ -160,6 +167,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                         <tr>
                             <th>Érték</th>
                             <th>Mező azonosító</th>
+                            <th>Érték törlése</th>
                         </tr>
                         ';
                 $count=count($ertek);
@@ -168,8 +176,9 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                     echo '<td>'.$ertek[$i]->getErtekFields()['ertek'].'</td>';
                     echo '<td>'.$ertek[$i]->getErtekFields()['mezo_azon'].'</td>';
                     ?> <td> <form action="" method="post">
-                            <input type="submit" name="deleteField" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott Mezőt?')" >
-                            <input type="hidden" name="fieldAzon" value="<? echo $ertek[$i]->getErtekFields()['azon'] ?>">
+                            <input type="submit" name="deleteValue" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott értéket?')" >
+                            <input type="hidden" name="azon" value="<? echo $ertek[$i]->getErtekFields()['azon'] ?>">
+                            <input type="hidden" name="mezo_azon" value="<? echo $ertek[$i]->getErtekFields()['mezo_azon']?>">
                         </form></td>;<?
                     echo '</tr>';
                 }
