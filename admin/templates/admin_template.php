@@ -50,7 +50,7 @@ class Admin_Template extends Site_Template{
                       <a href="?page=sablon_ugyfel"><span>Sablonok</span></a>
                   </li>
                   <li>
-                      <a href="?page=igenyles"><span>Igénylések</span></a>
+                      <a href="?page=igenyles_ugyfel"><span>Igénylések</span></a>
                   </li>
                   <?
               }

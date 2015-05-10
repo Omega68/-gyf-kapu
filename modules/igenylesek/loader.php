@@ -19,6 +19,7 @@ class Igenylesek_Loader extends AbstractLoader{
         switch ($classname) {
             case "Igenylesek_Site_Component": return $this->myfolder."/igenylesek_site_component.php";
             case "Igenyles" : return $this->myfolder."/igenyles.php";
+            case "Igenylesek_Site_Component_Ugyfel" : return $this->myfolder."/igenylesek_site_component_ugyfel.php";
             default:
                 return null;
         }

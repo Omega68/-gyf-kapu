@@ -55,7 +55,10 @@ return array(
         'sablon_ugyfel'=>array(
             'class'=>'Urlap_sablonok_Site_Component_Ugyfel',
             'allowed_slots'=>array('page')
+        ),
+        'igenyles_ugyfel' => array(
+            'class'=>'Igenylesek_Site_Component_Ugyfel',
+            'allowed_slots'=>array('page')
         )
-
   ) 
 );
