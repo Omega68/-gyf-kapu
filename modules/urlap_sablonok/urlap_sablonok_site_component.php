@@ -131,7 +131,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             if($_POST['tipus']=='Legördülős'){
                 echo $_POST['sab_azon'];
                 $adatok=array(
-                    'azon' => "".$_POST['azon']
+                    'mezo_azon' => $_POST['azon']
                 );
                 $ertek=$this->perm->getObjectsByField("Ertek",$adatok);
                 echo '<form method="post">
@@ -165,7 +165,6 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 $count=count($ertek);
                 for($i=0;$i<$count;$i++){
                     echo '<tr>';
-                    echo '<td>'.$ertek[$i]->getErtekFields()['azon'].'</td>';
                     echo '<td>'.$ertek[$i]->getErtekFields()['ertek'].'</td>';
                     echo '<td>'.$ertek[$i]->getErtekFields()['mezo_azon'].'</td>';
                     ?> <td> <form action="" method="post">
@@ -315,6 +314,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                             <th>Típus</th>
                             <th>Kötelezőség</th>
                             <th>Művelet</th>
+                            <th>Ertekek</th>
                         </tr>
                         ';
             $count=count($mezok);
@@ -327,6 +327,15 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                     <input type="submit" name="deleteField" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott Mezőt?')" >
                     <input type="hidden" name="fieldAzon" value="<? echo $mezok[$i]->getMezoFields()['azon'] ?>">
                 </form></td>;<?
+                echo '<td>';
+                if($mezok[$i]->getMezoFields()['tipus']=='Legördülős'){
+                    ?><form action="" method="post">
+                    <input type="submit" name="getValuesOfFields" value="Értékek" >
+                    <input type="hidden" name="azon" value="<? echo $mezok[$i]->getMezoFields()['azon'] ?>">
+                    <input type="hidden" name="tipus" value="Legördülős">
+                    </form></td><?
+                }
+                echo '</td>';
                 echo '</tr>';
             }
             echo '
