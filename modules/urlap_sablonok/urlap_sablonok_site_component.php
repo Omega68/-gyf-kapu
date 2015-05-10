@@ -53,6 +53,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $fieldAzon=$_POST['fieldAzon'];
             $u = $this->perm->getObjectsByField("Mezo", array('azon'=>$fieldAzon))[0];
             $u->delete();
+            $this->showFieldList=true;
         }
         if(isset($_POST['deleteValue']) && isset($_POST['azon'])){
             $fieldAzon=$_POST['azon'];
@@ -340,6 +341,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 ?> <td> <form action="" method="post">
                     <input type="submit" name="deleteField" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott Mezőt?')" >
                     <input type="hidden" name="fieldAzon" value="<? echo $mezok[$i]->getMezoFields()['azon'] ?>">
+                    <input type="hidden" name="sab_azon" value="<?echo $_POST['sab_azon']?>">
                 </form></td>;<?
                 echo '<td>';
                 if($mezok[$i]->getMezoFields()['tipus']=='Legördülős'){
