@@ -19,5 +19,6 @@ return array(
   ,"Felhasznalok_Loader"=>"/modules/felhasznalok/loader.php"
   ,"Error_Loader"=>"/modules/errors/loader.php"
   ,"Profil_Loader"=>"/modules/profil/loader.php"
+  ,"Ertek_Loader"=>"/modules/ertek/loader.php"
 );
 

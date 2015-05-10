@@ -1,6 +1,6 @@
 <html>
 <head>
-    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+   <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
     <link rel="stylesheet" type="text/css"
           href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" />
@@ -30,6 +30,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
     private $showAddForm=false;
     private $showFieldList=false;
     private $addFieldForm=false;
+    private $dropDownType=false;
 
     protected function afterConstruction(){
         $this->perm=PersistenceManager::getInstance();
@@ -59,6 +60,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         if(!empty($_POST['back']) || !empty($_POST['save']) || !empty($_POST['change'])) {
             $this->szerkesztes = false;
             $this->addFieldForm=false;
+            unset($_POST["tipus"]);
         }
         if(!empty($_POST['sablon_azon']) && !empty($_POST['addFieldButton'])){
             $this->addFieldForm=true;
@@ -114,10 +116,70 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             }
             $this->perm->createObject("Mezo", $adatok);
         }
+        if(!empty($_POST['AddValue'])){
+            $adatok=array(
+                'ertek'=>$_POST['ertek'],
+                'mezo_azon'=>$_POST['mezo_azon']
+            );
+            $this->perm->createObject("Ertek",$adatok);
+        }
         $this->pagination();
     }
 
     function show(){
+        if(!empty($_POST['tipus'])){
+            if($_POST['tipus']=='Legördülős'){
+                echo $_POST['sab_azon'];
+                $adatok=array(
+                    'azon' => "".$_POST['azon']
+                );
+                $ertek=$this->perm->getObjectsByField("Ertek",$adatok);
+                echo '<form method="post">
+            <div class="form_box">
+            <h1>Érték adatai</h1>
+                <input type="submit" name="back" value="Vissza" class="back_button">
+            </div>
+            <br/>
+            <h2>Új érték</h2>
+                <div class="form_box">
+                <form method="post">
+                     <tr>
+                        <td><span>Érték</span></td>
+                        <td><input type="text" name="ertek" value=""></td>';?>
+                        <td><input type="hidden" name="mezo_azon" value="<?echo $_POST['azon']?>"></td>
+                        <td><input type="hidden" name="tipus" value="Legördülős"></td>';
+                      <?
+                    echo '</tr>
+                        <td><input type="submit" name="AddValue" value="Új legördülő érték hozzáadása"></td>
+                </div>
+                </form>
+            <br/>
+            <br/>
+            <div class="listtable">
+                <table style="width:100%">
+                        <tr>
+                            <th>Érték</th>
+                            <th>Mező azonosító</th>
+                        </tr>
+                        ';
+                $count=count($ertek);
+                for($i=0;$i<$count;$i++){
+                    echo '<tr>';
+                    echo '<td>'.$ertek[$i]->getErtekFields()['azon'].'</td>';
+                    echo '<td>'.$ertek[$i]->getErtekFields()['ertek'].'</td>';
+                    echo '<td>'.$ertek[$i]->getErtekFields()['mezo_azon'].'</td>';
+                    ?> <td> <form action="" method="post">
+                            <input type="submit" name="deleteField" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott Mezőt?')" >
+                            <input type="hidden" name="fieldAzon" value="<? echo $ertek[$i]->getErtekFields()['azon'] ?>">
+                        </form></td>;<?
+                    echo '</tr>';
+                }
+                echo '
+                </table>
+            </div>
+            </form>';
+            }
+        }else
         if($this->addFieldForm){
             ?><form method="post">
             <div class="form_box">
@@ -140,12 +202,19 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                                         </tr>
                                         <tr>
                                             <td><span>Típus</span></td>
-                                            <td><input type="radio" name="tipus" checked value="Szám">Szám
+                                            <td>
+                                            <select name="tipus">
+                                                <option value="Szám">Szám</option>
+                                                <option id="legordulos" value="Legördülős">Legördülős</option>
+                                                <option value="Szöveg">Szöveg</option>
+                                            </select>
+                                                </td>
+                                            <!--<td><input type="radio" name="tipus" checked value="Szám">Szám
                                                 <br>
-                                                <input type="radio" name="tipus" value="Legördülős">Legördülős
+                                                <input id="legordulos" type="radio" name="tipus" value="Legördülős">Legördülős
                                                 <br>
                                                 <input type="radio" name="tipus" value="Szöveg">Szöveg
-                                            </td>
+                                            </td>-->
                                         </tr>
                                         <tr>
                                             <td><span>Kell-e</span></td>
@@ -155,6 +224,8 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                                             </td>
                                             <input type="hidden" name="sablon_azon" value="<?echo $_POST['sablon_azon']?>" >
                                         </tr>
+                                        </form>
+
                                     </tbody>
                                 </table>
                             </td>
