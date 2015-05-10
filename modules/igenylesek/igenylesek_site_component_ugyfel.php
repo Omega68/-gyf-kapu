@@ -65,30 +65,46 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component{
                 <table style="width:100%">
                         <tr>
                             <th>#</th>
-                            <th>azon</th>
-                            <th>státusz</th>
-                            <th>letrehozas datuma</th>
-                            <th>utolsó módosítása dátuma</th>
-                            <th>Sablon Azonosító</th>
+                            <th>Azonosító</th>
+                            <th>Státusz</th>
+                            <th>Létrehozás dátuma</th>
+                            <th>Utolsó módosítás dátuma</th>
+                            <th>Sablon azonosító</th>
+                            <th>Ügyfél azonosító</th>
                             <th>Mező</th>
+                            <th>Szerkesztés</th>
                             <th>Törlés</th>
                         </tr>
                         ';
             $count = count($igenylesek);
             $this->sorszam=$this->offset;
             for ($i = 0; $i < $count; $i++) {
+                $iFields = $igenylesek[$i]->getIgenylesFields();
                 echo '<tr>';
                 echo '<td>'.($this->sorszam + 1.).'</td>';
-                echo '<td>' . $igenylesek[$i]->getIgenylesFields()['azon'] . '</td>';
-                echo '<td>' . $igenylesek[$i]->getIgenylesFields()['statusz'] . '</td>';
-                echo '<td>' . $igenylesek[$i]->getIgenylesFields()['letrehozas_datuma'] . '</td>';
-                echo '<td>' . $igenylesek[$i]->getIgenylesFields()['utolso_modositas'] . '</td>';
-                echo '<td>' . $igenylesek[$i]->getIgenylesFields()['sablon_azon'] . '</td>';
-                echo '<td> <input type="submit" name="GetFilledFields" value="Kitoltott mezők lekérdezese"</td>';
-                ?><td> <form action="" method="post">
-                    <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott ügyfelet?')" >
-                    <input type="hidden" name="deleteAzon" value="<? echo $igenylesek[$i]->getIgenylesFields()['azon'] ?>">
-                </form></td>
+                echo '<td>' . $iFields['azon'] . '</td>';
+                echo '<td>' . $iFields['statusz'] . '</td>';
+                echo '<td>' . date("Y.m.d",strtotime($iFields['letrehozas_datuma'])) . '</td>';
+                echo '<td>' . date("Y.m.d",strtotime($iFields['utolso_modositas'])) . '</td>';
+                echo '<td>' . $iFields['sablon_azon'] . '</td>';
+                echo '<td>' . $iFields['ugyfel_azon'] . '</td>';
+
+                ?>
+
+                <td>
+
+                    <form action="" method="post">
+                        <input type="submit" name="editButton" value="Szerkesztés" >
+                        <input type="hidden" name="szerkAzon" value="<? echo $iFields['azon']?>">
+                    </form></td>
+
+
+                <td> <form action="" method="post">
+                        <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott igénylést?')" >
+                        <input type="hidden" name="deleteAzon" value="<? echo $iFields['azon'] ?>">
+                    </form></td>
+
+
                 <?
                 echo '</tr>';
                 $this->sorszam++;

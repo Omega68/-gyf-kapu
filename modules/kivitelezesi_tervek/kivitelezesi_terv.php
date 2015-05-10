@@ -1,7 +1,10 @@
 <?php
 
 class KivitelezesiTerv extends Persistent{
- 
+
+    protected $ugyfel_azon;
+    protected $path;
+
   //protected static function getTableName() {
   //      return 'kivitelezesi_terv';
   //}
@@ -14,16 +17,6 @@ class KivitelezesiTerv extends Persistent{
   */
   public function validate(array $params=null){
   $errors = array();
-         if(empty($params['azon']))
-         $errors[]='Nincs azon megadva';
-          if(empty($params['letrehozo']))
-         $errors[]='Nincs letrehozo megadva';
-          if(empty($params['datum']))
-         $errors[]='Nincs datum megadva';
-          if(empty($params['igenyles_azon']))
-         $errors[]='Nincs igenyles_azon megadva';
-          if(empty($params['dokumentum']))
-         $errors[]='Nincs dokumentum megadva';
   return $errors;
   }
   

@@ -95,17 +95,18 @@ class Igenylesek_Site_Component extends Site_Component{
 
                 <td>
                     <?
-                    $uid = u . $iFields['id'];
-                    if(isset($_SESSION[$uid])){
-                        echo "Kivitelezési terv feltöltve.";
-                        } else {
+                    $url = $this->getDownloadLink($iFields['ugyfel_azon']);
+                    if( $url == NULL){
                     ?>
                     <form method="post" enctype="multipart/form-data">
                         <input type="file" name="fajl" >
-                        <input type="hidden" name="id" value="<? echo $iFields['id'] ?>">
+                        <input type="hidden" name="ugyfel_azon" value="<? echo $iFields['ugyfel_azon'] ?>">
                         <input type="submit" name="feltolt" value="Feltölt">
                     </form>
-            <?}?>
+            <?} else { ?>
+                       <a href="<?echo $url?>">Letöltés</a>
+                    <?
+                    }?>
                 </td>
 
                 <td>
@@ -283,10 +284,21 @@ class Igenylesek_Site_Component extends Site_Component{
                 $ext  = pathinfo($name)['extension'];
                 //$file = $_FILES['fajl'];
                 //move_uploaded_file($tmp_name, $target_dir."/".spl_object_hash($file).".".($name[count($name)-1]));
-                move_uploaded_file($tmp_name, $target_dir."/"."kiv_terv-".$_POST['id'].".".$ext);
-                $uid = "u".$_POST['id'];
-                $_SESSION[$uid] = true;
+                move_uploaded_file($tmp_name, $target_dir."/"."kiv_terv-".$_POST['ugyfel_azon'].".".$ext);
+                $terv = $this->perm->createObject("KivitelezesiTerv", array("ugyfel_azon" => $_POST['ugyfel_azon'],
+                    "path"=>"kiv_terv-".$_POST['ugyfel_azon'].".".$ext));
+
             }
         }
+    }
+
+    private function getDownloadLink($ugyfel_azon){
+        $target_dir = realpath(__DIR__ . '/../../uploads');
+        $v = NULL;
+        $terv = $this->perm->getObjectsByField("KivitelezesiTerv", array("ugyfel_azon"=>$ugyfel_azon));
+        if(!empty($terv)){
+            $v = $target_dir."/".$terv[0]->getKivitelezesiTervFields()['path'];
+        }
+        return $v;
     }
 }
