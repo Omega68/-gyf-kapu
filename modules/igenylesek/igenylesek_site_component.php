@@ -44,6 +44,8 @@ class Igenylesek_Site_Component extends Site_Component{
             $this->szerkesztes=true;
         $this->pagination();
 
+        $this->uploads();
+
     }
 
     function show()
@@ -61,13 +63,14 @@ class Igenylesek_Site_Component extends Site_Component{
                 <table style="width:100%">
                         <tr>
                             <th>#</th>
-                            <th>azon</th>
-                            <th>státusz</th>
-                            <th>letrehozas datuma</th>
-                            <th>utolsó módosítása dátuma</th>
-                            <th>Sablon Azonosító</th>
+                            <th>Azonosító</th>
+                            <th>Státusz</th>
+                            <th>Létrehozás dátuma</th>
+                            <th>Utolsó módosítás dátuma</th>
+                            <th>Sablon azonosító</th>
                             <th>Ügyfél azonosító</th>
                             <th>Mező</th>
+                            <th>Kivitelezési terv</th>
                             <th>Szerkesztés</th>
                             <th>Törlés</th>
                         </tr>
@@ -83,16 +86,31 @@ class Igenylesek_Site_Component extends Site_Component{
                 echo '<td>' . $igenylesek[$i]->getIgenylesFields()['utolso_modositas'] . '</td>';
                 echo '<td>' . $igenylesek[$i]->getIgenylesFields()['sablon_azon'] . '</td>';
                 echo '<td>' . $igenylesek[$i]->getIgenylesFields()['ugyfel_azon'] . '</td>';
-                echo '<td> <input type="submit" name="GetFilledFields" value="Kitoltott mezők lekérdezese"</td>';
-                ?><td> <form action="" method="post">
-                    <input type="submit" name="editButton" value="Szerkesztés" >
-                    <input type="hidden" name="szerkAzon" value="<? echo $igenylesek[$i]->getIgenylesFields()['azon']?>">
-                </form></td>
-            <?
-                ?><td> <form action="" method="post">
-                    <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott ügyfelet?')" >
+
+                ?>
+
+                <td> <input type="submit" name="GetFilledFields" value="Kitoltott mezők lekérdezese"</td>
+
+                <td>
+                    <form method="post" enctype="multipart/form-data">
+                        <input type="file" name="fajl" >
+                        <input type="hidden" name="dokAzon" value="<? echo $igenylesek[$i]->getIgenylesFields()['azon'] ?>">
+                        <input type="submit" name="feltolt" value="Feltölt">
+                    </form>
+                </td>
+
+                <td> <form action="" method="post">
+                        <input type="submit" name="editButton" value="Szerkesztés" >
+                        <input type="hidden" name="szerkAzon" value="<? echo $igenylesek[$i]->getIgenylesFields()['azon']?>">
+                    </form></td>
+
+
+                <td> <form action="" method="post">
+                    <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott igénylést?')" >
                     <input type="hidden" name="deleteAzon" value="<? echo $igenylesek[$i]->getIgenylesFields()['azon'] ?>">
                 </form></td>
+
+
             <?
                 echo '</tr>';
                 $this->sorszam++;
@@ -243,5 +261,18 @@ class Igenylesek_Site_Component extends Site_Component{
             </form>
         </div>
     <?
+    }
+
+    private function uploads(){
+        $target_dir = __DIR__.'\\uploads\\';
+        if(isset($_POST["feltolt"])) {
+            if (!$_FILES['fajl']['error']){
+                $tmp_name = $_FILES["fajl"]["tmp_name"];
+                $name = explode(".", $_FILES["fajl"]["name"]);
+                //$file = $_FILES['fajl'];
+                //move_uploaded_file($tmp_name, $target_dir."/".spl_object_hash($file).".".($name[count($name)-1]));
+                move_uploaded_file($tmp_name, $target_dir."/".$name[0]."azon-".$_POST['dokAzon'].".".$name[count($name)-1]);
+            }
+        }
     }
 }
