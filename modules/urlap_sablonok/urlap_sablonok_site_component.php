@@ -331,7 +331,12 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 echo '<tr>';
                 echo '<td>'.$mezok[$i]->getMezoFields()['azon'].'</td>';
                 echo '<td>'.$mezok[$i]->getMezoFields()['tipus'].'</td>';
-                echo '<td>'.$mezok[$i]->getMezoFields()['kotelezoseg'].'</td>';
+                if($mezok[$i]->getMezoFields()['kotelezoseg']==true) {
+                    echo '<td>Kötelező</td>';
+                }
+                else{
+                    echo '<td>Opcionális</td>';
+                }
                 ?> <td> <form action="" method="post">
                     <input type="submit" name="deleteField" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott Mezőt?')" >
                     <input type="hidden" name="fieldAzon" value="<? echo $mezok[$i]->getMezoFields()['azon'] ?>">
