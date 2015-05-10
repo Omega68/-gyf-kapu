@@ -8,6 +8,7 @@ return array(
   ,"Uzenetek_Loader"=>"/modules/uzenetek/loader.php"
   ,"API_Loader"=>"/api/loader.php"
   ,"Ugyfelek_Loader"=>"/modules/ugyfelek/loader.php"
+  ,"PDF_Gen_Loader"=>"/modules/pdf_gen/loader.php"
   ,"Mezok_Loader"=>"/modules/mezok/loader.php"
   ,"Kivitelezesi_tervek_Loader"=>"/modules/kivitelezesi_tervek/loader.php"
   ,"Authentikacio_Loader"=>"/modules/authentikacio/loader.php"
