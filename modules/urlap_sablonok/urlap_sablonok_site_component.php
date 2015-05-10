@@ -64,12 +64,15 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $this->addFieldForm=true;
         }
         if(!empty($_POST['change'])){
-            $admin=$this->perm->getObject($_SESSION['PHPSESSID']);
+            $lekérdezés=array(
+                'id'=>"".$_SESSION['PHPSESSID']
+            );
+            $admin=$this->perm->getObjectsByField("Felhasznalo",$lekérdezés);
             $adatok = array(
                 'azon' => $_POST['azon'],
                 'allapot' => $_POST['allapot'],
                 'letrehozas_datuma'=> date("j - n - Y"),
-                'admin_azon' => $admin->getFelhasznaloFields('azon')
+                'admin_azon' => $admin[0]->getFelhasznaloFields()['azon']
             );
             //$this->perm->updateObjectByFields('UrlapSablon',$adatok);
             $uk = $this->perm->getObjectsByField('UrlapSablon', array("azon" => $_POST['azon']))[0];
@@ -77,12 +80,15 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             // $this->perm->createObject("UrlapSablon", $adatok);
         }
         if(!empty($_POST['save'])){
-            $admin=$this->perm->getObject($_SESSION['PHPSESSID']);
+            $lekérdezés=array(
+                'id'=>"".$_SESSION['PHPSESSID']
+            );
+            $admin=$this->perm->getObjectsByField("Felhasznalo",$lekérdezés);
             $adatok = array(
                 'azon' => $_POST['azon'],
                 'allapot' => $_POST['allapot'],
                 'letrehozas_datuma'=> date("j - n - Y"),
-                'admin_azon' => $admin->getFelhasznaloFields('azon')
+                'admin_azon' => $admin[0]->getFelhasznaloFields()['azon']
 
             );
             //$this->perm->updateObjectByFields('UrlapSablon',$adatok);
