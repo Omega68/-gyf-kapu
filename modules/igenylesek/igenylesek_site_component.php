@@ -94,22 +94,31 @@ class Igenylesek_Site_Component extends Site_Component{
                 <td> <input type="submit" name="GetFilledFields" value="Kitoltott mezők lekérdezese"</td>
 
                 <td>
+                    <?
+                    $uid = u . $iFields['id'];
+                    if(isset($_SESSION[$uid])){
+                        echo "Kivitelezési terv feltöltve.";
+                        } else {
+                    ?>
                     <form method="post" enctype="multipart/form-data">
                         <input type="file" name="fajl" >
-                        <input type="hidden" name="dokAzon" value="<? echo $igenylesek[$i]->getIgenylesFields()['azon'] ?>">
+                        <input type="hidden" name="id" value="<? echo $iFields['id'] ?>">
                         <input type="submit" name="feltolt" value="Feltölt">
                     </form>
+            <?}?>
                 </td>
 
-                <td> <form action="" method="post">
+                <td>
+
+                    <form action="" method="post">
                         <input type="submit" name="editButton" value="Szerkesztés" >
-                        <input type="hidden" name="szerkAzon" value="<? echo $igenylesek[$i]->getIgenylesFields()['azon']?>">
+                        <input type="hidden" name="szerkAzon" value="<? echo $iFields['azon']?>">
                     </form></td>
 
 
                 <td> <form action="" method="post">
                     <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott igénylést?')" >
-                    <input type="hidden" name="deleteAzon" value="<? echo $igenylesek[$i]->getIgenylesFields()['azon'] ?>">
+                    <input type="hidden" name="deleteAzon" value="<? echo $iFields['azon'] ?>">
                 </form></td>
 
 
@@ -266,14 +275,17 @@ class Igenylesek_Site_Component extends Site_Component{
     }
 
     private function uploads(){
-        $target_dir = __DIR__.'\\uploads\\';
+        $target_dir = realpath(__DIR__ . '/../../uploads');
         if(isset($_POST["feltolt"])) {
             if (!$_FILES['fajl']['error']){
                 $tmp_name = $_FILES["fajl"]["tmp_name"];
-                $name = explode(".", $_FILES["fajl"]["name"]);
+                $name = $_FILES["fajl"]["name"];
+                $ext  = pathinfo($name)['extension'];
                 //$file = $_FILES['fajl'];
                 //move_uploaded_file($tmp_name, $target_dir."/".spl_object_hash($file).".".($name[count($name)-1]));
-                move_uploaded_file($tmp_name, $target_dir."/".$name[0]."azon-".$_POST['dokAzon'].".".$name[count($name)-1]);
+                move_uploaded_file($tmp_name, $target_dir."/"."kiv_terv-".$_POST['id'].".".$ext);
+                $uid = "u".$_POST['id'];
+                $_SESSION[$uid] = true;
             }
         }
     }
