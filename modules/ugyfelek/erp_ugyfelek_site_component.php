@@ -24,7 +24,6 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
 
         if( isset($_POST['inviteButton']) && isset($_POST['email'])){
             if(!empty($_POST['email']) && !empty($_POST['inviteAzon'])){
-                echo "EMAIL: " . $_POST['email'] . " " . $_POST['inviteAzon'] . "<br/>";
                 // The message
                 $this->r = rand(1000,999999);
                 while(count($this->perm->getObjectsByField("ERPUgyfelKod", array("kod"=>$this->r)))>0){
@@ -45,9 +44,9 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
                 // Send
                 mail($_POST['email'], 'Ügyfélkapu - regisztrációs kód', $message, $headers);
 
-                $this->inviteAzon = $_POST['inviteAzon'];
+                $_SESSION['inviteAzon'] = $_POST['inviteAzon'];
                 $adatok = array(
-                    'azon'=>$this->inviteAzon,
+                    'azon'=>$_POST['inviteAzon'],
                     'kod' => $this->r
                 );
                 $uk=$this->perm->createObject('ERPUgyfelKod',$adatok);
@@ -76,7 +75,8 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
         <br/>
         <br/>
 <?
-        $json = file_get_contents('http://erp.fejlesztesgyak2015.info/api.php?module=ugyfel_api&function=allUgyfel&key=2e6766863522c270667cd91952db15f5');
+        $erp_url = 'http://erp.fejlesztesgyak2015.info/api.php?module=ugyfel_api&function=allUgyfel&key=2e6766863522c270667cd91952db15f5';
+        $json = file_get_contents($erp_url);
 
         $erp = json_decode($json, true);
         $erp_u = array();
@@ -120,25 +120,30 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
                     echo '<td>'.$f['cim'].'</td>';
                     echo '<td>'.$f['email'].'</td>';
                     echo '<td>'.$f['telefon'].'</td>';
-                    ?>
-                    <td>
 
-                        <form action="" method="post">
-                        <input type="submit" name="inviteButton" value="Meghívó küldése" >
-                        <input type="hidden" name="email" value="<? echo $f['email'] ?>">
-                        <input type="hidden" name="inviteAzon" value="<? echo $f['azon'] ?>">
-                        </form>
-                    <?
-                    if($this->inviteAzon == $f['azon'] && $this->sent){
-                        echo "<p style=\"color: red;\">Meghívó elküldve! Kód: ";
-                        echo $this->r. "</p>";
+                    $o = $this->perm->getObjectsByField("Ugyfel", array('azon'=>$f['azon']))[0];
+                    if(!isset($o)){
+
+                        ?>
+                        <td>
+
+                            <form action="" method="post">
+                            <input type="submit" name="inviteButton" value="Meghívó küldése" >
+                            <input type="hidden" name="email" value="<? echo $f['email'] ?>">
+                            <input type="hidden" name="inviteAzon" value="<? echo $f['azon'] ?>">
+                            </form>
+                        <?
+                        if($_SESSION['inviteAzon'] == $f['azon'] && $this->sent){
+                            echo "<p style=\"color: red;\">Meghívó elküldve! Kód: ";
+                            echo $this->r. "</p>";
+                        }
+                        ?>
+
+                        </td>
+
+                        <?
+                        echo '</tr>';
                     }
-                    ?>
-
-                    </td>
-
-                    <?
-                    echo '</tr>';
                     $this->sorszam++;
 
                 }
@@ -147,7 +152,7 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
         </div>
 
         <?
-        $this->showPagination(count($erp_u));
+        $this->showPagination(count($osszes));
 
 
 
@@ -246,17 +251,22 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
         $adatok['telefon'] = "0652123456";
         $adatok['email'] = "kruppa.kinga@gmail.com";
         $erp_u[] = $adatok;
-        unset($adatok);
 
-        $adatok = array();
         $adatok['azon'] = 9888;
         $adatok['nev'] = "Teszt Adat 2.";
         $adatok['cim'] = "4031 Debrecen, Teszt út 2.";
         $adatok['telefon'] = "0652123456";
         $adatok['email'] = "kruppa.kinga@gmail.com";
         $erp_u[] = $adatok;
-        unset($adatok);
 
+        $adatok['azon'] = 1234;
+        $adatok['nev'] = "MárBentVan AzAdatbázisban.";
+        $adatok['cim'] = "4031 Debrecen, Teszt út 3.";
+        $adatok['telefon'] = "0652123456";
+        $adatok['email'] = "kruppa.kinga@gmail.com";
+        $erp_u[] = $adatok;
+
+        unset($adatok);
         return $erp_u;
     }
 }

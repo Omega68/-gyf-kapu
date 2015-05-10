@@ -44,6 +44,7 @@ class Authentication_Site_Component extends Site_Component{
                 $eredetiKod = $eredetiKod[0]->getKodFields()['kod'];
 
                 if($_POST['kod'] == $eredetiKod){
+                    $_SESSION['kod'] = $eredetiKod;
                     $this->registerUser = true;
                     $this->register = false;
                 }
@@ -65,6 +66,7 @@ class Authentication_Site_Component extends Site_Component{
                 'jelszo' => '1234556'
             );
             $uk=$this->perm->createObject('Ugyfel',$adatok);
+
             if($uk == NULL){
                 $this->registerUser = true;
             }
@@ -142,6 +144,13 @@ class Authentication_Site_Component extends Site_Component{
                     </form>
                 <?
                 } else {
+
+                    $erp = $this->readERP();
+                    foreach ($erp as $e) {
+                       // if($e )
+                    }
+
+
                     ?>
 
                     <form action="" method="POST">
@@ -198,5 +207,53 @@ class Authentication_Site_Component extends Site_Component{
             <?
 
         }
+    }
+
+    private function readERP(){
+        $erp_url = 'http://erp.fejlesztesgyak2015.info/api.php?module=ugyfel_api&function=allUgyfel&key=2e6766863522c270667cd91952db15f5';
+        $json = file_get_contents($erp_url);
+
+        $erp = json_decode($json, true);
+        $erp_u = array();
+        foreach($erp as $u){
+            $adatok = array();
+            $adatok['azon'] = $u['azonosito'];
+            $adatok['nev'] = $u['nev'];
+            $adatok['cim'] = $u['cim_irszam']." ".$u['cim_varos'].", ".$u['cim_utca_hsz'];
+            $adatok['telefon'] = $u['telefon'];
+            $adatok['email'] = $u['email'];
+            $erp_u[] = $adatok;
+            unset($adatok);
+        }
+
+        $erp_u = $this->tesztAdat($erp_u);
+        return $erp_u;
+    }
+
+    private function tesztAdat($erp_u){
+        $adatok = array();
+        $adatok['azon'] = 67676;
+        $adatok['nev'] = "Teszt Adat 1.";
+        $adatok['cim'] = "4031 Debrecen, Teszt út 1.";
+        $adatok['telefon'] = "0652123456";
+        $adatok['email'] = "kruppa.kinga@gmail.com";
+        $erp_u[] = $adatok;
+
+        $adatok['azon'] = 9888;
+        $adatok['nev'] = "Teszt Adat 2.";
+        $adatok['cim'] = "4031 Debrecen, Teszt út 2.";
+        $adatok['telefon'] = "0652123456";
+        $adatok['email'] = "kruppa.kinga@gmail.com";
+        $erp_u[] = $adatok;
+
+        $adatok['azon'] = 1234;
+        $adatok['nev'] = "MárBentVan AzAdatbázisban.";
+        $adatok['cim'] = "4031 Debrecen, Teszt út 3.";
+        $adatok['telefon'] = "0652123456";
+        $adatok['email'] = "kruppa.kinga@gmail.com";
+        $erp_u[] = $adatok;
+
+        unset($adatok);
+        return $erp_u;
     }
 }
