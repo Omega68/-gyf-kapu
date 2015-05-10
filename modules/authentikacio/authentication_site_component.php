@@ -40,14 +40,20 @@ class Authentication_Site_Component extends Site_Component{
 
         if(!empty($_POST['save'])){
             if(!empty($_POST['kod'])){
-                $eredetiKod = $this->perm->getObjectsByField("ERPUgyfelKod", array("kod"=>$_POST['kod']));
-                $eredetiKod = $eredetiKod[0]->getKodFields()['kod'];
+               $eredetiKod = $this->perm->getObjectsByField("ERPUgyfelKod", array("kod"=>$_POST['kod']));
+                if($eredetiKod == NULL){
+                    $this->register=true;
+                    $this->error = true;
+                }
+               else { $eredetiKod = $eredetiKod[0]->getKodFields()['kod'];
 
-                if($_POST['kod'] == $eredetiKod){
-                    $_SESSION['kod'] = $eredetiKod;
+                if($_POST['kod'] ==  $eredetiKod){
+                    $_SESSION['kod'] =  $eredetiKod;
                     $this->registerUser = true;
                     $this->register = false;
+                    $_SESSION['ujkod'] = $eredetiKod;
                 }
+               }
 
             }
             else {
@@ -58,18 +64,36 @@ class Authentication_Site_Component extends Site_Component{
 
         }
         else if(!empty($_POST['saveUser'])){
+            $rPassw = rand(1000, 99999);
             $adatok = array(
                 'azon'=>$_POST['azon'],
                 'email' => $_POST['email'],
                 'cim' => $_POST['cim'],
                 'telefon' => $_POST['telefon'],
-                'jelszo' => '1234556'
+                'jelszo' => $rPassw
             );
             $uk=$this->perm->createObject('Ugyfel',$adatok);
 
             if($uk == NULL){
                 $this->registerUser = true;
             }
+
+            $headers = "Content-Type: text/html; charset=ISO-8859-1\r\n";
+            $message = '<html><body>';
+            $message .= "<h2>Ügyfélkapu regisztráció</h2>
+                         <p>Tisztelt Ügyfél!</p>
+                        <p>Köszönjük regisztrációját, belépési adatai a következőek. <br/>Azonosító: " . $_POST['azon']
+                        . "<br/>Jelszó: ".$rPassw."</p>";
+            $message .= "<p> Belépni <a href=\"http://ugyfelkapu.fejlesztesgyak2015.info\">itt</a> tud, a fenti adatokat megadva, jelszavát
+                        pedig belépés után megváltoztathatja.<p>
+                        Üdvözlettel,<br/>
+                        Ügyfélkapu";
+            // In case any of our lines are larger than 70 characters, we should use wordwrap()
+            $message .= '</body></html>';
+            $message = wordwrap($message, 70, "\r\n");
+            // Send
+            mail($_POST['email'], 'Ügyfélkapu - regisztráció', $message, $headers);
+
          }
         else if(!empty($_POST['back']))
             $this->register=false;
@@ -146,8 +170,15 @@ class Authentication_Site_Component extends Site_Component{
                 } else {
 
                     $erp = $this->readERP();
+                    $ujAzon = $this->perm->getObjectsByField("ERPUgyfelKod", array("kod"=>$_SESSION['ujkod']));
+                    $ujAzon = $ujAzon[0]->getKodFields()['azon'];
+
+                    $ujUser = null;
                     foreach ($erp as $e) {
-                       // if($e )
+                       if($e['azon'] == $ujAzon){
+                            $ujUser = $e;
+                           break;
+                       }
                     }
 
 
@@ -166,19 +197,19 @@ class Authentication_Site_Component extends Site_Component{
                                             <tbody>
                                             <tr>
                                                 <td><span>Ügyfélazonosító: </span></td>
-                                                <td><input type="text" name="azon" value=""></td>
+                                                <td><input type="text" name="azon" value="<?echo $ujUser['azon']?>" readonly="readonly"></td>
                                             </tr>
                                             <tr>
                                                 <td><span>E-mail</span></td>
-                                                <td><input type="text" name="email" value=""></td>
+                                                <td><input type="text" name="email" value="<?echo$ujUser['email']?>"></td>
                                             </tr>
                                             <tr>
                                                 <td><span>Telefon</span></td>
-                                                <td><input type="number" name="telefon" value=""></td>
+                                                <td><input type="text" name="telefon" value="<?echo$ujUser['telefon']?>"></td>
                                             </tr>
                                             <tr>
                                                 <td><span>Cím</span></td>
-                                                <td><input type="text" name="cim" value=""></td>
+                                                <td><input type="text" name="cim" value="<?echo$ujUser['cim']?>"></td>
                                             </tr>
 
                                             </tbody>
