@@ -26,6 +26,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
     private $offset=0;
     private $paginationNumber=1;
     private $sorszam=1;
+    private $szerkesztes=false;
     private $showAddForm=false;
     private $showFieldList=false;
 
@@ -38,6 +39,9 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         if(!empty($_POST['new'])){
             $this->showAddForm=true;
         }
+        if(isset($_POST['editButton']) && isset($_POST['szerkAzon']))
+            $this->szerkesztes=true;
+
         if(isset($_POST['deleteButton']) && isset($_POST['deleteAzon'])){
             $azon = $_POST['deleteAzon'];
             $u = $this->perm->getObjectsByField("UrlapSablon", array('azon'=>$azon))[0];
@@ -46,23 +50,97 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         if(!empty($_POST['GetFields'])) {
             $this->showFieldList = true;
         }
-        if(!empty($_POST['back']) || !empty($_POST['save']))
+        if(!empty($_POST['back']) || !empty($_POST['save']) || !empty($_POST['change']))
             $this->szerkesztes=false;
+        if(!empty($_POST['change'])){
+            echo "belép";
+            $adatok = array(
+                'azon' => $_POST['azon'],
+                'allapot' => $_POST['allapot'],
+                'letrehozas_datuma'=> date("j - n - Y"),
+                'admin_azon' => $_SESSION['PHPSESSID']
+            );
+            //$this->perm->updateObjectByFields('UrlapSablon',$adatok);
+            $uk = $this->perm->getObjectsByField('UrlapSablon', array("azon" => $_POST['azon']))[0];
+            $uk->setUrlapSablonFields($adatok);
+            // $this->perm->createObject("UrlapSablon", $adatok);
+        }
         if(!empty($_POST['save'])){
             $adatok = array(
                 'azon' => $_POST['azon'],
                 'allapot' => $_POST['allapot'],
                 'letrehozas_datuma'=> date("j - n - Y"),
-                'admin_azon' => $_SESSION['PHPSESSID'].'213'
+                'admin_azon' => $_SESSION['PHPSESSID']
             );
-            //$uk=$this->perm->updateObjectByFields('Ugyfel',$adatok, array("azon" => $_POST['azon']));
-            $this->perm->createObject("UrlapSablon", $adatok);
+            //$this->perm->updateObjectByFields('UrlapSablon',$adatok);
+          /*  $uk = $this->perm->getObjectsByField("UrlapSablon", array("azon" => $_POST['azon']))[0];
+            $uk->setUgyfelFields($adatok);*/
+             $this->perm->createObject("UrlapSablon", $adatok);
         }
         $this->pagination();
     }
 
     function show(){
-        if($this->showFieldList){
+        if($this->szerkesztes){
+            $lekerdezes_adatok=array(
+                'azon'=>"{$_POST['szerkAzon']}"
+            );
+            //var_dump($lekerdezes_adatok);
+            $customer=$this->perm->getObjectsByField('UrlapSablon',$lekerdezes_adatok);
+            // var_dump($customer);
+            ?>
+            <form action="" method="POST">
+            <div class="form_box">
+                <h1>Sablon adatainak módosítása</h1>
+                <input type="submit" name="change" value="Változtatás" class="save_button">
+                <input type="submit" name="back" value="Vissza" class="back_button">
+                <br/>
+                <br/>
+                <div>
+                    <table class="formtable">
+                        <tbody>
+                        <tr>
+                            <td valign="top">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td><span>Azonosító</span></td>
+                                        <td><input type="text" name="azon"  readonly="true" value="<? echo $customer[0]->getUrlapSablonFields()['azon'] ?>"></td>
+                                    </tr>
+                                    <? if($customer[0]->getUrlapSablonFields()['allapot']=='Aktív'){ ?>
+                                    <tr><td><span>Állapot</span></td>
+                                        <td><input type="radio" name="allapot" value="Aktív" checked>Aktív
+                                            <br>
+                                            <input type="radio" name="allapot" value="Passzív">Passzív
+                                        </td>
+                                    </tr>
+                                    <? }else {?>
+                                    <tr><td><span>Állapot</span></td>
+                                        <td><input type="radio" name="allapot" value="Aktív">Aktív
+                                            <br>
+                                            <input type="radio" name="allapot" value="Passzív" checked>Passzív
+                                        </td>
+                                    </tr>
+                                    <?} ?>
+                                    <tr>
+                                        <td><span>Létrehozás dátuma</span></td>
+                                        <td><input type="text" name="letrehozas_datuma" readonly="readonly"  value="<? echo $customer[0]->getUrlapSablonFields()['letrehozas_datuma'] ?>"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>Admin azonosító</span></td>
+                                        <td><input type="text" name="admin_azon" readonly="readonly"  value="<? echo $customer[0]->getUrlapSablonFields()['admin_azon'] ?>"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </form><?
+        }
+        else if($this->showFieldList){
             echo $_POST['sab_azon'];
             $adatok=array(
                 'sablon_azon' => "".$_POST['sab_azon']
@@ -175,8 +253,8 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 echo '<td> <input type="submit" name="GetFields" value="Mezok lekerdezese"></td>';
                 echo '</form>';
                 echo '<form method="post">';
-                echo '<input type="hidden" name="sablon_id" value="'.$sablonok[$i]->getUrlapSablonFields()['id'].'">';
-                echo '<td> <input type="submit" name="Edit" value="Szerkesztés"></td>';
+                echo '<input type="hidden" name="szerkAzon" value="'.$sablonok[$i]->getUrlapSablonFields()['azon'].'">';
+                echo '<td> <input type="submit" name="editButton" value="Szerkesztés"></td>';
                 echo '</form>';
                 ?><td> <form action="" method="post">
                     <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott ügyfelet?')" >
