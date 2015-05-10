@@ -27,10 +27,11 @@ class Igenylesek_Site_Component extends Site_Component{
         }
 
         if(!empty($_POST['save'])){
+           
             $adatok = array(
                 'statusz' => $_POST['statusz'],
-                'letrehozas_datuma' => $_POST['letrehozas_datuma'],
-                'utolso_modositas' => $_POST['utolso_modositas'],
+                'letrehozas_datuma' =>  date("Y-m-d",strtotime($_POST['letrehozas_datuma'])),
+                'utolso_modositas' => date("Y-m-d",strtotime($_POST['utolso_modositas'])),
                 'sablon_azon' => $_POST['sablon_azon'],
                 'ugyfel_azon' => $_POST['ugyfel_azon']
             );
@@ -78,14 +79,15 @@ class Igenylesek_Site_Component extends Site_Component{
             $count = count($igenylesek);
             $this->sorszam=$this->offset;
             for ($i = 0; $i < $count; $i++) {
+                $iFields = $igenylesek[$i]->getIgenylesFields();
                 echo '<tr>';
                 echo '<td>'.($this->sorszam + 1.).'</td>';
-                echo '<td>' . $igenylesek[$i]->getIgenylesFields()['azon'] . '</td>';
-                echo '<td>' . $igenylesek[$i]->getIgenylesFields()['statusz'] . '</td>';
-                echo '<td>' . $igenylesek[$i]->getIgenylesFields()['letrehozas_datuma'] . '</td>';
-                echo '<td>' . $igenylesek[$i]->getIgenylesFields()['utolso_modositas'] . '</td>';
-                echo '<td>' . $igenylesek[$i]->getIgenylesFields()['sablon_azon'] . '</td>';
-                echo '<td>' . $igenylesek[$i]->getIgenylesFields()['ugyfel_azon'] . '</td>';
+                echo '<td>' . $iFields['azon'] . '</td>';
+                echo '<td>' . $iFields['statusz'] . '</td>';
+                echo '<td>' . date("Y.m.d",strtotime($iFields['letrehozas_datuma'])) . '</td>';
+                echo '<td>' . date("Y.m.d",strtotime($iFields['utolso_modositas'])) . '</td>';
+                echo '<td>' . $iFields['sablon_azon'] . '</td>';
+                echo '<td>' . $iFields['ugyfel_azon'] . '</td>';
 
                 ?>
 
@@ -152,11 +154,11 @@ class Igenylesek_Site_Component extends Site_Component{
                                     </tr>
                                     <tr>
                                         <td><span>Létrehozás dátuma</span></td>
-                                        <td><input type="date" name="letrehozas_datuma" value="<?echo $customer[0]->getIgenylesFields()['letrehozas_datuma']?>"></td>
+                                        <td><input type="date" name="letrehozas_datuma" value="<?echo date("Y-m-d",strtotime($customer[0]->getIgenylesFields()['letrehozas_datuma']))?>"></td>
                                     </tr>
                                     <tr>
                                         <td><span>Utolsó dátuma</span></td>
-                                        <td><input type="date" name="utolso_modositas" value="<?echo $customer[0]->getIgenylesFields()['utolso_modositas']?>"></td>
+                                        <td><input type="date" name="utolso_modositas" value="<?echo date("Y-m-d",strtotime($customer[0]->getIgenylesFields()['utolso_modositas']))?>"></td>
                                     </tr>
                                     <tr>
                                         <td><span>Sablon azonosító</span></td>
