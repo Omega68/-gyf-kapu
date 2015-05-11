@@ -14,8 +14,8 @@ class KitoltottMezo extends Persistent{
   */
   public function validate(array $params=null){
   $errors = array();
-         if(empty($params['azon']))
-             $errors[]=array(Error::MANDATORY, "azon");
+        /* if(empty($params['azon']))
+             $errors[]=array(Error::MANDATORY, "azon");*/
          if(empty($params['tartalom']))
              $errors[]=array(Error::MANDATORY, "tartalom");
         if(empty($params['mezo_azon']))
