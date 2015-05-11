@@ -372,7 +372,11 @@ class Igenylesek_Site_Component extends Site_Component{
         $message = '<html><body>';
         $message .= "<h2>Ügyfélkapu - Igénylés állapotának változása</h2>
                     <p>Tisztelt Felhasználó!</p>
-                    <p>A(z) <? echo $igenyles_azon ?> számú igénylés státusza megváltozott. Az új státusz: <? echo $statusz ?>. </p>";
+                    <p>A(z) ";
+        $message.= $igenyles_azon;
+        $message .= " számú igénylés státusza megváltozott. Az új státusz: ";
+        $message .= $statusz;
+        $message .= "</p>";
         $message .= "<p>Üdvözlettel,<br/>
                         Ügyfélkapu<p>";
         // In case any of our lines are larger than 70 characters, we should use wordwrap()
