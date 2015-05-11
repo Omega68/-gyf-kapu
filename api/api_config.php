@@ -9,5 +9,6 @@ Az modul osztály pedig API_Module-ból kell hogy származzon.
 
 */
 return array(
-  'teszt'=>'Teszt_API_Modul'
+  'teszt'=>'Teszt_API_Modul',
+  'erp_api'=>'ERP_API'
 );

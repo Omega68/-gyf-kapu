@@ -9,6 +9,7 @@ return array(
   ,"API_Loader"=>"/api/loader.php"
   ,"Ugyfelek_Loader"=>"/modules/ugyfelek/loader.php"
   ,"PDF_Gen_Loader"=>"/modules/pdf_gen/loader.php"
+  ,"ERP_API_Loader"=>"/modules/erp_api/loader.php"
   ,"Mezok_Loader"=>"/modules/mezok/loader.php"
   ,"Kivitelezesi_tervek_Loader"=>"/modules/kivitelezesi_tervek/loader.php"
   ,"Authentikacio_Loader"=>"/modules/authentikacio/loader.php"
