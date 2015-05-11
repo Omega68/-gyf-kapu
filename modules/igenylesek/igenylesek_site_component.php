@@ -356,7 +356,7 @@ class Igenylesek_Site_Component extends Site_Component{
 
     private function getDownloadLink($ugyfel_azon){
         //$target_dir = realpath(__DIR__ . '/../../ufkapu-uploads');
-        $target_dir = "http://hazik.fejlesztesgyak2015.info/kruppa_kinga/ufkapu-uploads";
+        $target_dir = "http://ugyfelkapu.fejlesztesgyak2015.info/ufkapu-uploads";
         $v = NULL;
         $terv = $this->perm->getObjectsByField("KivitelezesiTerv", array("ugyfel_azon"=>$ugyfel_azon));
         if(!empty($terv)){
