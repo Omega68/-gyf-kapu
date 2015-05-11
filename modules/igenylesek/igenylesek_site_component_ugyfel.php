@@ -50,13 +50,14 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
             $this->newSablonForm = false;
         }
         if (!empty($_POST['saveIgenyles'])) {
+            $uk = $this->perm->getObject($_SESSION['PHPSESSID']);
             $adatok = array(
                 'azon' => $_POST['igenyles_azon'],
                 'statusz' => $_POST['allapot'],
                 'letrehozas_datuma' => date("Y.m.d"),
                 'utolso_modositas' => date("Y.m.d"),
                 'sablon_azon' => $_POST['sablon_azon'],
-                'ugyfel_azon' => $_SESSION['PHPSESSID']
+                'ugyfel_azon' => $uk->getFelhasznaloFields()['azon']
             );
             $this->perm->createObject('Igenyles', $adatok);
 
@@ -161,14 +162,14 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
 
                                         } else if ($mezok[$i]->getMezoFields()['tipus'] == 'Legördülős'){
                                         ?>
-                                        <td><select name="<?echo 'azon'.$i ?>" > <?
+                                        <td><select name="<?echo 'ertek'.$i ?>" > <?
                                                 $mezo_adatok = array(
                                                     'mezo_azon' => $mezok[$i]->getMezoFields()['azon']
                                                 );
                                                 $ertekek = $this->perm->getObjectsByField('Ertek', $mezo_adatok);
                                                 $ertekekSzama = count($ertekek);
                                                 for ($j = 0; $j < $ertekekSzama; $j++) {
-                                                    ?><option value="<?echo $ertekek[$j]->getErtekFields()['ertek']?>" ><? echo $ertekek[$j]->getErtekFields()['ertek'] ?></option><?
+                                                    ?><option name="<?echo 'ertek'.$i?>" value="<?echo $ertekek[$j]->getErtekFields()['ertek']?>" ><? echo $ertekek[$j]->getErtekFields()['ertek'] ?></option><?
                                                 }
                                                 echo '</select></td>';
                                                 ?><input type="hidden" name="<? echo 'azon' . $i ?>"
