@@ -20,5 +20,18 @@ abstract class Site_Component{
   abstract function process();
   
   abstract function show();
-   
-}
+
+  protected  function validationError($errors){
+      if(count($errors) > 0 ){
+          echo "<p style=\"color: red\">Hiba: ";
+          foreach( $errors as $e )
+              echo Error::get_error_msg($e[0]) . " Mező: " . $e[1] . "<br/>";
+          echo "</p>";
+          return true;
+      }
+
+      return false;
+  }
+
+
+  }

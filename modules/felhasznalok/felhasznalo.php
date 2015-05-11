@@ -39,7 +39,13 @@ class Felhasznalo extends Persistent{
     }
     
     public function setFelhasznaloFields(array $values){
-      return $this->setFields($values);
+       $errors = $this->validateFields($values);
+       if(count($errors) > 0){
+            return $errors;
+        }
+        $values['jelszo'] = md5($values['jelszo']);
+        return $this->setFields($values);
+
     }     
     
     protected function onBeforeDelete(array $params=null) {}

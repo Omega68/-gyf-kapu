@@ -37,7 +37,11 @@ class Profil_Site_Component extends Site_Component{
                 } else {
                     $this->error = false;
                     $this->errorNew = false;
-                    $this->u->setFelhasznaloFields(array('jelszo' => md5($_POST['new'])));
+                    $result = $this->u->setFelhasznaloFields(array('jelszo' => $_POST['new']));
+                    if(is_array($result)){
+                        $this->success= false;
+                        $this->errormsg = $result;
+                    }
                     $this->success = true;
                 }
             }
@@ -94,9 +98,15 @@ class Profil_Site_Component extends Site_Component{
                          if($this->errorNew){
                              echo '<tr><td colspan="2">Nincs megadva új jelszó!</td></tr>';
                          }
-                        if($this->success){
+
+                        if (isset($this->errormsg)){
+                            $this->validationError($this->errormsg);
+
+                        }
+                        else if($this->success){
                             echo '<tr><td colspan="2">Sikeres jelszóváltoztatás!</td></tr>';
-                    }
+                        }
+
     }
 
 

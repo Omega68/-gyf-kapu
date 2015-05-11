@@ -38,9 +38,9 @@ abstract class Persistent{
       /*if(count($this->validate($params))  > 0){
           return;
       }*/
-
-      if($this->validationError($this->validate($params)))
-          return;
+        $errors = $this->validate($params);
+      if($this->validationError($errors))
+          return $errors;
 
 
       //1. objektum bejegyzése a fő objektum táblába
@@ -145,9 +145,9 @@ abstract class Persistent{
     foreach($field_values as $key => $value){
       $s[] = $key."='".$value."'";
     }
-
-      if($this->validationError($this->validateFields($field_values)))
-          return;
+      $errors = $this->validateFields($field_values);
+      if($this->validationError($errors))
+          return $errors;
 
       $actual = get_class($this);
       $classes = array();
@@ -212,12 +212,8 @@ abstract class Persistent{
     private function validationError($errors){
 
         if(count($errors) > 0 ){
-            echo "validation error: ";
-            foreach( $errors as $e )
-                echo Error::get_error_msg($e[0]) . " Mező: " . $e[1] . "<br/>";
             return true;
         }
-
         return false;
 
     }
