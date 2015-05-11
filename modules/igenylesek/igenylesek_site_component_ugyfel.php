@@ -121,7 +121,11 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
             $_SESSION['iksablon_azon'] = 1;
             $_SESSION['ikugyfel_azon'] = 1;
             }    
-          
+        
+        if(isset($_POST['printButton']) && isset($_POST['printAzon'])){
+            $nyom = new PDF_Gen($_POST['printAzon']);
+            $nyom->createPDF();
+        }  
         
         $this->pagination();
 
@@ -372,6 +376,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                             <th>Művelet</th>
                             <th>Szerkesztés</th>
                             <th>Törlés</th>
+                            <th>Nyomtatás</th>
                         </tr>
                         ';
             $count = count($igenylesek);
@@ -405,6 +410,13 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                         <input type="submit" name="deleteButton" value="Törlés"
                                onclick="return confirm('Biztosan törli a kiválasztott igénylést?')">
                         <input type="hidden" name="deleteAzon" value="<? echo $iFields['azon'] ?>">
+                    </form>
+                </td>
+                
+                <td>
+                    <form action="" method="post">
+                        <input type="submit" name="printButton" value="Nyomtatás" >
+                        <input type="hidden" name="printAzon" value="<? echo $iFields['azon'] ?>">
                     </form>
                 </td>
 
