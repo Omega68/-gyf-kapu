@@ -75,6 +75,33 @@ class Igenylesek_Site_Component extends Site_Component{
             $this->szerkesztes=true;
             $_SESSION['szerkAzon'] = $_POST['szerkAzon'];
         }
+        
+        if(isset($_POST['searchButton'])){
+            if (empty($_REQUEST['isearchString']))
+                $_SESSION['ikeresve']=false;
+            else if (($_POST['ikazon']!=1) && ($_POST['ikstatusz']!=1) && ($_POST['ikletrehozas_datuma']!=1) && ($_POST['ikutolso_modositas']!=1) && ($_POST['iksablon_azon']!=1) && ($_POST['ikugyfel_azon']!=1))
+                $_SESSION['ikeresve']=false;
+            else 
+                $_SESSION['ikeresve']=true;
+                $_SESSION['isearchString'] = $_POST['isearchString'];
+                $_SESSION['ikazon'] = $_POST['ikazon'];
+                $_SESSION['ikletrehozas_datuma'] = $_POST['ikletrehozas_datuma'];
+                $_SESSION['ikutolso_modositas'] = $_POST['ikutolso_modositas'];
+                $_SESSION['ikstatusz'] = $_POST['ikstatusz'];
+                $_SESSION['iksablon_azon'] = $_POST['iksablon_azon'];
+                $_SESSION['ikugyfel_azon'] = $_POST['ikugyfel_azon'];
+            }
+        if(isset($_POST['resetButton'])){
+            $_SESSION['ikeresve']=false;
+            $_SESSION['isearchString'] = '';
+            $_SESSION['ikazon'] = 1;
+            $_SESSION['ikletrehozas_datuma'] = 1;
+            $_SESSION['ikutolso_modositas'] = 1;
+            $_SESSION['ikstatusz'] = 1;
+            $_SESSION['iksablon_azon'] = 1;
+            $_SESSION['ikugyfel_azon'] = 1;
+            }
+            
         $this->pagination();
 
         $this->uploads();
@@ -84,15 +111,64 @@ class Igenylesek_Site_Component extends Site_Component{
     function show()
     {
         if(!$this->szerkesztes ) {
-            $igenylesek = $this->perm->getObjectsByLimitOffsetOrderBy("Igenyles", $this->limit, $this->offset, 'letrehozas_datuma');
+          if ($_SESSION['ikeresve']){
+              $igenyles_adatok=array();
+              if($_SESSION['ikazon']==1) $igenyles_adatok['azon'] = $_SESSION['isearchString'];
+              if($_SESSION['ikletrehozas_datuma']==1) $igenyles_adatok['letrehozas_datuma'] = $_SESSION['isearchString'];
+              if($_SESSION['ikutolso_modositas']==1) $igenyles_adatok['utolso_modositas'] = $_SESSION['isearchString'];
+              if($_SESSION['ikstatusz']==1) $igenyles_adatok['statusz'] = $_SESSION['isearchString'];
+              if($_SESSION['iksablon_azon']==1) $igenyles_adatok['sablon_azon'] = $_SESSION['isearchString'];
+              if($_SESSION['ikugyfel_azon']==1) $igenyles_adatok['ugyfel_azon'] = $_SESSION['isearchString'];
+                                     
+              $igenylesek=$this->perm->getObjectsByFieldLimitOffsetOrderByOr("Igenyles",$igenyles_adatok,$this->limit,$this->offset,'azon');    
+            }
+            else{
+              $igenylesek=$this->perm->getObjectsByLimitOffsetOrderBy("Igenyles",$this->limit,$this->offset,'azon');
+            }
+        
+            //$igenylesek = $this->perm->getObjectsByLimitOffsetOrderBy("Igenyles", $this->limit, $this->offset, 'letrehozas_datuma');
             //    $igenylesek=$this->perm->getAllObjects("Igenyles");
             echo '
             <div class="form_box">
                 <h1>Igénylések adatai</h1>
             </div>
-            <br/>
-            <br/>
-            <div class="listtable">
+            <br/>';
+            ?>
+            
+           <div class="form_box">          
+              <form action="" method="post">
+                <input id="search_field" type="text" value="<? echo $_SESSION['isearchString']; ?>" name="isearchString" size="32">
+                <input type="submit" value="Keresés" name="searchButton">
+                <input type="submit" value="Alaphelyzet" name="resetButton">
+                <div>
+                  <input id="id_search_sel__1" type="checkbox" value="1" <? if($_SESSION['ikazon']==1) echo 'checked=""';?> name="ikazon">
+                  <label for="id_search_sel__1">Azonosító</label>
+                </div><div>
+                  <input id="id_search_sel__2" type="checkbox" value="1" <? if($_SESSION['ikstatusz']==1) echo 'checked=""';?> name="ikstatusz">
+                  <label for="id_search_sel__2">Státusz</label>
+                </div>                
+                <div>
+                  <input id="id_search_sel__3" type="checkbox" value="1" <? if($_SESSION['ikletrehozas_datuma']==1) echo 'checked=""';?> name="ikletrehozas_datuma">
+                  <label for="id_search_sel__3">Létrehozás dátuma</label>
+                </div>
+                <div>
+                  <input id="id_search_sel__4" type="checkbox" value="1" <? if($_SESSION['ikutolso_modositas']==1) echo 'checked=""';?> name="ikutolso_modositas">
+                  <label for="id_search_sel__4">Utolsó módosítás</label>
+                </div> 
+                <div>
+                  <input id="id_search_sel__5" type="checkbox" value="1" <? if($_SESSION['iksablon_azon']==1) echo 'checked=""';?> name="iksablon_azon">
+                  <label for="id_search_sel__5">Sablon azonosító</label>
+                </div>
+                <div>
+                  <input id="id_search_sel__6" type="checkbox" value="1" <? if($_SESSION['ikugyfel_azon']==1) echo 'checked=""';?> name="ikugyfel_azon">
+                  <label for="id_search_sel__6">Ügyfél azonosító</label>
+                </div>
+              </form>                      
+            </div>
+            
+            <?            
+            
+            echo '<div class="listtable">
                 <table style="width:100%">
                         <tr>
                             <th>#</th>
