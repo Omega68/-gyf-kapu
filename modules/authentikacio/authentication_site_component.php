@@ -279,16 +279,37 @@ class Authentication_Site_Component extends Site_Component{
         $adatok['email'] = "kruppa.kinga@gmail.com";
         $erp_u[] = $adatok;
 
-        $adatok['azon'] = 9888;
-        $adatok['nev'] = "Teszt Adat 2.";
-        $adatok['cim'] = "4031 Debrecen, Teszt út 2.";
+        $adatok['azon'] = 1234;
+        $adatok['nev'] = "MárBentVan AzAdatbázisban.";
+        $adatok['cim'] = "4031 Debrecen, Teszt út 3.";
         $adatok['telefon'] = "0652123456";
         $adatok['email'] = "kruppa.kinga@gmail.com";
         $erp_u[] = $adatok;
 
-        $adatok['azon'] = 1234;
-        $adatok['nev'] = "MárBentVan AzAdatbázisban.";
-        $adatok['cim'] = "4031 Debrecen, Teszt út 3.";
+        $adatok['azon'] = 98231;
+        $adatok['nev'] = "Tóth Elek";
+        $adatok['cim'] = "4031 Debrecen, Teszt út 4.";
+        $adatok['telefon'] = "0652123456";
+        $adatok['email'] = "te@hasznosnet.com";
+        $erp_u[] = $adatok;
+
+        $adatok['azon'] = 111112;
+        $adatok['nev'] = "Kruppa Kinga";
+        $adatok['cim'] = "4031 Debrecen, Teszt út 5.";
+        $adatok['telefon'] = "0652123456";
+        $adatok['email'] = "kruppa.kinga@gmail.com";
+        $erp_u[] = $adatok;
+
+        $adatok['azon'] = 98231222;
+        $adatok['nev'] = "Tóth Elek";
+        $adatok['cim'] = "4031 Debrecen, Teszt út 4.";
+        $adatok['telefon'] = "0652123456";
+        $adatok['email'] = "te@hasznosnet.com";
+        $erp_u[] = $adatok;
+
+        $adatok['azon'] = 111113;
+        $adatok['nev'] = "Kruppa Kinga";
+        $adatok['cim'] = "4031 Debrecen, Teszt út 6.";
         $adatok['telefon'] = "0652123456";
         $adatok['email'] = "kruppa.kinga@gmail.com";
         $erp_u[] = $adatok;

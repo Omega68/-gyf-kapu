@@ -19,10 +19,19 @@ class Felhasznalok_Site_Component extends Site_Component {
     function process(){
         $pm = PersistenceManager::getInstance();
 
+        if(isset($_POST['editButton']) && isset($_POST['szerkAzon'])){
+            $_SESSION['edit'] = true;
+            $_SESSION['azon'] = $_POST['szerkAzon'];
+        }
+
         if(isset($_POST['deleteButton']) && isset($_POST['deleteAzon'])){
             $azon = $_POST['deleteAzon'];
             $u = $pm->getObjectsByField("Felhasznalo", array('azon'=>$azon))[0];
             $u->delete();
+        }
+
+        if(!empty($_POST['back'])){
+            $_SESSION['edit'] = false;
         }
         
         if(isset($_POST['searchButton'])){
@@ -59,55 +68,127 @@ class Felhasznalok_Site_Component extends Site_Component {
             }
         }
 
+        if(!empty($_POST['save'])){
+            $_SESSION['azon'] = $_POST['azon'];
+
+            $adatok = array(
+                'email' => $_POST['email']
+            );
+            //$uk=$this->perm->updateObjectByFields('Ugyfel',$adatok, array("azon" => $_POST['azon']));
+            $uk = $pm->getObjectsByField("Felhasznalo", array("azon" =>  $_SESSION['azon']))[0];
+            $result = $uk->setFelhasznaloFields($adatok);
+            if(is_array($result)){
+                $this->errormsg = $result;
+                $_SESSION['edit'] = true;
+            }
+            else $_SESSION['edit'] = false;
+
+
+        }
+
 
 
         $this->pagination();
 
     }
 
-    function show(){
+    function show()
+    {
         $pm = PersistenceManager::getInstance();
         //$ugyfelek=$pm->getObjectsByLimitOffsetOrderBy("Felhasznalo",$this->limit,$this->offset,'azon');
         //$osszes=$pm->getAllObjects("Felhasznalo");
-        
-        if ($_SESSION['fkeresve']){
-            $ugyfel_adatok=array();
-            if($_SESSION['fkazon']==1) $ugyfel_adatok['azon'] = $_SESSION['fsearchString'];
-            if($_SESSION['fkemail']==1) $ugyfel_adatok['email'] = $_SESSION['fsearchString'];
-          
-            $ugyfelek=$pm->getObjectsByFieldLimitOffsetOrderByOr("Felhasznalo",$ugyfel_adatok,$this->limit,$this->offset,'azon');
-            $osszes=$pm->getObjectsByFieldOr("Felhasznalo", $ugyfel_adatok);           
-        }
-        else{
-          $ugyfelek=$pm->getObjectsByLimitOffsetOrderBy("Felhasznalo",$this->limit,$this->offset,'azon');
-          $osszes=$pm->getAllObjects("Felhasznalo");
+
+        if ($_SESSION['fkeresve']) {
+            $ugyfel_adatok = array();
+            if ($_SESSION['fkazon'] == 1) $ugyfel_adatok['azon'] = $_SESSION['fsearchString'];
+            if ($_SESSION['fkemail'] == 1) $ugyfel_adatok['email'] = $_SESSION['fsearchString'];
+
+            $ugyfelek = $pm->getObjectsByFieldLimitOffsetOrderByOr("Felhasznalo", $ugyfel_adatok, $this->limit, $this->offset, 'azon');
+            $osszes = $pm->getObjectsByFieldOr("Felhasznalo", $ugyfel_adatok);
+        } else {
+            $ugyfelek = $pm->getObjectsByLimitOffsetOrderBy("Felhasznalo", $this->limit, $this->offset, 'azon');
+            $osszes = $pm->getAllObjects("Felhasznalo");
         }
 
-        ?>
+
+        if ($_SESSION['edit'] == true) {
+
+            $lekerdezes_adatok = array(
+                'azon' => $_SESSION['azon']
+            );
+
+            //var_dump($lekerdezes_adatok);
+            $customer = $pm->getObjectsByField('Felhasznalo', $lekerdezes_adatok);
+            $c = $customer[0]->getFelhasznaloFields();
+            // var_dump($customer);
+            ?>
+            <form action="" method="POST">
+            <div class="form_box">
+            <h1>Ügyfél adatainak módosítása</h1>
+            <input type="submit" name="save" value="Mentés" class="save_button">
+            <input type="submit" name="back" value="Vissza" class="back_button">
+            <br/>
+            <br/>
+            <div>
+            <table class="formtable">
+                <tbody>
+                <tr>
+                    <td valign="top">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td><span>Azonosító</span></td>
+                                <td><input type="text" name="azon" readonly="readonly" value="<? echo $c['azon'] ?>">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>E-mail</span></td>
+                                <td><input type="text" name="email" value="<? echo $c['email']?>"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <?
+            if (isset($this->errormsg)) {
+                $this->validationError($this->errormsg);
+            }
+        } else {
+            ?>
+
+
+
 
 
             <div class="form_box">
                 <h1>Felhasználók adatai</h1>
             </div>
-            
+
             <br/>
-        
-            <div class="form_box">          
-              <form action="" method="post">
-                <input id="search_field" type="text" value="<? echo $_SESSION['fsearchString']; ?>" name="fsearchString" size="32">
-                <input type="submit" value="Keresés" name="searchButton">
-                <input type="submit" value="Alaphelyzet" name="resetButton">
-                <div>
-                  <input id="id_search_sel__1" type="checkbox" value="1" <? if($_SESSION['fkazon']==1) echo 'checked=""';?> name="fkazon">
-                  <label for="id_search_sel__1">Azonosító</label>
-                </div>
-                <div>
-                  <input id="id_search_sel__3" type="checkbox" value="1" <? if($_SESSION['fkemail']==1) echo 'checked=""';?> name="fkemail">
-                  <label for="id_search_sel__3">E-mail</label>
-                </div>
-              </form>                      
+
+            <div class="form_box">
+                <form action="" method="post">
+                    <input id="search_field" type="text" value="<? echo $_SESSION['fsearchString']; ?>"
+                           name="fsearchString" size="32">
+                    <input type="submit" value="Keresés" name="searchButton">
+                    <input type="submit" value="Alaphelyzet" name="resetButton">
+
+                    <div>
+                        <input id="id_search_sel__1" type="checkbox"
+                               value="1" <? if ($_SESSION['fkazon'] == 1) echo 'checked=""'; ?> name="fkazon">
+                        <label for="id_search_sel__1">Azonosító</label>
+                    </div>
+                    <div>
+                        <input id="id_search_sel__3" type="checkbox"
+                               value="1" <? if ($_SESSION['fkemail'] == 1) echo 'checked=""'; ?> name="fkemail">
+                        <label for="id_search_sel__3">E-mail</label>
+                    </div>
+                </form>
             </div>
-            
+
             <br/>
             <br/>
 
@@ -118,61 +199,69 @@ class Felhasznalok_Site_Component extends Site_Component {
             </form></td>
             -->
             <?
-        /*
-                if($this->sent){
-                    echo "<p style=\"color: red;\">Meghívó elküldve! Kód: ";
-                    echo $this->r. "</p>";
-                }
-        */
+            /*
+                    if($this->sent){
+                        echo "<p style=\"color: red;\">Meghívó elküldve! Kód: ";
+                        echo $this->r. "</p>";
+                    }
+            */
             ?>
 
             <form method="post">
-            <div class="listtable" style="width:100%">
-            <?         $this->showPagination(count($osszes));
-            ?>
-                <table style="width:100%">
-                    <tr>
-                        <th>#</th>
-                        <th>Azonosító</th>
-                        <th>Szerepkör</th>
-                        <th>E-mail</th>
-                        <th>Szerkesztés</th>
-                        <th>Törlés</th>
-                    </tr>
-
-                    <?
-        $this->sorszam=$this->offset;
-        foreach($ugyfelek as $f){
-                        $a = $f->getFelhasznaloFields();
-                        echo '<tr>';
-                        echo '<td>'.($this->sorszam + 1) . '</td>';
-                        echo '<td>'.$a['azon'].'</td>';
-                        echo '<td>';
-                                if(get_class($pm->getObject($a['id'])) == "Ugyfel")
-                                    echo "Ügyfél";
-                                else echo "Admin";
-                        echo '</td>';
-                        echo '<td>'.$a['email'].'</td>';
-                        ?><td> <form action="" method="post">
-                                <input type="submit" name="editButton" value="Szerkesztés" >
-                            </form></td>
-                        <?
-                        ?><td> <form action="" method="post">
-                            <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott felhasználót?')" >
-                            <input type="hidden" name="deleteAzon" value="<? echo $f->getFelhasznaloFields()['azon'] ?>">
-                        </form></td>
-                        <?
-                        echo '</tr>';
-                        $this->sorszam++;
-
-                    }
+                <div class="listtable" style="width:100%">
+                    <? $this->showPagination(count($osszes));
                     ?>
-                </table>
-            </div>
-        </form>
+                    <table style="width:100%">
+                        <tr>
+                            <th>#</th>
+                            <th>Azonosító</th>
+                            <th>Szerepkör</th>
+                            <th>E-mail</th>
+                            <th>Szerkesztés</th>
+                            <th>Törlés</th>
+                        </tr>
 
-    <?
-        $this->showPagination(count($osszes));
+                        <?
+                        $this->sorszam = $this->offset;
+                        foreach ($ugyfelek as $f) {
+                            $a = $f->getFelhasznaloFields();
+                            echo '<tr>';
+                            echo '<td>' . ($this->sorszam + 1) . '</td>';
+                            echo '<td>' . $a['azon'] . '</td>';
+                            echo '<td>';
+                            if (get_class($pm->getObject($a['id'])) == "Ugyfel")
+                                echo "Ügyfél";
+                            else echo "Admin";
+                            echo '</td>';
+                            echo '<td>' . $a['email'] . '</td>';
+                            ?>
+                            <td>
+                            <form action="" method="post">
+                                <input type="submit" name="editButton" value="Szerkesztés">
+                                <input type="hidden" name="szerkAzon" value="<? echo $a['azon']?>">
+                            </form></td>
+                            <?
+                            ?>
+                            <td>
+                            <form action="" method="post">
+                                <input type="submit" name="deleteButton" value="Törlés"
+                                       onclick="return confirm('Biztosan törli a kiválasztott felhasználót?')">
+                                <input type="hidden" name="deleteAzon"
+                                       value="<? echo $f->getFelhasznaloFields()['azon'] ?>">
+                            </form></td>
+                            <?
+                            echo '</tr>';
+                            $this->sorszam++;
+
+                        }
+                        ?>
+                    </table>
+                </div>
+            </form>
+
+            <?
+            $this->showPagination(count($osszes));
+        }
     }
 
     private function test(){

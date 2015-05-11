@@ -18,8 +18,6 @@ class Ugyfel extends Felhasznalo
          $errors[]=array(Error::MANDATORY, "azon");
          if(empty($params['cim']))
          $errors[]= array(Error::MANDATORY, "cim");
-         if(empty($params['email']))
-         $errors[]= array(Error::MANDATORY, "email");
          if(empty($params['telefon']))
          $errors[]= array(Error::MANDATORY, "telefon");
         $allFields = $this->validateFields($params);
@@ -37,10 +35,7 @@ class Ugyfel extends Felhasznalo
                 if (!is_numeric($value))
                     $errors[] = array(Error::NOT_NUMERIC, $key);
             }
-            if ($key == "email") {
-                if (strpos($value, '@') == false)
-                    $errors[] = array(Error::NOT_EMAIL, $key);
-            }
+
         }
         return $errors;
     }

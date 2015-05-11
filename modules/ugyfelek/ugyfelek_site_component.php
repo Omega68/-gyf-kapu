@@ -153,20 +153,21 @@ class Ugyfelek_Site_Component extends Site_Component{
                 <?
                 $this->sorszam=$this->offset;
                 foreach($ugyfelek as $f){
+                    $ff = $f->getUgyfelFields();
                     echo '<tr>';
                     echo '<td>'.($this->sorszam + 1.).'</td>';
-                    echo '<td>'.$f->getUgyfelFields()['azon'].'</td>';
-                    echo '<td>'.$f->getUgyfelFields()['cim'].'</td>';
-                    echo '<td>'.$f->getUgyfelFields()['email'].'</td>';
-                    echo '<td>'.$f->getUgyfelFields()['telefon'].'</td>';
+                    echo '<td>'.$ff['azon'].'</td>';
+                    echo '<td>'.$ff['cim'].'</td>';
+                    echo '<td>'.$ff['email'].'</td>';
+                    echo '<td>'.$ff['telefon'].'</td>';
                     ?><td> <form action="" method="post">
                             <input type="submit" name="editButton" value="Szerkesztés" >
-                            <input type="hidden" name="szerkAzon" value="<? echo $f->getUgyfelFields()['azon']?>">
+                            <input type="hidden" name="szerkAzon" value="<? echo $ff['azon']?>">
                         </form></td>
                     <?
                     ?><td> <form action="" method="post">
                         <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott ügyfelet?')" >
-                        <input type="hidden" name="deleteAzon" value="<? echo $f->getUgyfelFields()['azon'] ?>">
+                        <input type="hidden" name="deleteAzon" value="<? echo $ff['azon'] ?>">
                     </form></td>
                     <?
                     // echo '<td>'.$f->getUgyfelFields()['jelszo'].'</td>';
@@ -186,6 +187,7 @@ class Ugyfelek_Site_Component extends Site_Component{
             );
             //var_dump($lekerdezes_adatok);
             $customer=$this->perm->getObjectsByField('Ugyfel',$lekerdezes_adatok);
+            $c = $customer[0]->getUgyfelFields()
            // var_dump($customer);
           ?>
             <form action="" method="POST">
@@ -204,19 +206,19 @@ class Ugyfelek_Site_Component extends Site_Component{
                             <tbody>
                             <tr>
                                 <td><span>Azonosító</span></td>
-                                <td><input type="text" name="azon" readonly="readonly"  value="<? echo $customer[0]->getUgyfelFields()['azon'] ?>"></td>
+                                <td><input type="text" name="azon" readonly="readonly"  value="<? echo $c['azon'] ?>"></td>
                             </tr>
                             <tr>
                                 <td><span>E-mail</span></td>
-                                <td><input type="text" name="email" value="<?echo $customer[0]->getUgyfelFields()['email']?>"></td>
+                                <td><input type="text" name="email" value="<?echo $c['email']?>"></td>
                             </tr>
                             <tr>
                                 <td><span>Telefon</span></td>
-                                <td><input type="tel" name="telefon" value="<?echo $customer[0]->getUgyfelFields()['telefon']?>"></td>
+                                <td><input type="tel" name="telefon" value="<?echo $c['telefon']?>"></td>
                             </tr>
                             <tr>
                                 <td><span>Cím</span></td>
-                                <td><input type="text" name="cim" value="<?echo $customer[0]->getUgyfelFields()['cim']?>"></td>
+                                <td><input type="text" name="cim" value="<?echo $c['cim']?>"></td>
                             </tr>
                             </tbody>
                         </table>

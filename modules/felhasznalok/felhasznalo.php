@@ -16,6 +16,8 @@ class Felhasznalo extends Persistent{
       $errors = array();
       if(empty($params['azon']))
           $errors[]=array(Error::MANDATORY, "azon");
+      if(empty($params['email']))
+          $errors[]= array(Error::MANDATORY, "email");
 
       $allFields = $this->validateFields($params);
       return array_merge($errors, $allFields);
@@ -61,6 +63,10 @@ class Felhasznalo extends Persistent{
             if($key == "jelszo"){
                 if(strlen($value) < 5 )
                     $errors[] = array(Error::SHORT_PASSWORD, $key);
+            }
+            if ($key == "email") {
+                if (strpos($value, '@') == false)
+                    $errors[] = array(Error::NOT_EMAIL, $key);
             }
         }
         return $errors;
