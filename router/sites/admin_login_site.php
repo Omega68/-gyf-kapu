@@ -3,7 +3,7 @@ return array(
   'default_menu'=>array()
   ,'template_class'=>"Admin_Login_Site_Template"
   ,'component_slots'=>array(
-    'login'=>'authentikacio'
+    'page'=>'authentikacio'
     ,'messages'=>'uzenetek'
   )
   ,'components'=>array(
@@ -14,15 +14,15 @@ return array(
         'login'=>array(
             'class'=>'Admin_Login_Site_Component',
             'params'=>array(),
-            'allowed_slots'=>array('login')
+            'allowed_slots'=>array('page')
         ),
         'authentikacio'=>array(
             'class'=>'Authentication_Site_Component',
             'allowed_slots'=>array()
         ),
-        'teszt' => array(
+        'ujadmin' => array(
             'class'=>'TestData',
-            'allowed_slots'=>array('login')
+            'allowed_slots'=>array('page')
         )
     )
 

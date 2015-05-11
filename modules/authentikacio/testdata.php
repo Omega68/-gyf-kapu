@@ -145,7 +145,7 @@ class TestData extends Site_Component{
             <?
             $this->newAdmin();
 
-            $this->newUgyfel();
+            //$this->newUgyfel();
             ?>
             </body>
         <html/>

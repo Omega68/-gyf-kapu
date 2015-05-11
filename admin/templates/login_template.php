@@ -22,7 +22,7 @@ class Admin_Login_Site_Template extends Site_Template{
       </div>
         <?
         $this->show_slot('messages');
-        $this->show_slot('login');
+        $this->show_slot('page');
         ?>
      
       </div>
