@@ -17,6 +17,8 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
     private $szerkesztes = false;
     private $uj_igenyles = false;
     private $newSablonForm = false;
+    private $showFieldList=false;
+
 
     protected function afterConstruction()
     {
@@ -29,6 +31,10 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
             $azon = $_POST['deleteAzon'];
             $u = $this->perm->getObjectsByField("Igenyles", array('azon' => $azon))[0];
             $u->delete();
+        }
+
+        if(!empty($_POST['GetFields'])) {
+            $this->showFieldList = true;
         }
 
         if (!empty($_POST['save'])) {
@@ -69,12 +75,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 echo "<br>";
                 echo $_POST['azon' . $i];*/
                 // echo 'azon'.$i;
-                echo "<br>";
-                echo "<br>";
-                echo "<br>";
-                print_r($_POST);
-                echo "<br>";
-                echo "<br>";
+                
                 $mezo_adatok = array(
                     'tartalom' => $_POST['ertek' . $i],
                     'mezo_azon' => $_POST['azon' . $i],
@@ -100,7 +101,41 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
 
     function show()
     {
-        if ($this->newSablonForm) {
+        if($this->showFieldList){
+            echo $_POST['igeny_azon'];
+            $adatok=array(
+                'igenyles_azon' => "".$_POST['igeny_azon']
+            );
+            $kmezok=$this->perm->getObjectsByField("KitoltottMezo",$adatok);
+            echo '<form method="post">
+            <div class="form_box">
+            <h1>Kitöltött mezők adatai</h1>
+                <input type="submit" name="back" value="Vissza" class="back_button">
+            </div>
+            <br/>
+            <br/>
+            <div class="listtable">
+                <table style="width:100%">
+                        <tr>
+                            <th>Igénylés Azonosító</th>
+                            <th>Tartalom</th>
+                            <th>Mező azon</th>
+                        </tr>
+                        ';
+            $count=count($kmezok);
+            for($i=0;$i<$count;$i++){
+                echo '<tr>';
+                echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['igenyles_azon'].'</td>';
+                echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['tartalom'].'</td>';
+                echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['mezo_azon'].'</td>';
+                echo '</tr>';
+            }
+            echo '
+                </table>
+            </div>
+            </form>';
+        }
+       else if ($this->newSablonForm) {
             $lekerdezes_adatok = array(
                 'sablon_azon' => "{$_POST['sab_azon']}"
             );
@@ -260,7 +295,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                             <th>Utolsó módosítás dátuma</th>
                             <th>Sablon azonosító</th>
                             <th>Ügyfél azonosító</th>
-                            <th>Mező</th>
+                            <th>Művelet</th>
                             <th>Szerkesztés</th>
                             <th>Törlés</th>
                         </tr>
@@ -277,9 +312,11 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 echo '<td>' . date("Y.m.d", strtotime($iFields['utolso_modositas'])) . '</td>';
                 echo '<td>' . $iFields['sablon_azon'] . '</td>';
                 echo '<td>' . $iFields['ugyfel_azon'] . '</td>';
-
+                echo '<form method="post">';
+                echo '<input type="hidden" name="igeny_azon" value="'.$iFields['azon'].'">';
+                echo '<td> <input type="submit" name="GetFields" value="Mezők lekérdezese"></td>';
+                echo '</form>';
                 ?>
-
                 <td>
 
                     <form action="" method="post">
