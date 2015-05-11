@@ -41,10 +41,6 @@ class Ugyfel extends Felhasznalo
                 if (strpos($value, '@') == false)
                     $errors[] = array(Error::NOT_EMAIL, $key);
             }
-            if($key == "jelszo"){
-                if(strlen($value) < 5 )
-                    $errors[] = array(Error::SHORT_PASSWORD, $key);
-            }
         }
         return $errors;
     }
@@ -59,10 +55,6 @@ class Ugyfel extends Felhasznalo
     
     public function setUgyfelFields(array $values){
       return $this->setFields($values);
-    }
-
-    public function to_string(){
-        return implode(", ", $this->getUgyfelFields());
     }
     
     protected function onBeforeDelete(array $params=null) {}

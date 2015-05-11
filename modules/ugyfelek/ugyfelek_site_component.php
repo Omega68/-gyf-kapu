@@ -21,8 +21,12 @@ class Ugyfelek_Site_Component extends Site_Component{
             $u = $this->perm->getObjectsByField("Ugyfel", array('azon'=>$azon))[0];
             $u->delete();
         }
-        if(isset($_POST['editButton']) && isset($_POST['szerkAzon']))
+        if(isset($_POST['editButton']) && isset($_POST['szerkAzon'])){
+            $_SESSION['edit'] = true;
+            $_SESSION['azon'] = $_POST['szerkAzon'];
             $this->szerkesztes=true;
+        }
+
 
         if(isset($_POST['searchButton'])){
             if (empty($_REQUEST['usearchString']))
@@ -47,24 +51,36 @@ class Ugyfelek_Site_Component extends Site_Component{
             }
 
         if(!empty($_POST['save'])){
-                    $adatok = array(
+            $_SESSION['azon'] = $_POST['azon'];
+
+            $adatok = array(
                         'email' => $_POST['email'],
                         'cim' => $_POST['cim'],
                         'telefon' => $_POST['telefon']
                     );
                 //$uk=$this->perm->updateObjectByFields('Ugyfel',$adatok, array("azon" => $_POST['azon']));
-                $uk = $this->perm->getObjectsByField("Ugyfel", array("azon" => $_POST['azon']))[0];
-                $uk->setUgyfelFields($adatok);
+                $uk = $this->perm->getObjectsByField("Ugyfel", array("azon" =>  $_SESSION['azon']))[0];
+                $result = $uk->setUgyfelFields($adatok);
+                if(is_array($result)){
+                    $this->errormsg = $result;
+                    $_SESSION['edit'] = true;
+                }
+                else $_SESSION['edit'] = false;
 
-            }
+
+        }
 
 
-        if(!empty($_POST['back']) || !empty($_POST['save']))
+        if(!empty($_POST['back'])){
+            $_SESSION['edit'] = false;
             $this->szerkesztes=false;
+        }
+
+
         $this->pagination();
     }
     function show(){
-        if(!$this->szerkesztes){
+        if( $_SESSION['edit'] == false){
         // echo $_POST["limit"].' '.$_POST['offset'].' '.$_POST['pagination'];
         //$ugyfelek=$this->perm->getObjectsByLimitOffsetOrderBy("Ugyfel",$this->limit,$this->offset,'azon');
         //$osszes=$this->perm->getAllObjects("Ugyfel");
@@ -112,7 +128,8 @@ class Ugyfelek_Site_Component extends Site_Component{
               <input id="id_search_sel__4" type="checkbox" value="1" <? if($_SESSION['uktelefon']==1) echo 'checked=""';?> name="uktelefon">
               <label for="id_search_sel__4">Telefon</label>
             </div>
-          </form>                      
+          </form>
+
         </div>
                 
         <br/>
@@ -165,7 +182,7 @@ class Ugyfelek_Site_Component extends Site_Component{
         }
         else{
             $lekerdezes_adatok=array(
-                'azon'=>"{$_POST['szerkAzon']}"
+                'azon'=>"{$_SESSION['azon']}"
             );
             //var_dump($lekerdezes_adatok);
             $customer=$this->perm->getObjectsByField('Ugyfel',$lekerdezes_adatok);
@@ -207,6 +224,12 @@ class Ugyfelek_Site_Component extends Site_Component{
                 </tr>
                 </tbody>
             </table>
+
+            <?
+            if (isset($this->errormsg)){
+                $this->validationError($this->errormsg);
+            }
+            ?>
         </div>
     </div>
 </form><?
