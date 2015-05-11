@@ -1,16 +1,3 @@
-<html>
-<head>
-   <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
-    <link rel="stylesheet" type="text/css"
-          href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" />
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $("#date").datepicker();
-        });
-    </script>
-</head>
-<body>
 <?php
 /**
  * Created by PhpStorm.
@@ -97,7 +84,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $adatok = array(
                 'azon' => $_POST['azon'],
                 'allapot' => $_POST['allapot'],
-                'letrehozas_datuma'=> date("j - n - Y"),
+                'letrehozas_datuma'=> date("Y.m.d"),
                 'admin_azon' => $admin[0]->getFelhasznaloFields()['azon']
 
             );
@@ -324,7 +311,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                             <th>Típus</th>
                             <th>Kötelezőség</th>
                             <th>Művelet</th>
-                            <th>Ertekek</th>
+                            <th>Értekek</th>
                         </tr>
                         ';
             $count=count($mezok);
@@ -413,12 +400,12 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 <table style="width:100%">
                         <tr>
                             <th>#</th>
-                            <th>azon</th>
-                            <th>letrehozas datuma</th>
-                            <th>allapot</th>
-                            <th>admin_azon</th>
+                            <th>Azonosító</th>
+                            <th>Létrehozás dátuma</th>
+                            <th>Állapot</th>
+                            <th>Létrehozó admin</th>
                             <th>Művelet</th>
-                            <th>Szerkesztes</th>
+                            <th>Szerkesztés</th>
                             <th>Törlés</th>
                             <th>Hozzáadás</th>
                         </tr>
@@ -426,27 +413,28 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $this->sorszam=$this->offset;
             $count=count($sablonok);
             for($i=0;$i<$count;$i++){
+                $s = $sablonok[$i]->getUrlapSablonFields();
                 echo '<tr>';
                 echo '<td>'.($this->sorszam + 1) . '</td>';
-                echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['azon'].'</td>';
-                echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['letrehozas_datuma'].'</td>';
-                echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['allapot'].'</td>';
-                echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['admin_azon'].'</td>';
+                echo '<td>'.$s['azon'].'</td>';
+                echo '<td>'.date("Y.m.d",strtotime($s['letrehozas_datuma'])).'</td>';
+                echo '<td>'.$s['allapot'].'</td>';
+                echo '<td>'.$s['admin_azon'].'</td>';
                 echo '<form method="post">';
-                echo '<input type="hidden" name="sab_azon" value="'.$sablonok[$i]->getUrlapSablonFields()['azon'].'">';
-                echo '<td> <input type="submit" name="GetFields" value="Mezok lekerdezese"></td>';
+                echo '<input type="hidden" name="sab_azon" value="'.$s['azon'].'">';
+                echo '<td> <input type="submit" name="GetFields" value="Mezők lekérdezese"></td>';
                 echo '</form>';
                 echo '<form method="post">';
-                echo '<input type="hidden" name="szerkAzon" value="'.$sablonok[$i]->getUrlapSablonFields()['azon'].'">';
+                echo '<input type="hidden" name="szerkAzon" value="'.$s['azon'].'">';
                 echo '<td> <input type="submit" name="editButton" value="Szerkesztés"></td>';
                 echo '</form>';
                 ?><td> <form action="" method="post">
-                    <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott ügyfelet?')" >
-                    <input type="hidden" name="deleteAzon" value="<? echo $sablonok[$i]->getUrlapSablonFields()['azon'] ?>">
+                    <input type="submit" name="deleteButton" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott sablont?')" >
+                    <input type="hidden" name="deleteAzon" value="<? echo $s['azon'] ?>">
                 </form></td>
                 <?
                 echo '<form method="post">';
-                echo '<input type="hidden" name="sablon_azon" value="'.$sablonok[$i]->getUrlapSablonFields()['azon'].'">';
+                echo '<input type="hidden" name="sablon_azon" value="'.$s['azon'].'">';
                 echo '<td> <input type="submit" name="addFieldButton" value="Új Mező"></td>';
                 echo '</form>';
                 echo '</tr>';
@@ -542,5 +530,3 @@ class Urlap_sablonok_Site_Component extends Site_Component{
     <?
     }
 }?>
-</body>
-</html>

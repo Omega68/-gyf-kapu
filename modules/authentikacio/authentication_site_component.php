@@ -45,13 +45,13 @@ class Authentication_Site_Component extends Site_Component{
                     $this->register=true;
                     $this->error = true;
                 }
-               else { $eredetiKod = $eredetiKod[0]->getKodFields()['kod'];
+               else { $eredetiKod1 = $eredetiKod[0]->getKodFields()['kod'];
 
-                if($_POST['kod'] ==  $eredetiKod){
-                    $_SESSION['kod'] =  $eredetiKod;
+                if($_POST['kod'] ==  $eredetiKod1){
+                    $_SESSION['kod'] =  $eredetiKod1;
                     $this->registerUser = true;
                     $this->register = false;
-                    $_SESSION['ujkod'] = $eredetiKod;
+                    $_SESSION['ujkod'] = $eredetiKod1;
                 }
                }
 
@@ -93,8 +93,11 @@ class Authentication_Site_Component extends Site_Component{
             $message = wordwrap($message, 70, "\r\n");
             // Send
             mail($_POST['email'], 'Ügyfélkapu - regisztráció', $message, $headers);
-
-         }
+            $_SESSION['msg'] = 1;
+            $this->msg = "Sikeres regisztráció!<br/> Azonosító: " . $_POST['azon'] . "<br/>Jelszó: " . $rPassw . "<br/>";
+            $eredetiKod = $this->perm->getObjectsByField("ERPUgyfelKod", array("kod"=>$_SESSION['ujkod']));
+            $eredetiKod[0]->delete();
+        }
         else if(!empty($_POST['back']))
             $this->register=false;
 
@@ -167,7 +170,7 @@ class Authentication_Site_Component extends Site_Component{
                         </div>
                     </form>
                 <?
-                } else {
+                } else if(isset($_SESSION['ujkod'])){
 
                     $erp = $this->readERP();
                     $ujAzon = $this->perm->getObjectsByField("ERPUgyfelKod", array("kod"=>$_SESSION['ujkod']));
@@ -223,6 +226,12 @@ class Authentication_Site_Component extends Site_Component{
                             <br/><br/>
                         </div>
                     </form>
+
+                    <?
+                        if(isset($_SESSION['msg'])){
+                            echo $this->msg;
+                        }
+                    ?>
 
                 <?
                 } ?>

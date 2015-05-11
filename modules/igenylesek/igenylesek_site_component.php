@@ -123,7 +123,7 @@ class Igenylesek_Site_Component extends Site_Component{
 
                 ?>
 
-                <td> <input type="submit" name="GetFilledFields" value="Kitoltott mezők lekérdezese"</td>
+                <td> <input type="submit" name="GetFilledFields" value="Kitöltott mezők lekérdezese"</td>
 
                 <td>
                     <?
@@ -199,16 +199,16 @@ class Igenylesek_Site_Component extends Site_Component{
                                         <td><input type="date" name="letrehozas_datuma" value="<?echo date("Y-m-d",strtotime($customer[0]->getIgenylesFields()['letrehozas_datuma']))?>"></td>
                                     </tr>
                                     <tr>
-                                        <td><span>Utolsó dátuma</span></td>
+                                        <td><span>Utolsó módosítás</span></td>
                                         <td><input type="date" name="utolso_modositas" value="<?echo date("Y-m-d",strtotime($customer[0]->getIgenylesFields()['utolso_modositas']))?>"></td>
                                     </tr>
                                     <tr>
                                         <td><span>Sablon azonosító</span></td>
-                                        <td><input type="text" name="sablon_azon" value="<?echo $customer[0]->getIgenylesFields()['sablon_azon']?>"></td>
+                                        <td><input type="text" name="sablon_azon" value="<?echo $customer[0]->getIgenylesFields()['sablon_azon']?>"  readonly="readonly"></td>
                                     </tr>
                                     <tr>
                                         <td><span>Ügyfel azonosító</span></td>
-                                        <td><input type="text" name="ugyfel_azon" value="<?echo $customer[0]->getIgenylesFields()['ugyfel_azon']?>"></td>
+                                        <td><input type="text" name="ugyfel_azon" value="<?echo $customer[0]->getIgenylesFields()['ugyfel_azon']?>"  readonly="readonly"></td>
                                     </tr>
                                     </tbody>
                                 </table>
