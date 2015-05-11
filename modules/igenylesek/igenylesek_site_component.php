@@ -136,7 +136,7 @@ class Igenylesek_Site_Component extends Site_Component{
                         <input type="submit" name="feltolt" value="Feltölt">
                     </form>
             <?} else { ?>
-                       <a href="<?echo $url?>">Letöltés</a>
+                       <a href="<?echo $url?>" target="_blank">Letöltés</a>
                     <?
                     }?>
                 </td>
