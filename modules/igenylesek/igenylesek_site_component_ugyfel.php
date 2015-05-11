@@ -75,7 +75,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 echo "<br>";
                 echo $_POST['azon' . $i];*/
                 // echo 'azon'.$i;
-                
+
                 $mezo_adatok = array(
                     'tartalom' => $_POST['ertek' . $i],
                     'mezo_azon' => $_POST['azon' . $i],
