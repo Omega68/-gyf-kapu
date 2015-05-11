@@ -58,7 +58,7 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
             }
         }
 
-        $this->pagination();
+        //$this->pagination();
     }
     function show(){
 
@@ -95,7 +95,7 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
 
   ?>
         <?
-        $this->showPagination(count($erp_u));
+        //$this->showPagination(count($erp_u));
         ?>
 
         <div class="listtable">
@@ -152,7 +152,7 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
         </div>
 
         <?
-        $this->showPagination(count($osszes));
+        //$this->showPagination(count($osszes));
 
 
 
