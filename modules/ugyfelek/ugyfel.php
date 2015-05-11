@@ -31,13 +31,10 @@ class Ugyfel extends Felhasznalo
                 $errors[] = array(Error::EMPTY_FIELD, $key);
                 continue;
             }
-            if ($key == "azon") {
-                if (!is_numeric($value))
-                    $errors[] = array(Error::NOT_NUMERIC, $key);
-            }
 
         }
-        return $errors;
+
+        return array_merge($errors, parent::validateFields($params));
     }
 
     //TODO: getterek, setterek a Persistent-ben lévő getFields és setFields segítségével
