@@ -118,6 +118,29 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             );
             $this->perm->createObject("Ertek",$adatok);
         }
+        
+        if(isset($_POST['searchButton'])){
+            if (empty($_REQUEST['ssearchString']))
+                $_SESSION['skeresve']=false;
+            else if (($_POST['skazon']!=1) && ($_POST['skletrehozas_datuma']!=1) && ($_POST['skallapot']!=1) && ($_POST['skadmin_azon']!=1))
+                $_SESSION['skeresve']=false;
+            else 
+                $_SESSION['skeresve']=true;
+                $_SESSION['ssearchString'] = $_POST['ssearchString'];
+                $_SESSION['skazon'] = $_POST['skazon'];
+                $_SESSION['skletrehozas_datuma'] = $_POST['skletrehozas_datuma'];
+                $_SESSION['skallapot'] = $_POST['skallapot'];
+                $_SESSION['skadmin_azon'] = $_POST['skadmin_azon'];
+            }
+        if(isset($_POST['resetButton'])){
+              $_SESSION['skeresve']=false;
+              $_SESSION['ssearchString'] = '';
+              $_SESSION['skazon'] = 1;
+              $_SESSION['skletrehozas_datuma'] = 1;
+              $_SESSION['skallapot'] = 1;
+              $_SESSION['skadmin_azon'] = 1;
+            }
+        
         $this->pagination();
     }
 
@@ -385,8 +408,23 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         </div>
     </form>';
         } else {
-            $sablonok=$this->perm->getObjectsByLimitOffsetOrderBy("UrlapSablon",$this->limit,$this->offset,'azon');
-            $osszes=$this->perm->getAllObjects("UrlapSablon");
+            if ($_SESSION['skeresve']){
+              $sablon_adatok=array();
+              if($_SESSION['skazon']==1) $sablon_adatok['azon'] = $_SESSION['ssearchString'];
+              if($_SESSION['skletrehozas_datuma']==1) $sablon_adatok['letrehozas_datuma'] = $_SESSION['ssearchString'];
+              if($_SESSION['skallapot']==1) $sablon_adatok['allapot'] = $_SESSION['ssearchString'];
+              if($_SESSION['skadmin_azon']==1) $sablon_adatok['admin_azon'] = $_SESSION['ssearchString'];
+                                     
+              $sablonok=$this->perm->getObjectsByFieldLimitOffsetOrderByOr("UrlapSablon",$sablon_adatok,$this->limit,$this->offset,'azon');
+              $osszes=$this->perm->getObjectsByFieldOr("UrlapSablon", $sablon_adatok);           
+            }
+            else{
+              $sablonok=$this->perm->getObjectsByLimitOffsetOrderBy("UrlapSablon",$this->limit,$this->offset,'azon');
+              $osszes=$this->perm->getAllObjects("UrlapSablon");
+            }
+        
+            //$sablonok=$this->perm->getObjectsByLimitOffsetOrderBy("UrlapSablon",$this->limit,$this->offset,'azon');
+            //$osszes=$this->perm->getAllObjects("UrlapSablon");
             echo '<form action="" method="post">
                 <button type="submit" name="new" value="new">Új sablon hozzáadása</button>
         </form>';
@@ -394,9 +432,35 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             <div class="form_box">
                 <h1>Sablonok adatai</h1>
             </div>
-            <br/>
-            <br/>
-            <div class="listtable">
+            <br/>';
+            ?>
+            
+           <div class="form_box">          
+              <form action="" method="post">
+                <input id="search_field" type="text" value="<? echo $_SESSION['ssearchString']; ?>" name="ssearchString" size="32">
+                <input type="submit" value="Keresés" name="searchButton">
+                <input type="submit" value="Alaphelyzet" name="resetButton">
+                <div>
+                  <input id="id_search_sel__1" type="checkbox" value="1" <? if($_SESSION['skazon']==1) echo 'checked=""';?> name="skazon">
+                  <label for="id_search_sel__1">Azonosító</label>
+                </div>
+                <div>
+                  <input id="id_search_sel__2" type="checkbox" value="1" <? if($_SESSION['skletrehozas_datuma']==1) echo 'checked=""';?> name="skletrehozas_datuma">
+                  <label for="id_search_sel__2">Létrehozás dátuma</label>
+                </div>
+                <div>
+                  <input id="id_search_sel__3" type="checkbox" value="1" <? if($_SESSION['skallapot']==1) echo 'checked=""';?> name="skallapot">
+                  <label for="id_search_sel__3">Állapot</label>
+                </div>
+                <div>
+                  <input id="id_search_sel__4" type="checkbox" value="1" <? if($_SESSION['skadmin_azon']==1) echo 'checked=""';?> name="skadmin_azon">
+                  <label for="id_search_sel__4">Admin azonosító</label>
+                </div>
+              </form>                      
+            </div>
+            
+            <?             
+            echo '<div class="listtable">
                 <table style="width:100%">
                         <tr>
                             <th>#</th>
