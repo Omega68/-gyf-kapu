@@ -84,7 +84,7 @@ class Igenylesek_Site_Component extends Site_Component{
     function show()
     {
         if(!$this->szerkesztes ) {
-            $igenylesek = $this->perm->getObjectsByLimitOffsetOrderBy("Igenyles", $this->limit, $this->offset, 'azon');
+            $igenylesek = $this->perm->getObjectsByLimitOffsetOrderBy("Igenyles", $this->limit, $this->offset, 'letrehozas_datuma');
             //    $igenylesek=$this->perm->getAllObjects("Igenyles");
             echo '
             <div class="form_box">
