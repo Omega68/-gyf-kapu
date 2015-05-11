@@ -1,17 +1,3 @@
-<html>
-<head>
-    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
-    <link rel="stylesheet" type="text/css"
-          href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" />
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $("#date").datepicker();
-        });
-    </script>
-</head>
-<body>
-
 <?php
 /**
  * Created by PhpStorm.
@@ -46,14 +32,14 @@ function process(){
 
 function show(){
      if($this->showFieldList){
-        echo $_POST['sab_azon'];
         $adatok=array(
-            'sablon_azon' => "".$_POST['sab_azon']
+            'sablon_azon' => $_POST['sab_azon']
         );
         $mezok=$this->perm->getObjectsByField("Mezo",$adatok);
-        echo '<form method="post">
+        ?>
+            <form method="post">
             <div class="form_box">
-            <h1>Mezok adatai</h1>
+            <h1>Mezők adatai - sablon: <?echo $_POST['sab_azon'];?></h1>
                 <input type="submit" name="back" value="Vissza" class="back_button">
             </div>
             <br/>
@@ -61,19 +47,24 @@ function show(){
             <div class="listtable">
                 <table style="width:100%">
                         <tr>
-                            <th>azon</th>
-                            <th>tipus</th>
-                            <th>kotelezoseg</th>
+                            <th>Azonosító</th>
+                            <th>Típus</th>
+                            <th>Kötelezőség</th>
                             <th>Művelet</th>
                         </tr>
-                        ';
+        <?
         $count=count($mezok);
         for($i=0;$i<$count;$i++){
+            $m = $mezok[$i]->getMezoFields();
             echo '<tr>';
-            echo '<td>'.$mezok[$i]->getMezoFields()['azon'].'</td>';
-            echo '<td>'.$mezok[$i]->getMezoFields()['tipus'].'</td>';
-            echo '<td>'.$mezok[$i]->getMezoFields()['kotelezoseg'].'</td>';
-            echo '<td><input type="submit" name="ModifyField" value="Mezo módosítása"></td>';
+            echo '<td>'.$m['azon'].'</td>';
+            echo '<td>'.$m['tipus'].'</td>';
+            echo '<td>';
+                if($m['kotelezoseg'] == 1){
+                    echo "kötelező";
+                } else echo "opcionális";
+            echo '</td>';
+            echo '<td><input type="submit" name="ModifyField" value="Mező módosítása"></td>';
             echo '</tr>';
         }
         echo '
@@ -93,10 +84,9 @@ function show(){
                 <table style="width:100%">
                         <tr>
                             <th>#</th>
-                            <th>azon</th>
-                            <th>letrehozas datuma</th>
-                            <th>allapot</th>
-                            <th>admin_azon</th>
+                            <th>Azonosító</th>
+                            <th>Létrehozás dátuma</th>
+                            <th>Állapot</th>
                             <th>Mezők lekérdezése</th>
                             <th>Művelet</th>
                         </tr>
@@ -104,18 +94,18 @@ function show(){
         $this->sorszam=$this->offset;
         $count=count($sablonok);
         for($i=0;$i<$count;$i++){
+            $s = $sablonok[$i]->getUrlapSablonFields();
             echo '<tr>';
             echo '<td>'.($this->sorszam + 1) . '</td>';
-            echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['azon'].'</td>';
-            echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['letrehozas_datuma'].'</td>';
-            echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['allapot'].'</td>';
-            echo '<td>'.$sablonok[$i]->getUrlapSablonFields()['admin_azon'].'</td>';
+            echo '<td>'.$s['azon'].'</td>';
+            echo '<td>'.$s['letrehozas_datuma'].'</td>';
+            echo '<td>'.$s['allapot'].'</td>';
             echo '<form method="post">';
-            echo '<input type="hidden" name="sab_azon" value="'.$sablonok[$i]->getUrlapSablonFields()['azon'].'">';
+            echo '<input type="hidden" name="sab_azon" value="'.$s['azon'].'">';
             echo '<td> <input type="submit" name="GetFields" value="Mezok lekerdezese"></td>';
             echo '</form>';
             echo '<form method="post">';
-            echo '<input type="hidden" name="sab_azon" value="'.$sablonok[$i]->getUrlapSablonFields()['azon'].'">';
+            echo '<input type="hidden" name="sab_azon" value="'.$s['azon'].'">';
             echo '<td> <input type="submit" name="Choose" value="Kiválasztás"></td>';
             echo '</form>';
             ?>
@@ -213,5 +203,3 @@ private function showPagination($ugyfelek){
 <?
 }
 }?>
-</body>
-</html>
