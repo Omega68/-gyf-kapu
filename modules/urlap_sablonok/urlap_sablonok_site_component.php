@@ -28,8 +28,11 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         if(!empty($_POST['new'])){
             $this->showAddForm=true;
         }
-        if(isset($_POST['editButton']) && isset($_POST['szerkAzon']))
+        if(isset($_POST['editButton']) && isset($_POST['szerkAzon'])) {
             $this->szerkesztes=true;
+             $_SESSION['edit'] = true;
+             $_SESSION['azon'] = $_POST['szerkAzon'];
+          }
 
         if(isset($_POST['deleteButton']) && isset($_POST['deleteAzon'])){
             $azon = $_POST['deleteAzon'];
@@ -73,7 +76,12 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             );
             //$this->perm->updateObjectByFields('UrlapSablon',$adatok);
             $uk = $this->perm->getObjectsByField('UrlapSablon', array("azon" => $_POST['azon']))[0];
-            $uk->setUrlapSablonFields($adatok);
+            $result = $uk->setUrlapSablonFields($adatok);
+             if(is_array($result)){
+                    $this->errormsg = $result;
+                    $_SESSION['edit'] = true;
+                }
+                else $_SESSION['edit'] = false;
             // $this->perm->createObject("UrlapSablon", $adatok);
         }
         if(!empty($_POST['save'])){
@@ -109,7 +117,8 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                     'sablon_azon' => "" . $_POST['sablon_azon']
                 );
             }
-            $this->perm->createObject("Mezo", $adatok);
+            $result = $this->perm->createObject("Mezo", $adatok);
+
         }
         if(!empty($_POST['AddValue'])){
             $adatok=array(
@@ -310,6 +319,12 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                         </tr>
                         </tbody>
                     </table>
+                    
+                    <?
+            if (isset($this->errormsg)){
+                $this->validationError($this->errormsg);
+            }
+            ?>
                 </div>
             </div>
             </form><?

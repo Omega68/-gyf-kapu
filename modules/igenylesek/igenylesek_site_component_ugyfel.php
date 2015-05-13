@@ -465,13 +465,13 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                                     <tr>
                                         <td><span>Létrehozás dátuma</span></td>
                                         <td><input type="date" name="letrehozas_datuma"
-                                                   value="<?echo $customer[0]->getIgenylesFields()['letrehozas_datuma']?>">
+                                                   value="<?echo date("Y-m-d", strtotime($customer[0]->getIgenylesFields()['letrehozas_datuma']))?>">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><span>Utolsó dátuma</span></td>
                                         <td><input type="date" name="utolso_modositas"
-                                                   value="<?echo $customer[0]->getIgenylesFields()['utolso_modositas']?>">
+                                                   value="<?echo date("Y-m-d", strtotime($customer[0]->getIgenylesFields()['utolso_modositas']))?>">
                                         </td>
                                     </tr>
                                     <tr>

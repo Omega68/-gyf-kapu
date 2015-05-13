@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Created by PhpStorm.
  * User: norbert
@@ -14,6 +14,7 @@ class Igenylesek_Site_Component extends Site_Component{
     private $paginationNumber=1;
     private $sorszam=1;
     private $szerkesztes=false;
+    private $showFieldList=false;
 
     protected function afterConstruction(){
         $this->perm=PersistenceManager::getInstance();
@@ -24,6 +25,10 @@ class Igenylesek_Site_Component extends Site_Component{
             $azon = $_POST['deleteAzon'];
             $u = $this->perm->getObjectsByField("Igenyles", array('azon'=>$azon))[0];
             $u->delete();
+        }
+
+	if(!empty($_POST['GetFields'])) {
+            $this->showFieldList = true;
         }
 
         if(!empty($_POST['save'])){
@@ -115,7 +120,40 @@ class Igenylesek_Site_Component extends Site_Component{
 
     function show()
     {
-        if(!$this->szerkesztes ) {
+	if($this->showFieldList){
+            echo $_POST['igeny_azon'];
+            $adatok=array(
+                'igenyles_azon' => "".$_POST['igeny_azon']
+            );
+            $kmezok=$this->perm->getObjectsByField("KitoltottMezo",$adatok);
+            echo '<form method="post">
+            <div class="form_box">
+            <h1>Kitöltött mezők adatai</h1>
+                <input type="submit" name="back" value="Vissza" class="back_button">
+            </div>
+            <br/>
+            <br/>
+            <div class="listtable">
+                <table style="width:100%">
+                        <tr>
+                            <th>Igénylés Azonosító</th>
+                            <th>Tartalom</th>
+                            <th>Mező azon</th>
+                        </tr>
+                        ';
+            $count=count($kmezok);
+            for($i=0;$i<$count;$i++){
+                echo '<tr>';
+                echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['igenyles_azon'].'</td>';
+                echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['tartalom'].'</td>';
+                echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['mezo_azon'].'</td>';
+                echo '</tr>';
+            }
+            echo '
+                </table>
+            </div>
+            </form>';
+        } else if(!$this->szerkesztes ) {
           if ($_SESSION['ikeresve']){
               $igenyles_adatok=array();
               if($_SESSION['ikazon']==1) $igenyles_adatok['azon'] = $_SESSION['isearchString'];
@@ -203,9 +241,11 @@ class Igenylesek_Site_Component extends Site_Component{
                 echo '<td>' . $iFields['sablon_azon'] . '</td>';
                 echo '<td>' . $iFields['ugyfel_azon'] . '</td>';
 
-                ?>
+                ?>	<form method="post">
 
-                <td> <input type="submit" name="GetFilledFields" value="Kitöltott mezők lekérdezese"</td>
+                <td> 	<input type="submit" name="GetFields" value="Kitöltött mezők lekérdezese"</td>
+			<input type="hidden" name="igeny_azon" value="<?echo $iFields['azon']?>" >
+			</form>
 
                 <td>
                     <?

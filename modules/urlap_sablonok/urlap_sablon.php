@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 class UrlapSablon extends Persistent{
  
@@ -24,13 +24,16 @@ class UrlapSablon extends Persistent{
               $errors[]=array(Error::MANDATORY, "admin_azon");
 
       $allFields = $this->validateFields($params);
-      return array_merge($errors, $allFields);  }
+      return array_merge($errors, $allFields);  
+    
+    }
 
     public function validateFields(array $params = null){
         $errors = array();
         foreach($params as $key => $value) {
             if (empty($value)) {
                 $errors[] = array(Error::EMPTY_FIELD, $key);
+				
                 continue;
             }
         }

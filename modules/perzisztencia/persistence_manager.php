@@ -351,26 +351,14 @@ class PersistenceManager{
         unset($errors);
       return $object;
     } else {
-        if($this->validationError($errors))
-            return;
+        
         return null;
     }
 
 
   }
 
-    private function validationError($errors){
-
-        if(count($errors) > 0 ){
-            echo "validation error: ";
-            foreach( $errors as $e )
-                echo Error::get_error_msg($e[0]) . " Mező: " . $e[1] . "<br/>";
-            return true;
-        }
-
-        return false;
-
-    }
+   
   
   /**
   return table name string
