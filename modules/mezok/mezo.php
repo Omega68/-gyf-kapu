@@ -14,9 +14,11 @@ class Mezo extends Persistent{
   */
   public function validate(array $params=null){
   $errors = array();
-         if(empty($params['azon']))
-             $errors[]=array(Error::MANDATORY, "azon");
-          if(empty($params['tipus']))
+       /*  if(empty($params['azon']))
+             $errors[]=array(Error::MANDATORY, "azon");*/
+      if(empty($params['nev']) && !isset($params['nev']))
+          $errors[]=array(Error::MANDATORY, "nev");
+          if(empty($params['tipus']) && !isset($param['tipus']))
               $errors[]=array(Error::MANDATORY, "tipus");
           if(empty($params['kotelezoseg']))
               $errors[]=array(Error::MANDATORY, "kotelezoseg");

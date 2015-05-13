@@ -54,6 +54,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         }
         if(!empty($_POST['GetFields'])) {
             $this->showFieldList = true;
+          //  $this->addFieldForm=true;
         }
         if(!empty($_POST['back']) || !empty($_POST['save']) || !empty($_POST['change'])) {
             $this->szerkesztes = false;
@@ -102,23 +103,27 @@ class Urlap_sablonok_Site_Component extends Site_Component{
              $this->perm->createObject("UrlapSablon", $adatok);
         }
         if(!empty($_POST['saveField'])){
+            echo $_POST['kotelezoseg'];
             if($_POST['kotelezoseg']==1) {
                 $adatok = array(
-                    'azon' => $_POST['azon'],
+                    'nev' => $_POST['nev'],
                     'tipus' => $_POST['tipus'],
-                    'kotelezoseg' => true,
+                    'kotelezoseg' => 1,
                     'sablon_azon' => "" . $_POST['sablon_azon']
                 );
             } else{
                 $adatok = array(
-                    'azon' => $_POST['azon'],
+                    'nev' => $_POST['nev'],
                     'tipus' => $_POST['tipus'],
-                    'kotelezoseg' => false,
+                    'kotelezoseg' => 2,
                     'sablon_azon' => "" . $_POST['sablon_azon']
                 );
             }
-            $result = $this->perm->createObject("Mezo", $adatok);
-
+            $result=$this->perm->createObject("Mezo", $adatok);
+            if($result==null){
+                echo 'A mező létrehozása nem sierült';}else{
+            $_POST['azon']=$result->getMezoFields()['azon'];}
+            $this->showFieldList=true;
         }
         if(!empty($_POST['AddValue'])){
             $adatok=array(
@@ -199,6 +204,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                             <input type="submit" name="deleteValue" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott értéket?')" >
                             <input type="hidden" name="azon" value="<? echo $ertek[$i]->getErtekFields()['azon'] ?>">
                             <input type="hidden" name="mezo_azon" value="<? echo $ertek[$i]->getErtekFields()['mezo_azon']?>">
+                            <input type="hidden" name="sablon_azon" value="<? echo $ertek[$i]->getErtekFields()['sablon_azon'] ?>" >
                         </form></td>;<?
                     echo '</tr>';
                 }
@@ -225,8 +231,8 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                                 <table>
                                     <tbody>
                                         <tr>
-                                            <td><span>Mező Azonosító</span></td>
-                                            <td><input type="text" name="azon"  value=""></td>
+                                            <td><span class="mandatory">Mező Neve<span style="color:red">*</span></span></td>
+                                            <td><input type="text" name="nev" required value=""></td>
                                         </tr>
                                         <tr>
                                             <td><span>Típus</span></td>
@@ -248,7 +254,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                                             <td><span>Kell-e</span></td>
                                             <td><input type="radio" name="kotelezoseg" checked value="1">Kötelező
                                                 <br>
-                                                <input type="radio" name="kotelezoseg" value="0">Opcionális
+                                                <input type="radio" name="kotelezoseg" value="2">Opcionális
                                             </td>
                                             <input type="hidden" name="sablon_azon" value="<?echo $_POST['sablon_azon']?>" >
                                         </tr>
@@ -330,9 +336,62 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             </form><?
         }
         else if($this->showFieldList){
-            echo $_POST['sab_azon'];
+            ?><form method="post">
+    <div class="form_box">
+        <h1>Mező hozzáadása</h1>
+        <input type="submit" name="saveField" value="Új mező hozzáadása" class="save_button">
+        <input type="submit" name="cancel" value="Mégse" class="back_button">
+    </div>
+    <br/>
+    <br/>
+    <div>
+        <table class="formtable">
+            <tbody>
+            <tr>
+                <td valign="top">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td><span class="mandatory">Mező Neve<span style="color:red">*</span></span></td>
+                            <td><input type="text" name="nev"  value=""></td>
+                        </tr>
+                        <tr>
+                            <td><span>Típus</span></td>
+                            <td>
+                                <select name="tipus">
+                                    <option value="Szám">Szám</option>
+                                    <option id="legordulos" value="Legördülős">Legördülős</option>
+                                    <option value="Szöveg">Szöveg</option>
+                                </select>
+                            </td>
+                            <!--<td><input type="radio" name="tipus" checked value="Szám">Szám
+                                <br>
+                                <input id="legordulos" type="radio" name="tipus" value="Legördülős">Legördülős
+                                <br>
+                                <input type="radio" name="tipus" value="Szöveg">Szöveg
+                            </td>-->
+                        </tr>
+                        <tr>
+                            <td><span>Kell-e</span></td>
+                            <td><input type="radio" name="kotelezoseg" checked value="1">Kötelező
+                                <br>
+                                <input type="radio" name="kotelezoseg" value="2">Opcionális
+                            </td>
+                            <input type="hidden" name="sablon_azon" value="<?echo $_POST['sablon_azon']?>" >
+                        </tr>
+                    </form>
+                </tbody>
+            </table>
+            </td>
+        </tr>
+        </tbody>
+        </table>
+        </div>
+    </div>
+    </form><?
+            echo $_POST['sablon_azon'];
             $adatok=array(
-                'sablon_azon' => "".$_POST['sab_azon']
+                'sablon_azon' => "".$_POST['sablon_azon']
             );
             $mezok=$this->perm->getObjectsByField("Mezo",$adatok);
             echo '<form method="post">
@@ -345,7 +404,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             <div class="listtable">
                 <table style="width:100%">
                         <tr>
-                            <th>Azonosító</th>
+                            <th>Név</th>
                             <th>Típus</th>
                             <th>Kötelezőség</th>
                             <th>Művelet</th>
@@ -355,9 +414,9 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $count=count($mezok);
             for($i=0;$i<$count;$i++){
                 echo '<tr>';
-                echo '<td>'.$mezok[$i]->getMezoFields()['azon'].'</td>';
+                echo '<td>'.$mezok[$i]->getMezoFields()['nev'].'</td>';
                 echo '<td>'.$mezok[$i]->getMezoFields()['tipus'].'</td>';
-                if($mezok[$i]->getMezoFields()['kotelezoseg']==true) {
+                if($mezok[$i]->getMezoFields()['kotelezoseg']==1) {
                     echo '<td>Kötelező</td>';
                 }
                 else{
@@ -366,7 +425,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 ?> <td> <form action="" method="post">
                     <input type="submit" name="deleteField" value="Törlés" onclick="return confirm('Biztosan törli a kiválasztott Mezőt?')" >
                     <input type="hidden" name="fieldAzon" value="<? echo $mezok[$i]->getMezoFields()['azon'] ?>">
-                    <input type="hidden" name="sab_azon" value="<?echo $_POST['sab_azon']?>">
+                    <input type="hidden" name="sablon_azon" value="<?echo $_POST['sablon_azon']?>">
                 </form></td>;<?
                 echo '<td>';
                 if($mezok[$i]->getMezoFields()['tipus']=='Legördülős'){
@@ -486,7 +545,6 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                             <th>Művelet</th>
                             <th>Szerkesztés</th>
                             <th>Törlés</th>
-                            <th>Hozzáadás</th>
                         </tr>
                         ';
             $this->sorszam=$this->offset;
@@ -500,7 +558,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 echo '<td>'.$s['allapot'].'</td>';
                 echo '<td>'.$s['admin_azon'].'</td>';
                 echo '<form method="post">';
-                echo '<input type="hidden" name="sab_azon" value="'.$s['azon'].'">';
+                echo '<input type="hidden" name="sablon_azon" value="'.$s['azon'].'">';
                 echo '<td> <input type="submit" name="GetFields" value="Mezők lekérdezese"></td>';
                 echo '</form>';
                 echo '<form method="post">';
@@ -512,10 +570,6 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                     <input type="hidden" name="deleteAzon" value="<? echo $s['azon'] ?>">
                 </form></td>
                 <?
-                echo '<form method="post">';
-                echo '<input type="hidden" name="sablon_azon" value="'.$s['azon'].'">';
-                echo '<td> <input type="submit" name="addFieldButton" value="Új Mező"></td>';
-                echo '</form>';
                 echo '</tr>';
                 $this->sorszam++;
             }
