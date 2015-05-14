@@ -23,7 +23,7 @@ abstract class Site_Component{
 
   protected  function validationError($errors){
       if(count($errors) > 0 ){
-          echo "<p style=\"color: red\">Hiba: ";
+          echo "<p style=\"color: red\">Hiba: <br/>";
           foreach( $errors as $e )
               echo Error::get_error_msg($e[0]) . " Mező: " . $e[1] . "<br/>";
           echo "</p>";

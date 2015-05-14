@@ -19,10 +19,6 @@ return array(
         'authentikacio'=>array(
             'class'=>'Authentication_Site_Component',
             'allowed_slots'=>array()
-        ),
-        'ujadmin' => array(
-            'class'=>'TestData',
-            'allowed_slots'=>array('page')
         )
     )
 

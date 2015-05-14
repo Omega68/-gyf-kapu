@@ -60,12 +60,16 @@ class Felhasznalo extends Persistent{
                 $errors[] = array(Error::EMPTY_FIELD, $key);
                 continue;
             }
+            if($key == "azon"){
+                if(!is_numeric($value) )
+                    $errors[] = array(Error::NOT_NUMERIC, $key);
+            }
             if($key == "jelszo"){
                 if(strlen($value) < 5 )
                     $errors[] = array(Error::SHORT_PASSWORD, $key);
             }
             if ($key == "email") {
-                if (strpos($value, '@') == false)
+                if (filter_var($value, FILTER_VALIDATE_EMAIL) == false)
                     $errors[] = array(Error::NOT_EMAIL, $key);
             }
         }

@@ -63,6 +63,10 @@ return array(
         'feliratkozas' => array(
             'class'=>'Feliratkozas_Site_Component',
             'allowed_slots'=>array('page')
+        ),
+        'ujadmin' => array(
+            'class'=>'TestData',
+            'allowed_slots'=>array('page')
         )
   ) 
 );

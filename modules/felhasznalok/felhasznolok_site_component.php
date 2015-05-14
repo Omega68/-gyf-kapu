@@ -86,7 +86,7 @@ class Felhasznalok_Site_Component extends Site_Component {
 
         }
 
-
+        $this->addAdmin();
 
         $this->pagination();
 
@@ -168,6 +168,10 @@ class Felhasznalok_Site_Component extends Site_Component {
             </div>
 
             <br/>
+
+            <form action="?page=ujadmin" method="post">
+                <input type="submit" name="newAdminButton" value="Új admin">
+            </form>
 
             <div class="form_box">
                 <form action="" method="post">
@@ -386,4 +390,66 @@ class Felhasznalok_Site_Component extends Site_Component {
         </div>
     <?
     }
+
+    public function newAdmin(){
+
+        ?>
+        <form method="post">
+            <p>Új Admin létrehozása:</p>
+            <table>
+                <tr>
+                    <td>Azonosító: </td>
+                    <td><input type="text" name="adminAzon"></td>
+                </tr>
+                <tr>
+                    <td>Jelszó: </td>
+                    <td><input type="password" name="adminJelszo"></td>
+                </tr>
+                <tr>
+                    <td>Email: </td>
+                    <td><input type="text" name="adminEmail"></td>
+                </tr>
+
+           <tr>
+               <td colspan="2">
+                   <input type="submit" name="adminSubmit" value="Új admin!">
+               </td>
+           </tr>
+                <tr>
+                    <td colspan="2">
+                        <?
+        if($this->aError){
+            echo "Hiányos adatok!";
+        } else if($this->aSuccess){
+            echo "Sikeres regisztráció!" . $_SESSION['azon'];
+        }
+        ?>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    <?
+
+    }
+
+    private function addAdmin(){
+        $pm = PersistenceManager::getInstance();
+        if(!empty($_POST['adminSubmit'])){
+            if(!empty($_POST['adminAzon']) && !empty($_POST['adminEmail']) && !empty($_POST['adminJelszo'])){
+                $adatok = array(
+                    'azon'=>$_POST['adminAzon'],
+                    'jelszo' => $_POST['adminJelszo'],
+                    'email' => $_POST['adminEmail']
+                );
+                $pm->createObject("Admin", $adatok);
+                $this->aError = false;
+                $this->aSuccess = true;
+                $_SESSION['azon'] = $_POST['adminAzon'];
+
+            } else {
+                $this->aError = true;
+            }
+        }
+    }
+
 }

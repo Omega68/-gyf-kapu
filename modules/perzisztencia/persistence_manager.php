@@ -351,8 +351,7 @@ class PersistenceManager{
         unset($errors);
       return $object;
     } else {
-        
-        return null;
+        return $errors;
     }
 
 

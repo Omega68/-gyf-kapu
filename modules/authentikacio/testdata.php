@@ -12,9 +12,9 @@ class TestData extends Site_Component{
     public function newAdmin(){
 
         ?>
-        <form method="post">
-            <p>Új Admin létrehozása:</p>
+            <h1><br/>Új Admin létrehozása:</h1>
             <table>
+                <form method="post">
                 <tr>
                     <td>Azonosító: </td>
                     <td><input type="text" name="adminAzon"></td>
@@ -28,20 +28,32 @@ class TestData extends Site_Component{
                     <td><input type="text" name="adminEmail"></td>
                 </tr>
 
-           <tr>
-               <td colspan="2">
-                   <input type="submit" name="adminSubmit" value="Új admin!">
-               </td>
-           </tr>
                 <tr>
                     <td colspan="2">
                         <?
-                        if($this->aError){
+                        if(isset($this->aError)){
                             echo "Hiányos adatok!";
+                            $this->validationError($this->aError);
                         } else if($this->aSuccess){
-                            echo "Sikeres regisztráció!" . $_SESSION['azon'];
+                            echo "Sikeres regisztráció! Azonosító: " . $_SESSION['azon'];
                         }
                         ?>
+                    </td>
+                </tr>
+
+           <tr>
+               <td colspan="2">
+                   <input type="submit" name="adminSubmit" value="Mentés" class="save_button">
+               </td>
+           </tr>
+                </form>
+
+                <tr>
+                    <td>
+                    <form method="post" action="?page=felhasznalo">
+            <input type="submit" name="back" value="Vissza" class="back_button">
+            </form>
+
                     </td>
                 </tr>
             </table>
@@ -102,21 +114,23 @@ class TestData extends Site_Component{
     function process()
     {
         if(!empty($_POST['adminSubmit'])){
-            if(!empty($_POST['adminAzon']) && !empty($_POST['adminEmail']) && !empty($_POST['adminJelszo'])){
+
                 $adatok = array(
                     'azon'=>$_POST['adminAzon'],
                     'jelszo' => $_POST['adminJelszo'],
                     'email' => $_POST['adminEmail']
                 );
-                $this->pm->createObject("Admin", $adatok);
-                $this->aError = false;
-                $this->aSuccess = true;
+                $result = $this->pm->createObject("Admin", $adatok);
+                if(is_array($result)){
+                    $this->aError = $result;
+                    $_SESSION['edit'] = true;
+                }
+                else $this->aSuccess = true;
                 $_SESSION['azon'] = $_POST['adminAzon'];
 
-            } else {
-                $this->aError = true;
-            }
+
         }
+
         if(!empty($_POST['uSubmit'])){
             if(!empty($_POST['uAzon']) && !empty($_POST['uEmail']) && !empty($_POST['uJelszo'])  && !empty($_POST['uCim'])  && !empty($_POST['uTelefon'])){
                 $adatok = array(
@@ -139,17 +153,7 @@ class TestData extends Site_Component{
 
     function show()
     {
-        ?>
-        <html>
-        <body>
-            <?
             $this->newAdmin();
-
-            //$this->newUgyfel();
-            ?>
-            </body>
-        <html/>
-        <?
     }
 }
 
