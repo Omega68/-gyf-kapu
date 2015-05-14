@@ -12,7 +12,8 @@ class ERP_API extends API_Module
     function getSupportedFunctions()
     {
         return [
-            'getIgenyles'            
+            'getIgenyles',
+            'setIgenyles'            
         ];
     }
 
@@ -47,6 +48,14 @@ class ERP_API extends API_Module
                         
             echo json_encode($data);
         }
-
+        
+        if ($function=='setIgenyles') {
+          if ((empty($params['id'])) || (empty($params['statusz']))) {
+              echo json_encode(['msg' => 'Nem megfelelő paraméterek!']);
+              return;
+          }   
+          $uf = new Igenyles($params['id']);
+          $uf->setIgenylesFields(['statusz' => $params['statusz']]);          
+        }
     }
 }
