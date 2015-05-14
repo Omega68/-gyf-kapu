@@ -51,8 +51,8 @@ class TestData extends Site_Component{
                 <tr>
                     <td>
                     <form method="post" action="?page=felhasznalo">
-            <input type="submit" name="back" value="Vissza" class="back_button">
-            </form>
+                     <input type="submit" name="back" value="Vissza" class="back_button">
+                    </form>
 
                     </td>
                 </tr>

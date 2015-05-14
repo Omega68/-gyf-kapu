@@ -19,7 +19,13 @@ return array(
         'authentikacio'=>array(
             'class'=>'Authentication_Site_Component',
             'allowed_slots'=>array()
+        ),
+        'regisztracio'=>array(
+            'class'=>'Registration_Site_Component',
+
+            'allowed_slots'=>array('page')
         )
+
     )
 
  

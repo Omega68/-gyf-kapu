@@ -31,7 +31,7 @@ class PersistenceManager{
       $row = $result[0];
         return new $row['class']($row['id']);
     }
-    throw new Exception("Multiple rows affected.");
+    return null;
     
   }
   

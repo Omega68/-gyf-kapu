@@ -34,7 +34,9 @@ class Authentication_Site_Component extends Site_Component{
         }
 
         if (isset($_POST['register'])){
+            header('Location: ?pages=regisztracio');
             $this->register = true;
+
         }
 
 
@@ -103,8 +105,7 @@ class Authentication_Site_Component extends Site_Component{
 
     }
 
-    function show()
-    {
+    function show() {
         if(!$this->auth->isUserAuthorized()) {
             ?>
             <form action="index.php" method="post">

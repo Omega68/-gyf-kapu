@@ -25,17 +25,18 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
         if( isset($_POST['inviteButton']) && isset($_POST['email'])){
             if(!empty($_POST['email']) && !empty($_POST['inviteAzon'])){
                 // The message
-                $this->r = rand(1000,999999);
+                $this->r = md5(rand(1000,999999));
                 while(count($this->perm->getObjectsByField("ERPUgyfelKod", array("kod"=>$this->r)))>0){
-                    $this->r = rand(1000,999999);
+                    $this->r = md5(rand(1000,999999));
                 }
 
                 $headers = "Content-Type: text/html; charset=ISO-8859-1\r\n";
+                $regURL = "http://ugyfelkapu.fejlesztesgyak2015.info/index.php?page=regisztracio&kod=" . $this->r;
                 $message = '<html><body>';
                 $message .= "<h2>Ügyfélkapu regisztráció</h2>
                          <p>Tisztelt Ügyfél!</p>
-                        <p>Köszönjük regisztrációs kérelmét, az Ön meghívó kódja a következő: " . $this->r . "</p>";
-                $message .= "<p> Regisztrálni <a href=\"http://ugyfelkapu.fejlesztesgyak2015.info\">itt</a> tud, a meghívó kódját megadva.<p>
+                        <p>Köszönjük regisztrációs kérelmét!";
+                $message .= "Regisztrálni <a href=\"" . $regURL . "\"> ide kattintva</a> tud, adatait megadva.<p>
                         Üdvözlettel,<br/>
                         Ügyfélkapu";
                 // In case any of our lines are larger than 70 characters, we should use wordwrap()
@@ -134,7 +135,7 @@ class ERP_Ugyfelek_Site_Component extends Site_Component{
                             </form>
                         <?
                         if($_SESSION['inviteAzon'] == $f['azon'] && $this->sent){
-                            echo "<p style=\"color: red;\">Meghívó elküldve! Kód: ";
+                            echo "<p style=\"color: red;\">Meghívó elküldve! <br/>Kód: ";
                             echo $this->r. "</p>";
                         }
                         ?>
