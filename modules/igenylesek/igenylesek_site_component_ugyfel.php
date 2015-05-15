@@ -59,7 +59,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
             $uk = $this->perm->getObject($_SESSION['PHPSESSID']);
             $adatok = array(
                 'azon' => $_POST['igenyles_azon'],
-                'statusz' => $_POST['allapot'],
+                'statusz' => $_POST['statusz'],
                 'letrehozas_datuma' => date("Y.m.d"),
                 'utolso_modositas' => date("Y.m.d"),
                 'sablon_azon' => $_POST['sablon_azon'],
@@ -200,9 +200,10 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                                     </tr>
                                     <tr>
                                         <td><span>Állapot</span></td>
-                                        <td><input type="radio" name="allapot" value="Aktív">Aktív
-                                            <br>
-                                            <input type="radio" name="allapot" value="Passzív" checked>Passzív
+                                        <td><select name="statusz">
+                                                <option value="Aktiv">Aktív</option>
+                                                <option value="Passziv">Passzív</option>
+                                            </select>
                                         </td>
                                     </tr>
                                     <tr>
@@ -212,7 +213,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                                     $count = count($mezok);
                                         for ($i = 0;$i < $count;$i++){
                                         echo '<tr>';
-                                        echo '<td><span>' . $mezok[$i]->getMezoFields()['azon'] . '</span></td>';
+                                        echo '<td><span>' . $mezok[$i]->getMezoFields()['nev'] . '</span></td>';
 
                                         if ($mezok[$i]->getMezoFields()['tipus'] == 'Szám'){
                                             ?>
@@ -274,7 +275,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 <table style="width:100%">
                         <tr>
                             <th>#</th>
-                            <th>Azonosító</th>
+                            <th>azon</th>
                             <th>Létrehozás dátuma</th>
                             <th>Állapot</th>
                             <th>Létrehozó admin</th>
@@ -459,8 +460,10 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                                     </tr>
                                     <tr>
                                         <td><span>Státusz</span></td>
-                                        <td><input type="text" name="statusz"
-                                                   value="<?echo $customer[0]->getIgenylesFields()['statusz']?>"></td>
+                                        <td><select name="statusz">
+                                                <option value="Aktív">Aktív</option>
+                                                <option value="Passzív">Passzív</option>
+                                            </select></td>
                                     </tr>
                                     <tr>
                                         <td><span>Létrehozás dátuma</span></td>

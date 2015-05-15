@@ -319,7 +319,10 @@ class Igenylesek_Site_Component extends Site_Component{
                                     </tr>
                                     <tr>
                                         <td><span>Státusz</span></td>
-                                        <td><input type="text" name="statusz" value="<?echo $customer[0]->getIgenylesFields()['statusz']?>"></td>
+                                        <td><select name="statusz">
+                                                <option value="Aktív">Aktív</option>
+                                                <option value="Passzív">Passzív</option>
+                                            </select></td>
                                     </tr>
                                     <tr>
                                         <td><span>Létrehozás dátuma</span></td>
