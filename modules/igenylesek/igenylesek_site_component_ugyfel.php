@@ -138,7 +138,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
         if($this->showFieldList){
             echo $_POST['igeny_azon'];
             $adatok=array(
-                'igenyles_azon' => "".$_POST['igeny_azon']
+                'igenyles_azon' => "".$_POST['igeny_azon'],
             );
             $kmezok=$this->perm->getObjectsByField("KitoltottMezo",$adatok);
             echo '<form method="post">
@@ -152,14 +152,20 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 <table style="width:100%">
                         <tr>
                             <th>Igénylés Azonosító</th>
+                            <th>Mező neve</th>
                             <th>Tartalom</th>
                             <th>Mező azon</th>
                         </tr>
                         ';
             $count=count($kmezok);
             for($i=0;$i<$count;$i++){
+                $mezo_azon=array(
+                    'azon' => "{$kmezok[$i]->getKitoltottMezoFields()['mezo_azon']}"
+                );
+                $sima_mezok=$this->perm->getObjectsByField("Mezo",$mezo_azon);
                 echo '<tr>';
                 echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['igenyles_azon'].'</td>';
+                echo '<td>'.$sima_mezok[0]->getMezoFields()['nev'].'</td>';
                 echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['tartalom'].'</td>';
                 echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['mezo_azon'].'</td>';
                 echo '</tr>';
@@ -265,7 +271,10 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
             </div>
             </form><?
         } else if ($this->uj_igenyles) {
-            $sablonok = $this->perm->getObjectsByLimitOffsetOrderBy("UrlapSablon", $this->limit, $this->offset, 'azon');
+            $adatok=array(
+                'allapot'=>'Aktív'
+            );
+            $sablonok = $this->perm->getObjectsByFieldLimitOffsetOrderBy("UrlapSablon",$adatok, $this->limit, $this->offset, 'azon');
             $osszes = $this->perm->getAllObjects("UrlapSablon");
             echo '<form action="" method="post">
                         <input type="submit" value="Vissza" name="back">
@@ -306,7 +315,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 echo '</tr>';
                 $this->sorszam++;
             }
-            $this->showPagination(count($osszes));
+            $this->showPaginationForApplicationForm(count($osszes));
         } //Listázás
         else if (!$this->szerkesztes) {
             $uk = $this->perm->getObject($_SESSION['PHPSESSID']);
@@ -379,7 +388,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                             <th>Státusz</th>
                             <th>Létrehozás dátuma</th>
                             <th>Utolsó módosítás dátuma</th>
-                            <th>Sablon azonosító</th>
+                            <th>Sablon név</th>
                             <th>Ügyfél azonosító</th>
                             <th>Művelet</th>
                             <th>Szerkesztés</th>
@@ -391,13 +400,17 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
             $this->sorszam = $this->offset;
             for ($i = 0; $i < $count; $i++) {
                 $iFields = $igenylesek[$i]->getIgenylesFields();
+                $sablonok=array(
+                    'azon'=>$iFields['sablon_azon']
+                );
+                $sablon=$this->perm->getObjectsByField('UrlapSablon',$sablonok);
                 echo '<tr>';
                 echo '<td>' . ($this->sorszam + 1.) . '</td>';
                 echo '<td>' . $iFields['azon'] . '</td>';
                 echo '<td>' . $iFields['statusz'] . '</td>';
                 echo '<td>' . date("Y.m.d", strtotime($iFields['letrehozas_datuma'])) . '</td>';
                 echo '<td>' . date("Y.m.d", strtotime($iFields['utolso_modositas'])) . '</td>';
-                echo '<td>' . $iFields['sablon_azon'] . '</td>';
+                echo '<td>' . $sablon[0]->getUrlapSablonFields()['nev']. '</td>';
                 echo '<td>' . $iFields['ugyfel_azon'] . '</td>';
                 echo '<form method="post">';
                 echo '<input type="hidden" name="igeny_azon" value="'.$iFields['azon'].'">';
@@ -569,6 +582,32 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 $this->paginationNumber++;
             }
         }
+    }
+
+    private function showPaginationForApplicationForm($sablonok){
+        ?>
+        <div class="pagination">
+            <p>Találatok száma: <? echo $ugyfelek;?></p>
+
+            <form action="" method="post">
+                <select name="selected" onchange="this.form.submit()">
+                    <option value="50" <?if (empty($_POST['selected']) || $_POST['selected'] == 50) echo 'selected' ?> >
+                        50
+                    </option>
+                    <option value="100" <?if ($_POST['selected'] == 100) echo 'selected' ?>>100</option>
+                    <option value="500" <?if ($_POST['selected'] == 500) echo 'selected' ?>>500</option>
+                </select> <input type="submit" name="previous" value="Előző">
+                             <span class="pagination_page_number">
+                                    <span class="pagination_active_page_number"><?echo $this->paginationNumber;?></span>
+                            </span>
+                <input type="hidden" value="<?echo $this->offset?>" name="offset">
+                <input type="hidden" value="<?echo $this->limit?>" name="limit">
+                <input type="hidden" value="<?echo $this->paginationNumber?>" name="pagination">
+                <input type="hidden" value="igenyles" name="UjIgenyles">
+                <input type="submit" name="next" value="Következő">
+            </form>
+        </div>
+    <?
     }
 
     private function showPagination($ugyfelek)

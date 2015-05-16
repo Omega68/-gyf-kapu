@@ -185,7 +185,13 @@ class PersistenceManager{
     * order azt jelöli ami szerint rendezni kell, default értékben növekvő, true érték esetén csökkenő lesz
     */
     public function getObjectsByFieldLimitOffsetOrderBy($class, $params=null, $limit=null,$offset=null, $order=null, $isDesc=false){
-        $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+       // $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        if($class!='Admin' && $class!='Ugyfel')
+        {
+            $sql = sprintf("SELECT * FROM %s WHERE", strtolower($class));
+        }else{
+            $sql=sprintf("SELECT * FROM %s s inner join felhasznalo f on s.id=f.id WHERE", strtolower($class));
+        }
         $counter=0;
         foreach($params as $key=>$value) {
             $sql .= " " . $key . " = " . " '".$value."'";
