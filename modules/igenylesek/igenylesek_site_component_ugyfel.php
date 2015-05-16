@@ -58,15 +58,17 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
         if (!empty($_POST['saveIgenyles'])) {
             $uk = $this->perm->getObject($_SESSION['PHPSESSID']);
             $adatok = array(
-                'azon' => $_POST['igenyles_azon'],
+              //  'azon' => $_POST['igenyles_azon'],
                 'statusz' => $_POST['statusz'],
                 'letrehozas_datuma' => date("Y.m.d"),
                 'utolso_modositas' => date("Y.m.d"),
                 'sablon_azon' => $_POST['sablon_azon'],
                 'ugyfel_azon' => $uk->getFelhasznaloFields()['azon']
             );
-            $this->perm->createObject('Igenyles', $adatok);
-
+            $igeny=$this->perm->createObject('Igenyles', $adatok);
+            if($igeny==null)
+                echo "A létrehozás nem sikerült";
+            $igeny_azon=$igeny->getIgenylesFields()['azon'];
             //Új kitöltött mezők létrehozása
             for ($i = 0; $i < $_POST['Osszeg']; $i++) {
                /* echo "<br>";
@@ -79,7 +81,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 $mezo_adatok = array(
                     'tartalom' => $_POST['ertek' . $i],
                     'mezo_azon' => $_POST['azon' . $i],
-                    'igenyles_azon' => $_POST['igenyles_azon']
+                    'igenyles_azon' => $igeny_azon
                 );
                 $this->perm->createObject('KitoltottMezo', $mezo_adatok);
             }
@@ -173,6 +175,10 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
             );
             //var_dump($lekerdezes_adatok);
             $mezok = $this->perm->getObjectsByField('Mezo', $lekerdezes_adatok);
+            $sablon_adatok=array(
+                'azon'=>"{$_POST['sab_azon']}"
+            );
+            $sablon=$this->perm->getObjectsByField('UrlapSablon',$sablon_adatok);
             // var_dump($customer);
             ?>
             <form action="" method="POST">
@@ -194,9 +200,9 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                                         <td><h2>Igénylés adatok</h2>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td><span>Igénylés Azonosító</span></td>
-                                        <td><input type="text" name="igenyles_azon" value="" ></td>
+                                   <tr>
+                                        <td><span>Sablon neve </span></td>
+                                        <td><h4><?echo $sablon[0]->getUrlapSablonFields()['nev']?></h4></td>
                                     </tr>
                                     <tr>
                                         <td><span>Állapot</span></td>
@@ -249,7 +255,6 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                                             <input type="hidden" name="sablon_azon"
                                                    value="<?echo $_POST['sab_azon']?>">
 
-
                                     </tbody>
                                 </table>
                             </td>
@@ -276,6 +281,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                         <tr>
                             <th>#</th>
                             <th>azon</th>
+                            <th>Név</th>
                             <th>Létrehozás dátuma</th>
                             <th>Állapot</th>
                             <th>Létrehozó admin</th>
@@ -289,6 +295,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 echo '<tr>';
                 echo '<td>' . ($this->sorszam + 1) . '</td>';
                 echo '<td>' . $s['azon'] . '</td>';
+                echo '<td>'.$s['nev'].'</td>';
                 echo '<td>' . date("Y.m.d", strtotime($s['letrehozas_datuma'])) . '</td>';
                 echo '<td>' . $s['allapot'] . '</td>';
                 echo '<td>' . $s['admin_azon'] . '</td>';

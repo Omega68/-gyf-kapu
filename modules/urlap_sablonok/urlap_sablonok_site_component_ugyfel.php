@@ -148,6 +148,7 @@ function show(){
                         <tr>
                             <th>#</th>
                             <th>Azonosító</th>
+                            <th>Név</th>
                             <th>Létrehozás dátuma</th>
                             <th>Állapot</th>
                             <th>Mezők lekérdezése</th>
@@ -161,6 +162,7 @@ function show(){
             echo '<tr>';
             echo '<td>'.($this->sorszam + 1) . '</td>';
             echo '<td>'.$s['azon'].'</td>';
+            echo '<td>'.$s['nev'].'</td>';
             echo '<td>'.$s['letrehozas_datuma'].'</td>';
             echo '<td>'.$s['allapot'].'</td>';
             echo '<form method="post">';

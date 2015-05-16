@@ -14,8 +14,10 @@ class UrlapSablon extends Persistent{
   */
   public function validate(array $params=null){
   $errors = array();
-         if(empty($params['azon']))
-             $errors[]=array(Error::MANDATORY, "azon");
+       /*  if(empty($params['azon']))
+             $errors[]=array(Error::MANDATORY, "azon");*/
+          if(empty($params['nev']))
+            $errors[]=array(Error::MANDATORY, "nev");
           if(empty($params['letrehozas_datuma']))
               $errors[]=array(Error::MANDATORY, "letrehozas_datuma");
           if(empty($params['allapot']))

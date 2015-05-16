@@ -71,6 +71,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $admin=$this->perm->getObjectsByField("Felhasznalo",$lekérdezés);
             $adatok = array(
                 'azon' => $_POST['azon'],
+                'nev'=>$_POST['nev'],
                 'allapot' => $_POST['allapot'],
                 'letrehozas_datuma'=> date("j - n - Y"),
                 'admin_azon' => $admin[0]->getFelhasznaloFields()['azon']
@@ -91,7 +92,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             );
             $admin=$this->perm->getObjectsByField("Felhasznalo",$lekérdezés);
             $adatok = array(
-                'azon' => $_POST['azon'],
+                'nev' => $_POST['nev'],
                 'allapot' => $_POST['allapot'],
                 'letrehozas_datuma'=> date("Y.m.d"),
                 'admin_azon' => $admin[0]->getFelhasznaloFields()['azon']
@@ -296,6 +297,10 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                                         <td><span>Azonosító</span></td>
                                         <td><input type="text" name="azon"  readonly="true" value="<? echo $customer[0]->getUrlapSablonFields()['azon'] ?>"></td>
                                     </tr>
+                                    <tr>
+                                        <td><span>Név</span></td>
+                                        <td><input type="text" name="nev" value="<? echo $customer[0]->getUrlapSablonFields()['nev'] ?>"></td>
+                                    </tr>
                                     <? if($customer[0]->getUrlapSablonFields()['allapot']=='Aktív'){ ?>
                                     <tr><td><span>Állapot</span></td>
                                         <td><input type="radio" name="allapot" value="Aktív" checked>Aktív
@@ -459,8 +464,8 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                             <table>
                             <tbody>
                             <tr>
-                                <td><span>Azonosító</span></td>
-                                <td><input size="32" type="text" name="azon" value=""></td>
+                                <td><span class="mandatory">Név<span style="color:red">*</span></span></td>
+                                <td><input size="32" type="text" name="nev" value=""></td>
                             </tr>
                           <!--  <tr>
                                 <td><span>Állapot</span></td>
@@ -539,6 +544,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                         <tr>
                             <th>#</th>
                             <th>Azonosító</th>
+                            <th>Név</th>
                             <th>Létrehozás dátuma</th>
                             <th>Állapot</th>
                             <th>Létrehozó admin</th>
@@ -554,6 +560,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 echo '<tr>';
                 echo '<td>'.($this->sorszam + 1) . '</td>';
                 echo '<td>'.$s['azon'].'</td>';
+                echo '<td>'.$s['nev'].'</td>';
                 echo '<td>'.date("Y.m.d",strtotime($s['letrehozas_datuma'])).'</td>';
                 echo '<td>'.$s['allapot'].'</td>';
                 echo '<td>'.$s['admin_azon'].'</td>';
