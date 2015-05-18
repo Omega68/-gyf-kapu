@@ -24,7 +24,7 @@ class Registration_Site_Component extends Site_Component{
     function process()
     {
         if(!empty($_POST['saveUser'])){
-            $rPassw = rand(1000, 99999);
+            $rPassw = rand(10000, 9999999);
             $adatok = array(
                 'azon'=>$_POST['azon'],
                 'email' => $_POST['email'],
