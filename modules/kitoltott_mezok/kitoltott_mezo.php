@@ -18,10 +18,10 @@ class KitoltottMezo extends Persistent{
              $errors[]=array(Error::MANDATORY, "azon");*/
          if(empty($params['tartalom']))
              $errors[]=array(Error::MANDATORY, "tartalom");
-        if(empty($params['mezo_azon']))
+       /* if(empty($params['mezo_azon']))
             $errors[]=array(Error::MANDATORY, "mezo_azon");
         if(empty($params['igenyles_azon']))
-            $errors[]=array(Error::MANDATORY, "igenyles_azon");
+            $errors[]=array(Error::MANDATORY, "igenyles_azon");*/
       $allFields = $this->validateFields($params);
       return array_merge($errors, $allFields);  }
 
