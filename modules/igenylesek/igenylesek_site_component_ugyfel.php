@@ -56,6 +56,13 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
             $this->newSablonForm = false;
         }
         if (!empty($_POST['saveIgenyles'])) {
+            $kiVanEToltveAmezok=true;
+            for($i=0;i<$_POST['Osszeg'];$i++){
+                if($_POST['ertek'.$i]=="") {
+                    $kiVanEToltveAmezok=false;
+                }
+            }
+            if($kiVanEToltveAmezok===true){
             $uk = $this->perm->getObject($_SESSION['PHPSESSID']);
             $adatok = array(
               //  'azon' => $_POST['igenyles_azon'],
@@ -70,6 +77,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 echo "A létrehozás nem sikerült";
             $igeny_azon=$igeny->getIgenylesFields()['azon'];
             //Új kitöltött mezők létrehozása
+
             for ($i = 0; $i < $_POST['Osszeg']; $i++) {
                /* echo "<br>";
                 echo "<br>";
@@ -77,17 +85,19 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 echo "<br>";
                 echo $_POST['azon' . $i];*/
                 // echo 'azon'.$i;
-
                 $mezo_adatok = array(
                     'tartalom' => $_POST['ertek' . $i],
                     'mezo_azon' => $_POST['azon' . $i],
                     'igenyles_azon' => $igeny_azon
                 );
                 $this->perm->createObject('KitoltottMezo', $mezo_adatok);
+            }}
+            else{
+                echo "Töltsön ki minden mezőt";
             }
         }
 
-        if ($_POST['UjIgenyles']) {
+        if ($_POST['UjIgenyles'] || isset($_POST['backToSablon'])) {
             $this->uj_igenyles = true;
         }
 
@@ -191,7 +201,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
             <div class="form_box">
                 <h1>Igénylés adatainak módosítása</h1>
                 <input type="submit" name="saveIgenyles" value="Mentés" class="save_button">
-                <input type="submit" name="back" value="Vissza" class="back_button">
+                <input type="submit" name="backToSablon" value="Vissza" class="back_button">
                 <br/>
                 <br/>
 
@@ -213,8 +223,10 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                                     <tr>
                                         <td><span>Állapot</span></td>
                                         <td><select name="statusz">
-                                                <option value="Aktiv">Aktív</option>
-                                                <option value="Passziv">Passzív</option>
+                                                <option value="Folyamatban">Folyamatban</option>
+                                                <option value="Véglegesített">Véglegesített</option>
+                                                <option value="Feldolgozás alatt">Feldolgozás alatt</option>
+                                                <option value="Elfogadva">Elfogadva</option>
                                             </select>
                                         </td>
                                     </tr>
@@ -499,13 +511,13 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                                     </tr>
                                     <tr>
                                         <td><span>Sablon azonosító</span></td>
-                                        <td><input type="text" name="sablon_azon"
+                                        <td><input type="text" readonly="true" name="sablon_azon"
                                                    value="<?echo $customer[0]->getIgenylesFields()['sablon_azon']?>">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><span>Ügyfel azonosító</span></td>
-                                        <td><input type="text" name="ugyfel_azon"
+                                        <td><input type="text" readonly="true" name="ugyfel_azon"
                                                    value="<?echo $customer[0]->getIgenylesFields()['ugyfel_azon']?>">
                                         </td>
                                     </tr>
