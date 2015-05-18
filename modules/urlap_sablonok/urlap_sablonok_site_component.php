@@ -64,7 +64,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         if(!empty($_POST['sablon_azon']) && !empty($_POST['addFieldButton'])){
             $this->addFieldForm=true;
         }
-        if(!empty($_POST['change'])){
+        if(!empty($_POST['change']) && isset($_POST['nev']) && $_POST['nev']!=""){
             $lekérdezés=array(
                 'id'=>"".$_SESSION['PHPSESSID']
             );
@@ -86,7 +86,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                 else $_SESSION['edit'] = false;
             // $this->perm->createObject("UrlapSablon", $adatok);
         }
-        if(!empty($_POST['save'])){
+        if(!empty($_POST['save']) && isset($_POST['nev'])  && $_POST['nev']!=""){
             $lekérdezés=array(
                 'id'=>"".$_SESSION['PHPSESSID']
             );
@@ -103,16 +103,16 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $uk->setUgyfelFields($adatok);*/
              $this->perm->createObject("UrlapSablon", $adatok);
         }
-        if(!empty($_POST['saveField'])){
+        if(!empty($_POST['saveField']) && isset($_POST['nev']) && $_POST['nev']!=""){
             echo $_POST['kotelezoseg'];
-            if($_POST['kotelezoseg']==1) {
+            if($_POST['kotelezoseg']==1 && isset($_POST['nev'])) {
                 $adatok = array(
                     'nev' => $_POST['nev'],
                     'tipus' => $_POST['tipus'],
                     'kotelezoseg' => 1,
                     'sablon_azon' => "" . $_POST['sablon_azon']
                 );
-            } else{
+            } else if(isset($_POST['nev'])){
                 $adatok = array(
                     'nev' => $_POST['nev'],
                     'tipus' => $_POST['tipus'],
@@ -126,7 +126,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             $_POST['azon']=$result->getMezoFields()['azon'];}
             $this->showFieldList=true;
         }
-        if(!empty($_POST['AddValue'])){
+        if(!empty($_POST['AddValue']) && isset($_POST['AddValue']) && $_POST['AddValue']!=""){
             $adatok=array(
                 'ertek'=>$_POST['ertek'],
                 'mezo_azon'=>$_POST['azon']
