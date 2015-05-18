@@ -110,7 +110,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 }
             }
             if($kiVanEToltveAmezok===true){
-                $uk = $this->perm->getObject($_SESSION['PHPSESSID']);
+               // $uk = $this->perm->getObject($_SESSION['PHPSESSID']);
                 /*$adatok=array(
                     'azon'=>"{$_POST['igeny_azon']}"
                 );
@@ -121,7 +121,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
 
                 for ($i = 0; $i < $_POST['Osszeg']; $i++) {
                     $lekerdez_adatok=array(
-                        'azon'=> "{$_POST['azon' . $i]}"
+                        'id'=> "{$_POST['azon' . $i]}"
                     );
                     $mezo_adatok = array(
                         'tartalom' => "{$_POST['ertek' . $i]}"
@@ -230,11 +230,20 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                     $ertekek=$this->perm->getObjectsByField("Ertek",$ertek_adatok);
                     $ertekekSzama = count($ertekek);
                     for ($j = 0; $j < $ertekekSzama; $j++) {
-                        ?><option value="<?echo $ertekek[$j]->getErtekFields()['ertek']?>" ><? echo $ertekek[$j]->getErtekFields()['ertek'] ?></option><?
+                        $ertek=$ertekek[$j]->getErtekFields()['ertek'];
+                        if($ertek==$kmezok[$i]->getKitoltottMezoFields()['tartalom']) {
+                            ?>
+                            <option selected value="<?echo $ertek?>" ><? echo $ertek ?></option><?
+                        }
+                        else {
+                            ?>
+                            <option value="<?echo $ertek?>" ><? echo $ertek ?></option><?
+                        }
                     }
                     echo '</select></td>';
                 }?><input type="hidden" name="<? echo 'azon' . $i ?>"
-                          value="<? echo $kmezok[$i]->getKitoltottMezoFields()['azon'] ?>"> <?
+                          value="<? echo $kmezok[$i]->getKitoltottMezoFields()['id'] ?>">
+                <input type="hidden" name="Osszeg" value="<?echo $count?>"><?
 
                     echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['mezo_azon'].'</td>';
                 echo '</tr>';
