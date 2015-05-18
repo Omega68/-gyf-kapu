@@ -67,6 +67,14 @@ class UrlapSablon extends Persistent{
         $mezo1 = new Mezo($idk);
         $mezo1.delete();
       }
+        $perm = PersistenceManager::getInstance();
+        $adatok=array(
+            'sablon_azon'=>$this->getUrlapSablonFields()['azon']
+        );
+        $igenylesek=$perm->getObjectsByField('Igenyles',$adatok);
+        for($i=0;$i<count($igenylesek);$i++){
+            $igenylesek[$i]->delete();
+        }
     }
     
     public function createMezo(array $values){
