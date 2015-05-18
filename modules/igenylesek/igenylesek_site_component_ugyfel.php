@@ -101,6 +101,54 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
             $this->uj_igenyles = true;
         }
 
+
+        if($_POST['ChangeFilledFields']){
+            $kiVanEToltveAmezok=true;
+            for($i=0;i<$_POST['Osszeg'];$i++){
+                if($_POST['ertek'.$i]=="") {
+                    $kiVanEToltveAmezok=false;
+                }
+            }
+            if($kiVanEToltveAmezok===true){
+                $uk = $this->perm->getObject($_SESSION['PHPSESSID']);
+               /* $adatok = array(
+                    //  'azon' => $_POST['igenyles_azon'],
+                    'statusz' => $_POST['statusz'],
+                    'letrehozas_datuma' => date("Y.m.d"),
+                    'utolso_modositas' => date("Y.m.d"),
+                    'sablon_azon' => $_POST['sablon_azon'],
+                    'ugyfel_azon' => $uk->getFelhasznaloFields()['azon']
+                );*/
+                $adatok=array(
+                    'azon'=>"{$_POST['igeny_azon']}"
+                );
+                $igeny=$this->perm->getObjectsByField('Igenyles', $adatok);
+                if($igeny==null)
+                    echo "A módosítás nem sikerült";
+                $igeny_azon=$igeny[0]->getIgenylesFields()['azon'];
+                //Új kitöltött mezők létrehozása
+
+                for ($i = 0; $i < $_POST['Osszeg']; $i++) {
+                    $lekerdez_adatok=array(
+                        'azon'=> $_POST['azon' . $i]
+                    );
+                    $mezo_adatok = array(
+                        'tartalom' => $_POST['ertek' . $i],
+                    );
+                    $kitmezo=$this->perm->getObjectsByField('KitoltottMezo',$lekerdez_adatok);
+                    $kitmezo->setKitoltottMezoFields($mezo_adatok);
+                    // echo 'azon'.$i;
+                    /*$mezo_adatok = array(
+                        'tartalom' => $_POST['ertek' . $i],
+                        'mezo_azon' => $_POST['azon' . $i],
+                        'igenyles_azon' => $igeny_azon
+                    );
+                    $this->perm->createObject('KitoltottMezo', $mezo_adatok);*/
+                }}
+            else{
+                echo "Töltsön ki minden mezőt";
+            }
+        }
         if ($_POST['Chosen']) {
             $this->newSablonForm = true;
         }
@@ -154,6 +202,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
             echo '<form method="post">
             <div class="form_box">
             <h1>Kitöltött mezők adatai</h1>
+                <input type="submit" name="ChangeFilledFields" value="Módosítás" class="save_button">
                 <input type="submit" name="back" value="Vissza" class="back_button">
             </div>
             <br/>
@@ -174,10 +223,29 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
                 );
                 $sima_mezok=$this->perm->getObjectsByField("Mezo",$mezo_azon);
                 echo '<tr>';
+
+                echo '<input type="hidden" name="igeny_azon" value="'.$kmezok[$i]->getKitoltottMezoFields()['igenyles_azon'].'" >';
+                echo '<input name="'."azon".$i.'" type="hidden" value="' . $kmezok[$i]->getKitoltottMezoFields()['azon'] . '">';
                 echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['igenyles_azon'].'</td>';
                 echo '<td>'.$sima_mezok[0]->getMezoFields()['nev'].'</td>';
-                echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['tartalom'].'</td>';
-                echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['mezo_azon'].'</td>';
+                if($sima_mezok[0]->getMezoFields()['tipus']=='Szám') {
+                    echo '<td> <input name="'."ertek".$i.'" type="number" value="' . $kmezok[$i]->getKitoltottMezoFields()['tartalom'] . '"></td>';
+                } else if($sima_mezok[0]->getMezoFields()['tipus']=='Szöveg'){
+                    echo '<td> <input name="'."ertek".$i.'" type="text" value="' . $kmezok[$i]->getKitoltottMezoFields()['tartalom'] . '"></td>';
+                }else if($sima_mezok[0]->getMezoFields()['tipus']=='Legördülős'){
+                    $ertek_adatok=array(
+                        'mezo_azon'=> "{$kmezok[$i]->getKitoltottMezoFields()['mezo_azon']}"
+                    );
+                    echo '<td><select name="'."ertek".$i.'">';
+                    $ertekek=$this->perm->getObjectsByField("Ertek",$ertek_adatok);
+                    $ertekekSzama = count($ertekek);
+                    for ($j = 0; $j < $ertekekSzama; $j++) {
+                        ?><option value="<?echo $ertekek[$j]->getErtekFields()['ertek']?>" ><? echo $ertekek[$j]->getErtekFields()['ertek'] ?></option><?
+                    }
+                    echo '</select></td>';
+                }
+
+                    echo '<td>'.$kmezok[$i]->getKitoltottMezoFields()['mezo_azon'].'</td>';
                 echo '</tr>';
             }
             echo '
@@ -599,7 +667,7 @@ class Igenylesek_Site_Component_Ugyfel extends Site_Component
     private function showPaginationForApplicationForm($sablonok){
         ?>
         <div class="pagination">
-            <p>Találatok száma: <? echo $ugyfelek;?></p>
+            <p>Találatok száma: <? echo $sablonok;?></p>
 
             <form action="" method="post">
                 <select name="selected" onchange="this.form.submit()">
