@@ -137,12 +137,13 @@ class Urlap_sablonok_Site_Component extends Site_Component{
         if(isset($_POST['searchButton'])){
             if (empty($_REQUEST['ssearchString']))
                 $_SESSION['skeresve']=false;
-            else if (($_POST['skazon']!=1) && ($_POST['skletrehozas_datuma']!=1) && ($_POST['skallapot']!=1) && ($_POST['skadmin_azon']!=1))
+            else if (($_POST['skazon']!=1) && ($_POST['sknev']!=1) && ($_POST['skletrehozas_datuma']!=1) && ($_POST['skallapot']!=1) && ($_POST['skadmin_azon']!=1))
                 $_SESSION['skeresve']=false;
             else 
                 $_SESSION['skeresve']=true;
                 $_SESSION['ssearchString'] = $_POST['ssearchString'];
                 $_SESSION['skazon'] = $_POST['skazon'];
+                $_SESSION['sknev'] = $_POST['sknev'];
                 $_SESSION['skletrehozas_datuma'] = $_POST['skletrehozas_datuma'];
                 $_SESSION['skallapot'] = $_POST['skallapot'];
                 $_SESSION['skadmin_azon'] = $_POST['skadmin_azon'];
@@ -151,6 +152,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
               $_SESSION['skeresve']=false;
               $_SESSION['ssearchString'] = '';
               $_SESSION['skazon'] = 1;
+              $_SESSION['sknev'] = 1;
               $_SESSION['skletrehozas_datuma'] = 1;
               $_SESSION['skallapot'] = 1;
               $_SESSION['skadmin_azon'] = 1;
@@ -490,6 +492,7 @@ class Urlap_sablonok_Site_Component extends Site_Component{
             if ($_SESSION['skeresve']){
               $sablon_adatok=array();
               if($_SESSION['skazon']==1) $sablon_adatok['azon'] = $_SESSION['ssearchString'];
+              if($_SESSION['sknev']==1) $sablon_adatok['nev'] = $_SESSION['ssearchString'];
               if($_SESSION['skletrehozas_datuma']==1) $sablon_adatok['letrehozas_datuma'] = $_SESSION['ssearchString'];
               if($_SESSION['skallapot']==1) $sablon_adatok['allapot'] = $_SESSION['ssearchString'];
               if($_SESSION['skadmin_azon']==1) $sablon_adatok['admin_azon'] = $_SESSION['ssearchString'];
@@ -524,16 +527,20 @@ class Urlap_sablonok_Site_Component extends Site_Component{
                   <label for="id_search_sel__1">Azonosító</label>
                 </div>
                 <div>
-                  <input id="id_search_sel__2" type="checkbox" value="1" <? if($_SESSION['skletrehozas_datuma']==1) echo 'checked=""';?> name="skletrehozas_datuma">
-                  <label for="id_search_sel__2">Létrehozás dátuma</label>
+                  <input id="id_search_sel__2" type="checkbox" value="1" <? if($_SESSION['sknev']==1) echo 'checked=""';?> name="sknev">
+                  <label for="id_search_sel__2">Név</label>
                 </div>
                 <div>
-                  <input id="id_search_sel__3" type="checkbox" value="1" <? if($_SESSION['skallapot']==1) echo 'checked=""';?> name="skallapot">
-                  <label for="id_search_sel__3">Állapot</label>
+                  <input id="id_search_sel__3" type="checkbox" value="1" <? if($_SESSION['skletrehozas_datuma']==1) echo 'checked=""';?> name="skletrehozas_datuma">
+                  <label for="id_search_sel__3">Létrehozás dátuma</label>
                 </div>
                 <div>
-                  <input id="id_search_sel__4" type="checkbox" value="1" <? if($_SESSION['skadmin_azon']==1) echo 'checked=""';?> name="skadmin_azon">
-                  <label for="id_search_sel__4">Admin azonosító</label>
+                  <input id="id_search_sel__4" type="checkbox" value="1" <? if($_SESSION['skallapot']==1) echo 'checked=""';?> name="skallapot">
+                  <label for="id_search_sel__4">Állapot</label>
+                </div>
+                <div>
+                  <input id="id_search_sel__5" type="checkbox" value="1" <? if($_SESSION['skadmin_azon']==1) echo 'checked=""';?> name="skadmin_azon">
+                  <label for="id_search_sel__5">Létrehozó admin</label>
                 </div>
               </form>                      
             </div>
